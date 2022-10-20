@@ -8,12 +8,23 @@ interface Props {
   image: string
   duration: string
   large?: boolean
+  paid?: boolean
 }
-export function Recipe({ duration, large = false, image, title, reviews, postedOn, authors }: Props) {
+export function Recipe({
+  paid = false,
+  duration,
+  large = false,
+  image,
+  title,
+  reviews,
+  postedOn,
+  authors,
+}: Props) {
   return (
     <div
       className={
-        'h-70 p-10 rounded-7 c-white flex justify-between items-start flex-col relative ' + (large ? 'w-170' : 'w-70')
+        'h-70 p-10 rounded-7 w-full c-white flex justify-between items-start flex-col relative ' +
+        (large ? 'xl:w-170' : 'xl:w-70')
       }
     >
       <div className='z-1'>
@@ -21,6 +32,11 @@ export function Recipe({ duration, large = false, image, title, reviews, postedO
         <span>
           by <b>{authors.join(', ')}</b> {moment(postedOn).fromNow()}
         </span>
+        {paid ? (
+          <span className='block w-max mt-2 font-bold m-0 p-0 uppercase border-1 border-white w-max-content text-sm px-3 py-1 rounded-full'>
+            paid members only
+          </span>
+        ) : null}
       </div>
       <div className='flex justify-between items-center w-full z-1'>
         <span>{duration}</span>
