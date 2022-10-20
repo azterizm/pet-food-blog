@@ -10,6 +10,7 @@ export default defineConfig({
       theme: {
         colors: {
           primary: '#161b3d',
+          secondary: '#2821fc',
           element: '#f0f0f0',
         },
       },

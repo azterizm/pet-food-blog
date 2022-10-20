@@ -7,7 +7,7 @@ export function Hero() {
         src='./images/main.jpg'
         alt=''
       />
-      <div className='c-primary w-120 top-50% left-50% sm:translate-x--50% translate-x--40% xs:translate-x--45% translate-y--50% lg:translate-y-0 lg:translate-x-0 absolute lg:static c-white lg:c-primary lg:invert-0'>
+      <div className='c-primary w-full md:w-120 ml-10 top-50% left-50% translate-x--50% translate-y--50% lg:translate-y-0 lg:translate-x-0 absolute lg:static c-white lg:c-primary lg:invert-0'>
         <div className='flex items-center bg-primary px-3 py-2 rounded-full w-max gap-2'>
           <Star weight='fill' className='c-white' />
           <span className='uppercase font-bold text-sm c-white'>Featured</span>

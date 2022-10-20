@@ -23,7 +23,7 @@ export function Recipe({
   return (
     <div
       className={
-        'h-70 p-10 rounded-7 w-full c-white flex justify-between items-start flex-col relative ' +
+        'h-70 p-10 rounded-7 w-full c-white flex justify-between items-start flex-col relative shadow-lg ' +
         (large ? 'xl:w-170' : 'xl:w-70')
       }
     >
