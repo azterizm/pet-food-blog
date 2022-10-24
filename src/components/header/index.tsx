@@ -21,8 +21,14 @@ export function Header() {
         <a className='no-underline c-black' href='/recipes'>
           Recipes
         </a>
+        <a className='no-underline c-black' href='/recipes'>
+          Categories
+        </a>
         <a className='no-underline c-black' href='/posts'>
           Blog
+        </a>
+        <a className='no-underline c-black' href='/posts'>
+          Authors
         </a>
         <button className='bg-element border-none rounded-full c-black font-bold p-3 py-2'>
           Sign in

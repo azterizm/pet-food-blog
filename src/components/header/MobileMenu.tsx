@@ -13,7 +13,14 @@ export function MobileMenu({ open, onChange }: MobileMenuProps): ReactElement {
     config: config.slow,
     o: open ? 1 : 0,
   })
-  const menuItems = ['Recipes', 'Blog', 'Contact', 'About']
+  const menuItems = [
+    'Recipes',
+    'Categories',
+    'Blog',
+    'Authors',
+    'Contact',
+    'About',
+  ]
   const items = useTrail(menuItems.length, {
     o: open ? 1 : 0,
     y: open ? 0 : 10,
@@ -22,10 +29,13 @@ export function MobileMenu({ open, onChange }: MobileMenuProps): ReactElement {
   return (
     <a.div
       className={
-        'z-2 lg:invisible fixed top-0 left-0 w-full p-10 h-full bg-gray-500 c-white ' +
+        'z-2 lg:invisible fixed top-0 left-0 w-full p-10 h-full c-white bg-cover ' +
         (open ? 'translate-y-0' : 'translate-y-100vh')
       }
-      style={{ transform: menu.y.to((r) => `translateY(${r}vh)`) }}
+      style={{
+        transform: menu.y.to((r) => `translateY(${r}vh)`),
+        backgroundImage: `url('/images/menu.jpg')`,
+      }}
     >
       <div className='flex justify-end items-start gap-10 flex-col h-70%'>
         {items.map((styles, i) => (
@@ -34,7 +44,7 @@ export function MobileMenu({ open, onChange }: MobileMenuProps): ReactElement {
               opacity: styles.o,
               transform: styles.y.to((r) => `translateY(${r}px)`),
             }}
-            className='text-3xl c-white decoration-none'
+            className='text-3xl c-white decoration-none shadow-lg font-medium'
             href='#'
             key={i}
           >
@@ -43,10 +53,10 @@ export function MobileMenu({ open, onChange }: MobileMenuProps): ReactElement {
         ))}
       </div>
       <div className='mt-10'>
-        <button className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-black'>
+        <button className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'>
           Login
         </button>
-        <button className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-black'>
+        <button className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'>
           Sign Up
         </button>
       </div>
