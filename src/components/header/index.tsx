@@ -1,10 +1,11 @@
 import { List, MagnifyingGlass } from 'phosphor-react'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { MobileMenu } from '../header/MobileMenu'
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const navigate=useNavigate()
   useEffect(() => {
     if (menuOpen) document.body.style.overflowY = 'hidden'
     else document.body.style.overflowY = 'unset'
@@ -30,10 +31,10 @@ export function Header() {
         <a className='no-underline c-black' href='/posts'>
           Authors
         </a>
-        <button className='bg-element border-none rounded-full c-black font-bold p-3 py-2'>
+        <button onClick={() => navigate('login')} className='bg-element border-none rounded-full c-black font-bold p-3 py-2 hover:brightness-75'>
           Sign in
         </button>
-        <button className='bg-#2821fc c-white rounded-full c-black border-none font-bold p-3 py-2'>
+        <button onClick={() => navigate('register')} className='bg-#2821fc c-white rounded-full c-black border-none font-bold p-3 py-2 hover:brightness-75'>
           Sign up
         </button>
         <a className='no-underline c-black' href='/search'>
