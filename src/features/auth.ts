@@ -36,5 +36,5 @@ export async function getUser() {
     } else user = parsedUser
   }
 
-  return user
+  return user as any
 }
