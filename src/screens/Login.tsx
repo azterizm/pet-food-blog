@@ -1,10 +1,32 @@
 import { ReactElement, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { AuthTypeSelector } from '../components/AuthTypeSelector'
+import { Loader } from '../components/Loader'
 import { TwoColumnLayout } from '../components/TwoColumnLayout'
+import { API_ENDPOINT } from '../constants/api'
+import { AuthType } from '../types/auth'
 
 export function Login(): ReactElement {
   const [input, setInput] = useState('')
-  async function handleSubmit() {}
+  const [type, setType] = useState<AuthType>('user')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit() {
+    setError('')
+    if (!input) return setError('Input is needed to login.')
+    setLoading(true)
+    const data = await fetch(API_ENDPOINT + '/auth/login', {
+      body: JSON.stringify({ input, type, password: 'placeholder' }),
+      headers: { 'content-type': 'application/json' },
+      method: 'post',
+      credentials: 'include',
+    }).then((r) => r.json())
+    setLoading(false)
+    console.log('data:', data)
+    if (data.error) return setError(data.info)
+  }
+
   return (
     <TwoColumnLayout
       image='/images/auth.jpg'
@@ -25,18 +47,33 @@ export function Login(): ReactElement {
         data-lpignore='true'
         onChange={(e) => setInput(e.target.value)}
       />
+      <AuthTypeSelector
+        type={type}
+        onChange={setType}
+        containerClass='mb-10 gap-5'
+      />
       <button
         onClick={handleSubmit}
-        className='mb-10 font-bold c-primary px-5 py-3 rounded-full text-md border-none'
+        className='mb-10 font-bold c-primary px-5 py-3 rounded-full text-md border-none cursor-pointer focus:brightness-75'
       >
         Send login link
       </button>
+      {error ? (
+        <p className='c-red-500 text-center mt--5 mb-10 text-lg font-medium'>
+          {error}
+        </p>
+      ) : null}
       <p>
         Don't have account yet?{' '}
         <Link className='c-primary decoration-none font-bold' to='/register'>
           Sign Up
         </Link>
       </p>
+      {loading ? (
+        <div className='absolute top-10 left-50% translate-x--50%'>
+          <Loader />
+        </div>
+      ) : null}
     </TwoColumnLayout>
   )
 }

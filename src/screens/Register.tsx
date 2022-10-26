@@ -5,8 +5,11 @@ import 'react-phone-input-2/lib/bootstrap.css'
 import { Link } from 'react-router-dom'
 import { TwoColumnLayout } from '../components/TwoColumnLayout'
 import { emailRegex, usernameRegex } from '../constants/regex'
-import { MagicWand } from 'phosphor-react'
+import { CaretLeft, Eyeglasses, MagicWand, PencilCircle } from 'phosphor-react'
 import { Loader } from '../components/Loader'
+import { API_ENDPOINT } from '../constants/api'
+import { AuthType } from '../types/auth'
+import { AuthTypeSelector } from '../components/AuthTypeSelector'
 
 enum Stage {
   Start,
@@ -23,7 +26,10 @@ export function Register(): ReactElement {
   const [logging, setLogging] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const [type, setType] = useState<AuthType>('user')
+
   async function handleSubmit() {
+    setError('')
     const okEmail = emailRegex.test(email)
     if (!okEmail)
       return setError(
@@ -36,11 +42,21 @@ export function Register(): ReactElement {
       )
 
     setLoading(true)
-    const data = await fetch('/auth/register', {
-      body: JSON.stringify({ name, email, phone, username }),
+    const data = await fetch(`${API_ENDPOINT}/auth/register/${type}`, {
+      body: JSON.stringify({
+        name,
+        email,
+        phone,
+        username,
+        type,
+        input: username,
+        password: 'placeholder',
+      }),
       headers: { 'content-type': 'application/json' },
       method: 'post',
+      credentials: 'include',
     }).then((r) => r.json())
+    console.log('data:', data)
     setLoading(false)
     if (data.error) return setError(data.info)
     setLogging(true)
@@ -50,6 +66,7 @@ export function Register(): ReactElement {
   }
 
   function handleStart() {
+    setError('')
     const okEmail = emailRegex.test(email)
     if (!okEmail)
       return setError(
@@ -59,7 +76,7 @@ export function Register(): ReactElement {
   }
 
   useEffect(() => {
-    setUsername(generateUsername())
+    setUsername(generateUsername({ useHyphen: false }))
   }, [])
 
   return (
@@ -95,7 +112,14 @@ export function Register(): ReactElement {
         </>
       ) : (
         <>
-          <div className='flex items-center mt-10 mb-5'>
+          <div
+            className='flex items-center gap-2 mt-10 cursor-pointer'
+            onClick={() => setStage(Stage.Start)}
+          >
+            <CaretLeft size={16} />
+            <span>Go back</span>
+          </div>
+          <div className='flex items-center mt-5 mb-5'>
             <PhoneInput
               country={'us'}
               value={phone}
@@ -116,11 +140,18 @@ export function Register(): ReactElement {
             />
             <div
               className='bg-element p-2 rounded-lg translate-y--4 ml-2 flex items-center focus:brightness-75 cursor-pointer'
-              onClick={() => setUsername(generateUsername())}
+              onClick={() =>
+                setUsername(generateUsername({ useHyphen: false }))
+              }
             >
               <MagicWand size={24} weight='bold' />
             </div>
           </div>
+          <AuthTypeSelector
+            type={type}
+            onChange={setType}
+            containerClass='w-30% mb-10'
+          />
         </>
       )}
       {error ? (
