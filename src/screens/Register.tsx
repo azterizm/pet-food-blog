@@ -41,21 +41,23 @@ export function Register(): ReactElement {
       )
 
     setLoading(true)
-    const data = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/auth/register/${type}`, {
-      body: JSON.stringify({
-        name,
-        email,
-        phone,
-        username,
-        type,
-        input: username,
-        password: 'placeholder',
-      }),
-      headers: { 'content-type': 'application/json' },
-      method: 'post',
-      credentials: 'include',
-    }).then((r) => r.json())
-    console.log('data:', data)
+    const data = await fetch(
+      `${import.meta.env.VITE_API_ENDPOINT}/auth/register/${type}`,
+      {
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          username,
+          type,
+          input: username,
+          password: 'placeholder',
+        }),
+        headers: { 'content-type': 'application/json' },
+        method: 'post',
+        credentials: 'include',
+      },
+    ).then((r) => r.json())
     setLoading(false)
     if (data.error) return setError(data.info)
     setLogging(true)
@@ -149,7 +151,7 @@ export function Register(): ReactElement {
           <AuthTypeSelector
             type={type}
             onChange={setType}
-            containerClass='w-30% mb-10'
+            containerClass='gap-5 mb-10'
           />
         </>
       )}

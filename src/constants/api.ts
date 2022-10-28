@@ -1,1 +1,1 @@
-export const API_ENDPOINT = 'http://localhost:5000'
+export const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT as string

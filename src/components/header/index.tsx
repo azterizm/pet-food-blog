@@ -1,4 +1,4 @@
-import { List, MagnifyingGlass, Plus, User } from 'phosphor-react'
+import { List, MagnifyingGlass, User } from 'phosphor-react'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthUser } from '../../types/auth'
@@ -24,18 +24,18 @@ export function Header({ user }: Props) {
         <img className='w-50 invert' src='/logo.svg' alt='logo' />
       </Link>
       <div className='items-center gap-6 font-bold hidden lg:flex'>
-        <a className='no-underline c-black' href='/recipes'>
+        <Link className='no-underline c-black' to='/recipes'>
           Recipes
-        </a>
-        <a className='no-underline c-black' href='/categories'>
+        </Link>
+        <Link className='no-underline c-black' to='/categories'>
           Categories
-        </a>
-        <a className='no-underline c-black' href='/blog'>
+        </Link>
+        <Link className='no-underline c-black' to='/blog'>
           Blog
-        </a>
-        <a className='no-underline c-black' href='/authors'>
+        </Link>
+        <Link className='no-underline c-black' to='/authors'>
           Authors
-        </a>
+        </Link>
         {user ? (
           <div
             className='cursor-pointer p-5'
@@ -59,9 +59,9 @@ export function Header({ user }: Props) {
             </button>
           </>
         )}
-        <a className='no-underline c-black' href='/search'>
+        <Link className='no-underline c-black' to='/search'>
           <MagnifyingGlass weight='bold' size={24} />
-        </a>
+        </Link>
       </div>
       <div className='visible lg:invisible' onClick={() => setMenuOpen(true)}>
         <List weight='bold' size={46} />

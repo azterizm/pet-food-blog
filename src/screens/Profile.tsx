@@ -1,6 +1,6 @@
-import { CaretLeft } from 'phosphor-react'
 import type { ReactElement } from 'react'
 import { GoBack } from '../components/GoBack'
+import { logoutUser } from '../features/auth'
 import { AuthUser } from '../types/auth'
 
 export interface ProfileProps {
@@ -10,7 +10,7 @@ export interface ProfileProps {
 export function Profile({ user }: ProfileProps): ReactElement {
   return (
     <div className='min-h-100vh w-full'>
-      <GoBack/>
+      <GoBack />
       <h1>Your account</h1>
       <div className='flex items-start flex-col gap-1'>
         <span className='uppercase c-primary text-sm font-bold'>
@@ -28,6 +28,14 @@ export function Profile({ user }: ProfileProps): ReactElement {
         </button>
         <button className='bg-primary block c-white font-bold px-5 py-3 border-none rounded-lg cursor-pointer hover:brightness-75'>
           Subscribed authors
+        </button>
+      </div>
+      <div className='mt-5 block'>
+        <button
+          onClick={logoutUser}
+          className='bg-transparent hover:underline cursor-pointer c-primary text-lg border-none'
+        >
+          Logout
         </button>
       </div>
     </div>

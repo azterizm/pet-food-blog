@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/header'
@@ -15,7 +15,7 @@ import { AuthUser, IAuthor, IUser } from './types/auth'
 function App() {
   const headFoot = useHeaderFooter()
   const [user, setUser] = useState<null | AuthUser>(null)
-  useEffect(() => {
+  useLayoutEffect(() => {
     getUser().then((r) => {
       if (r && !r.error) setUser(r)
     })

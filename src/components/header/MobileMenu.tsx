@@ -1,6 +1,6 @@
 import { User, X } from 'phosphor-react'
 import type { ReactElement } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSpring, animated as a, config, useTrail } from 'react-spring'
 import { AuthUser } from '../../types/auth'
 
@@ -24,7 +24,7 @@ export function MobileMenu({
   open,
   onChange,
 }: MobileMenuProps): ReactElement {
-  const navigate=useNavigate()
+  const navigate = useNavigate()
   const menu = useSpring({
     y: open ? 0 : 100,
     config: config.slow,
@@ -48,26 +48,30 @@ export function MobileMenu({
     >
       <div className='flex justify-end items-start gap-10 flex-col h-70%'>
         {items.map((styles, i) => (
-          <a.a
+          <a.div
             style={{
               opacity: styles.o,
               transform: styles.y.to((r) => `translateY(${r}px)`),
             }}
-            className='text-3xl c-white decoration-none shadow-lg font-medium'
-            href={menuItems[i][0]}
             key={i}
+            onClick={() => onChange(false)}
           >
-            {menuItems[i][1]}
-          </a.a>
+            <Link
+              to={menuItems[i][0]}
+              className='text-3xl c-white decoration-none shadow-lg font-medium'
+            >
+              {menuItems[i][1]}
+            </Link>
+          </a.div>
         ))}
       </div>
-      <div className='mt-10'>
+      <div className='mt-10' onClick={() => onChange(false)}>
         {!user ? (
           <>
-            <button className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'>
+            <button onClick={() => navigate('/login')} className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'>
               Login
             </button>
-            <button className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'>
+            <button onClick={() => navigate('/register')} className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'>
               Sign Up
             </button>
           </>

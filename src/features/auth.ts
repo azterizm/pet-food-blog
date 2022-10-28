@@ -1,24 +1,24 @@
-
 export async function logoutUser() {
   const data = await fetch(import.meta.env.VITE_API_ENDPOINT + '/auth/logout', {
     headers: { 'content-type': 'application/json' },
     credentials: 'include',
-    method:'post'
+    method: 'post',
   }).then((r) => r.json())
-  if (data.error) window.alert(data.info)
-  else window.location.href = '/'
+  if (data.error) return window.alert(data.info)
+  localStorage.removeItem('user')
+  window.location.href = '/'
 }
 
 export async function getUser() {
   let user = localStorage.getItem('user')
 
-  if (!user || user !== 'null') {
+  if (!user || user === 'null') {
     const data = await fetch(import.meta.env.VITE_API_ENDPOINT + '/auth/user', {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',
     }).then((r) => r.json())
 
-    console.log('user data',data)
+    console.log('user data', data)
 
     if (data.error) {
       return null

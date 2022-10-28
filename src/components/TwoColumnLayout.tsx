@@ -9,11 +9,13 @@ export interface TwoColumnLayoutProps {
   title: string
   children: ReactNode
   image: string
+  containerClass? : string
 }
 
 export function TwoColumnLayout({
   children,
   subTitle,
+  containerClass,
   title,
   image,
 }: TwoColumnLayoutProps): ReactElement {
@@ -26,7 +28,7 @@ export function TwoColumnLayout({
     }
   }, [])
   return (
-    <div className='flex h-100vh'>
+    <div className={'flex h-100vh ' + containerClass}>
       <img
         src={image}
         alt='dog food'
