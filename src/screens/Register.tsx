@@ -1,15 +1,14 @@
-import { ReactElement, useEffect, useState } from 'react'
 import { generateUsername } from 'friendly-username-generator'
+import { CaretLeft, MagicWand } from 'phosphor-react'
+import { ReactElement, useEffect, useState } from 'react'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/bootstrap.css'
 import { Link } from 'react-router-dom'
+import { AuthTypeSelector } from '../components/AuthTypeSelector'
+import { Loader } from '../components/Loader'
 import { TwoColumnLayout } from '../components/TwoColumnLayout'
 import { emailRegex, usernameRegex } from '../constants/regex'
-import { CaretLeft, Eyeglasses, MagicWand, PencilCircle } from 'phosphor-react'
-import { Loader } from '../components/Loader'
-import { API_ENDPOINT } from '../constants/api'
 import { AuthType } from '../types/auth'
-import { AuthTypeSelector } from '../components/AuthTypeSelector'
 
 enum Stage {
   Start,
@@ -42,7 +41,7 @@ export function Register(): ReactElement {
       )
 
     setLoading(true)
-    const data = await fetch(`${API_ENDPOINT}/auth/register/${type}`, {
+    const data = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/auth/register/${type}`, {
       body: JSON.stringify({
         name,
         email,

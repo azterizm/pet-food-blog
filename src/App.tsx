@@ -17,7 +17,7 @@ function App() {
   const [user, setUser] = useState<null | AuthUser>(null)
   useEffect(() => {
     getUser().then((r) => {
-      if (!r.error) setUser(r)
+      if (r && !r.error) setUser(r)
     })
   }, [])
   return (
