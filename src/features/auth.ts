@@ -18,7 +18,6 @@ export async function getUser() {
       credentials: 'include',
     }).then((r) => r.json())
 
-    console.log('user data', data)
 
     if (data.error) {
       return null
@@ -34,6 +33,7 @@ export async function getUser() {
       return
     } else user = parsedUser
   }
+
 
   return user as any
 }

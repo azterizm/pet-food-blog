@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/header'
@@ -10,14 +10,16 @@ import { NotFound } from './screens/NotFound'
 import { Profile } from './screens/Profile'
 import { Register } from './screens/Register'
 import { Search } from './screens/Search'
-import { AuthUser, IAuthor, IUser } from './types/auth'
+import { AuthUser } from './types/auth'
 
 function App() {
   const headFoot = useHeaderFooter()
   const [user, setUser] = useState<null | AuthUser>(null)
   useLayoutEffect(() => {
     getUser().then((r) => {
-      if (r && !r.error) setUser(r)
+      if (!r || (r && r.error)) return alert(r.info)
+      else if (r.type === 'author') window.location.href = '/creator'
+      else setUser(r)
     })
   }, [])
   return (

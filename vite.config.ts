@@ -15,11 +15,14 @@ export default defineConfig({
         },
       },
       shortcuts: {
-        'absolute-center': 'absolute top-50% left-50% translate-x--50% translate-y--50%',
-        'fixed-center': 'fixed top-50% left-50% translate-x--50% translate-y--50%',
+        'absolute-center':
+          'absolute top-50% left-50% translate-x--50% translate-y--50%',
+        'fixed-center':
+          'fixed top-50% left-50% translate-x--50% translate-y--50%',
         'flex-center': 'flex justify-center items-center',
       },
     }),
   ],
-  server:{port:5002}
+  server: { port: 5002 },
+  build: { assetsDir: 'client_assets' },
 })

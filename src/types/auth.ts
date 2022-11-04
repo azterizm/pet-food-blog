@@ -5,17 +5,13 @@ export interface DBEssentials {
   createdAt: Date
   updatedAt: Date
 }
-export type AuthUser = IAuthor & DBEssentials & IUser & { type: AuthType }
-export interface IAuthor extends DBEssentials {
-  name: string
-  email: string
-  username: string
-  phone: string
-}
+export type AuthUser = DBEssentials & IUser & { type: AuthType }
 export interface IUser extends DBEssentials {
-  name: string
   email: string
   username: string
-  phone: string
+  name: string
+  createdAt: Date
+  type: string
   deposit: number
+  id: number
 }
