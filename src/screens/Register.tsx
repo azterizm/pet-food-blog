@@ -10,22 +10,21 @@ import { TwoColumnLayout } from '../components/TwoColumnLayout'
 import { emailRegex, usernameRegex } from '../constants/regex'
 import { AuthType } from '../types/auth'
 
-enum Stage {
-  Start,
-  Finish,
-}
-
 export function Register(): ReactElement {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [username, setUsername] = useState('')
-  const [stage, setStage] = useState<Stage>(Stage.Start)
+  const [stage, setStage] = useState(false)
   const [error, setError] = useState('')
   const [logging, setLogging] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const [type, setType] = useState<AuthType>('user')
+
+  useEffect(() => {
+    setUsername(generateUsername({ useHyphen: false }))
+  }, [])
 
   async function handleSubmit() {
     setError('')
@@ -73,12 +72,13 @@ export function Register(): ReactElement {
       return setError(
         'Please enter correct email address. It does not seem valid.',
       )
-    setStage(Stage.Finish)
+    setStage(true)
   }
 
-  useEffect(() => {
-    setUsername(generateUsername({ useHyphen: false }))
-  }, [])
+  function handleSubmitClick() {
+    if (!stage) handleStart()
+    else handleSubmit()
+  }
 
   return (
     <TwoColumnLayout
@@ -88,7 +88,7 @@ export function Register(): ReactElement {
     >
       {logging ? (
         <h1>Logging in...</h1>
-      ) : stage === Stage.Start ? (
+      ) : !stage ? (
         <>
           <input
             type='text'
@@ -115,7 +115,7 @@ export function Register(): ReactElement {
         <>
           <div
             className='flex items-center gap-2 mt-10 cursor-pointer'
-            onClick={() => setStage(Stage.Start)}
+            onClick={() => setStage(false)}
           >
             <CaretLeft size={16} />
             <span>Go back</span>
@@ -162,15 +162,13 @@ export function Register(): ReactElement {
       ) : null}
       {!logging ? (
         <button
-          onClick={() =>
-            stage === Stage.Start ? handleStart() : handleSubmit()
-          }
+          onClick={handleSubmitClick}
           className='mb-10 font-bold c-primary px-5 py-3 rounded-full text-md border-none'
         >
-          {stage === Stage.Start ? 'Continue' : 'Send link'}
+          {!stage ? 'Continue' : 'Send link'}
         </button>
       ) : null}
-      {stage === Stage.Start && !logging ? (
+      {!stage && !logging ? (
         <p>
           Already have account yet?{' '}
           <Link className='c-primary decoration-none font-bold' to='/login'>
