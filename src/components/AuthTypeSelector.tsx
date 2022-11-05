@@ -27,7 +27,7 @@ export function AuthTypeSelector({
         <span className='font-medium text-sm'>Reader</span>
       </div>
       <div
-        onClick={() => window.location.href = CREATOR_ENDPOINT + '/login'}
+        onClick={() => window.location.href = CREATOR_ENDPOINT + '/#/login'}
         className={
           'rounded-lg flex flex-col items-center gap-2 cursor-pointer p-5 ' +
           (type === 'author' ? 'bg-element' : '')

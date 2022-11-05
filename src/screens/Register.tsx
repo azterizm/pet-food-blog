@@ -1,8 +1,6 @@
 import { generateUsername } from 'friendly-username-generator'
 import { CaretLeft, MagicWand, X } from 'phosphor-react'
 import { ChangeEvent, ReactElement, useEffect, useState } from 'react'
-import PhoneInput from 'react-phone-input-2'
-import 'react-phone-input-2/lib/bootstrap.css'
 import { Link } from 'react-router-dom'
 import { AuthTypeSelector } from '../components/AuthTypeSelector'
 import { Loader } from '../components/Loader'
@@ -84,7 +82,7 @@ export function Register(): ReactElement {
 
   function handlePhoneChange(e: ChangeEvent<HTMLInputElement>) {
     const input = e.target.value
-    if (phone.length > 13) return
+    if (phone.length > MAX_PHONE) return
 
     if (!phone) {
       setPhone('+' + input)
@@ -141,7 +139,7 @@ export function Register(): ReactElement {
               value={phone}
               onChange={handlePhoneChange}
             />
-            {phone.length > 13 ? (
+            {phone.length > MAX_PHONE ? (
               <div
                 className='bg-element p-2 rounded-lg ml-2 flex items-center focus:brightness-75 cursor-pointer'
                 onClick={() => setPhone('')}
