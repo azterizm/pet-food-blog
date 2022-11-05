@@ -1,5 +1,6 @@
 import { Eyeglasses, PencilCircle } from 'phosphor-react'
 import type { ReactElement } from 'react'
+import { CREATOR_ENDPOINT } from '../constants/api'
 import { AuthType } from '../types/auth'
 
 interface Props {
@@ -14,11 +15,7 @@ export function AuthTypeSelector({
   onChange,
 }: Props): ReactElement {
   return (
-    <div
-      className={
-        'flex justify-between items-center ' + containerClass
-      }
-    >
+    <div className={'flex justify-between items-center ' + containerClass}>
       <div
         onClick={() => onChange('user')}
         className={
@@ -30,7 +27,7 @@ export function AuthTypeSelector({
         <span className='font-medium text-sm'>Reader</span>
       </div>
       <div
-        onClick={() => onChange('author')}
+        onClick={() => window.location.href = CREATOR_ENDPOINT + '/login'}
         className={
           'rounded-lg flex flex-col items-center gap-2 cursor-pointer p-5 ' +
           (type === 'author' ? 'bg-element' : '')

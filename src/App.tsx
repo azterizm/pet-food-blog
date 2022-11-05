@@ -2,6 +2,7 @@ import { useLayoutEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/header'
+import { CREATOR_ENDPOINT } from './constants/api'
 import { getUser } from './features/auth'
 import { useHeaderFooter } from './hooks/state'
 import Home from './screens/Home'
@@ -17,8 +18,8 @@ function App() {
   const [user, setUser] = useState<null | AuthUser>(null)
   useLayoutEffect(() => {
     getUser().then((r) => {
-      if (!r || (r && r.error)) return alert(r.info)
-      else if (r.type === 'author') window.location.href = '/creator'
+      if (!r || (r && r.error)) return r && r.info ? alert(r.info) : null
+      else if (r.type === 'author') window.location.href = CREATOR_ENDPOINT
       else setUser(r)
     })
   }, [])

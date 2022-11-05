@@ -1,3 +1,6 @@
+import { CREATOR_ENDPOINT } from '../constants/api'
+import { IUser } from '../types/auth'
+
 export async function logoutUser() {
   const data = await fetch(import.meta.env.VITE_API_ENDPOINT + '/auth/logout', {
     headers: { 'content-type': 'application/json' },
@@ -18,10 +21,10 @@ export async function getUser() {
       credentials: 'include',
     }).then((r) => r.json())
 
-
     if (data.error) {
       return null
-    }
+    } else if ((data as IUser).type === 'author')
+      return (window.location.href = CREATOR_ENDPOINT)
 
     user = data
     localStorage.setItem('user', JSON.stringify(data))
@@ -34,6 +37,9 @@ export async function getUser() {
     } else user = parsedUser
   }
 
-
   return user as any
+}
+
+export async function openCreatorPage() {
+  window.location.href = CREATOR_ENDPOINT
 }
