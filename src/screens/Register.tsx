@@ -1,6 +1,6 @@
 import { generateUsername } from 'friendly-username-generator'
-import { CaretLeft, MagicWand } from 'phosphor-react'
-import { ReactElement, useEffect, useState } from 'react'
+import { CaretLeft, MagicWand, X } from 'phosphor-react'
+import { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/bootstrap.css'
 import { Link } from 'react-router-dom'
@@ -10,10 +10,12 @@ import { TwoColumnLayout } from '../components/TwoColumnLayout'
 import { emailRegex, usernameRegex } from '../constants/regex'
 import { AuthType } from '../types/auth'
 
+const MAX_PHONE = 13
+
 export function Register(): ReactElement {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('1111111111')
+  const [phone, setPhone] = useState('')
   const [username, setUsername] = useState('')
   const [stage, setStage] = useState(false)
   const [error, setError] = useState('')
@@ -80,6 +82,15 @@ export function Register(): ReactElement {
     else handleSubmit()
   }
 
+  function handlePhoneChange(e: ChangeEvent<HTMLInputElement>) {
+    const input = e.target.value
+    if (phone.length > 13) return
+
+    if (!phone) {
+      setPhone('+' + input)
+    } else setPhone(input)
+  }
+
   return (
     <TwoColumnLayout
       image='/images/menu.jpg'
@@ -121,6 +132,23 @@ export function Register(): ReactElement {
             <span>Go back</span>
           </div>
           <div className='flex items-center mt-5 mb-5'>
+            <input
+              type='text'
+              name='phone'
+              id='phone'
+              placeholder='Your phone number'
+              className='focus:outline-none p-5 pb-3 font-black c-primary text-xl border-t-0 border-l-0 border-r-0 border-b-4 border-element min-w-15rem text-center focus:border-primary'
+              value={phone}
+              onChange={handlePhoneChange}
+            />
+            {phone.length > 13 ? (
+              <div
+                className='bg-element p-2 rounded-lg ml-2 flex items-center focus:brightness-75 cursor-pointer'
+                onClick={() => setPhone('')}
+              >
+                <X size={24} weight='bold' />
+              </div>
+            ) : null}
           </div>
           <div className='flex items-center justify-center'>
             <input
