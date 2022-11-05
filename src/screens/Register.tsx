@@ -13,7 +13,7 @@ import { AuthType } from '../types/auth'
 export function Register(): ReactElement {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
+  const [phone, setPhone] = useState('1111111111')
   const [username, setUsername] = useState('')
   const [stage, setStage] = useState(false)
   const [error, setError] = useState('')
@@ -121,12 +121,6 @@ export function Register(): ReactElement {
             <span>Go back</span>
           </div>
           <div className='flex items-center mt-5 mb-5'>
-            <PhoneInput
-              country={'us'}
-              value={phone}
-              onChange={(e) => setPhone(e)}
-              inputClass='!border-t-0 !border-l-0 !border-r-0 !border-b-4 !border-element !rounded-0 !focus:border-primary !shadow-none !focus:shadow-none'
-            />
           </div>
           <div className='flex items-center justify-center'>
             <input
