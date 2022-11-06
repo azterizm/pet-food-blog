@@ -1,7 +1,8 @@
-import { Eyeglasses, PencilCircle } from 'phosphor-react'
+import { Dog, Eyeglasses, PencilCircle } from 'phosphor-react'
 import type { ReactElement } from 'react'
 import { CREATOR_ENDPOINT } from '../constants/api'
 import { AuthType } from '../types/auth'
+import { Chef } from './icons/Chef'
 
 interface Props {
   type: AuthType
@@ -23,18 +24,18 @@ export function AuthTypeSelector({
           (type === 'user' ? 'bg-element' : '')
         }
       >
-        <Eyeglasses size={36} />
-        <span className='font-medium text-sm'>Reader</span>
+        <Dog size={36} />
+        <span className='font-medium text-sm'>Pet Parents</span>
       </div>
       <div
-        onClick={() => window.location.href = CREATOR_ENDPOINT + '/#/login'}
+        onClick={() => onChange('author')}
         className={
           'rounded-lg flex flex-col items-center gap-2 cursor-pointer p-5 ' +
           (type === 'author' ? 'bg-element' : '')
         }
       >
-        <PencilCircle size={36} />
-        <span className='font-medium text-sm'>Author</span>
+        <Chef width={36} height={36} />
+        <span className='font-medium text-sm'>Chef</span>
       </div>
     </div>
   )

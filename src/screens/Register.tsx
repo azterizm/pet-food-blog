@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { AuthTypeSelector } from '../components/AuthTypeSelector'
 import { Loader } from '../components/Loader'
 import { TwoColumnLayout } from '../components/TwoColumnLayout'
+import { API_ENDPOINT } from '../constants/api'
 import { emailRegex, usernameRegex } from '../constants/regex'
 import { AuthType } from '../types/auth'
 
@@ -41,7 +42,7 @@ export function Register(): ReactElement {
 
     setLoading(true)
     const data = await fetch(
-      `${import.meta.env.VITE_API_ENDPOINT}/auth/register/${type}`,
+      `${API_ENDPOINT}/auth/register/${type}`,
       {
         body: JSON.stringify({
           name,

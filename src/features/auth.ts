@@ -1,8 +1,8 @@
-import { CREATOR_ENDPOINT } from '../constants/api'
+import { API_ENDPOINT, CREATOR_ENDPOINT } from '../constants/api'
 import { IUser } from '../types/auth'
 
 export async function logoutUser() {
-  const data = await fetch(import.meta.env.VITE_API_ENDPOINT + '/auth/logout', {
+  const data = await fetch(API_ENDPOINT + '/auth/logout', {
     headers: { 'content-type': 'application/json' },
     credentials: 'include',
     method: 'post',
@@ -16,7 +16,7 @@ export async function getUser() {
   let user = localStorage.getItem('user')
 
   if (!user || user === 'null') {
-    const data = await fetch(import.meta.env.VITE_API_ENDPOINT + '/auth/user', {
+    const data = await fetch(API_ENDPOINT + '/auth/user', {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',
     }).then((r) => r.json())
