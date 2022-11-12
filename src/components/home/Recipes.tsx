@@ -17,15 +17,6 @@ export function Recipes(): ReactElement {
       style={{ transform: main.y.to((r) => `translate3d(0,${r}px,0)`) }}
       className='flex flex-wrap gap-10 xl:w-300 block m-auto relative bottom-10 flex justify-center items-center'
     >
-      <Recipe
-        image='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80'
-        paid
-        authors={['Patricia']}
-        postedOn={moment().subtract(5, 'year').toDate()}
-        reviews={4.6}
-        title='Homemade Dog Food'
-        duration='30 min'
-      />
 
       <Recipe
         image='./recipes/r3.jpg'

@@ -92,7 +92,7 @@ export function Register(): ReactElement {
 
   return (
     <TwoColumnLayout
-      image='/images/menu.jpg'
+      image='/images/menu.avif'
       subTitle={['Thoughts', 'Stories', 'Thoughts, stories and ideas']}
       title='Sign Up'
     >

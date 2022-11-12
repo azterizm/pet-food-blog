@@ -4,7 +4,7 @@ export function Hero() {
     <div className='flex items-center ml--10 xl:ml-10 gap-20 relative'>
       <img
         className='brightness-75 lg:brightness-100 w-120% lg:w-50% h-70vh xl:rounded-lg lg:rounded-r-lg object-right aspect-video object-cover'
-        src='./images/main.jpg'
+        src='./images/main.avif'
         alt=''
       />
       <div className='c-primary w-full md:w-120 ml-10 top-50% left-50% translate-x--50% translate-y--50% lg:translate-y-0 lg:translate-x-0 absolute lg:static c-white lg:c-primary lg:invert-0'>

@@ -32,7 +32,7 @@ export function Login(): ReactElement {
 
   return (
     <TwoColumnLayout
-      image='/images/auth.jpg'
+      image='/images/auth.avif'
       subTitle={[
         'Sign in',
         'Login',
