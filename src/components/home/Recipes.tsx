@@ -17,7 +17,6 @@ export function Recipes(): ReactElement {
       style={{ transform: main.y.to((r) => `translate3d(0,${r}px,0)`) }}
       className='flex flex-wrap gap-10 xl:w-300 block m-auto relative bottom-10 flex justify-center items-center'
     >
-
       <Recipe
         image='./recipes/r3.jpg'
         authors={['Memon']}

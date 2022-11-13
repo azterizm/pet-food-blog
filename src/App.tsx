@@ -9,6 +9,7 @@ import Home from './screens/Home'
 import { Login } from './screens/Login'
 import { NotFound } from './screens/NotFound'
 import { Profile } from './screens/Profile'
+import { RecipeList } from './screens/recipe/List'
 import { Register } from './screens/Register'
 import { Search } from './screens/Search'
 import { AuthUser } from './types/auth'
@@ -36,6 +37,9 @@ function App() {
             <Route path='search' element={<Search />} />
           </>
         ) : null}
+            <Route path='recipes'>
+              <Route index element={<RecipeList />} />
+            </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>
       {headFoot.visible ? <Footer /> : null}

@@ -14,7 +14,7 @@ const menuItems = [
   ['/recipes', 'Recipes'],
   ['/categories', 'Categories'],
   ['/blog', 'Blog'],
-  ['/authors', 'Authors'],
+  ['/authors', 'Chefs'],
   ['/contact', 'Contact'],
   ['/about', 'About'],
 ]
