@@ -27,9 +27,6 @@ export function Header({ user }: Props) {
         <Link className='no-underline c-black' to='/recipes'>
           Recipes
         </Link>
-        <Link className='no-underline c-black' to='/categories'>
-          Categories
-        </Link>
         <Link className='no-underline c-black' to='/authors'>
           Chefs
         </Link>

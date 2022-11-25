@@ -20,10 +20,12 @@ export default defineConfig({
         'fixed-center':
           'fixed top-50% left-50% translate-x--50% translate-y--50%',
         'flex-center': 'flex justify-center items-center',
+        'large-input':
+          'focus:border-primary focus:outline-none mt-10 mb-5 p-5 pb-3 font-black c-primary text-xl border-t-0 border-l-0 border-r-0 border-b-4 border-element w-60% text-center',
       },
     }),
   ],
   server: { port: 5002 },
-  build: { assetsDir: 'client_assets',minify: false },
+  build: { assetsDir: 'client_assets', minify: false },
   mode: 'development',
 })

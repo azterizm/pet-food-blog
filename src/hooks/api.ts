@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react'
 import { API_ENDPOINT } from '../constants/api'
 
-interface ApiOptions extends Partial<Request> {}
+interface ApiOptions extends Partial<Request> {
+  params?: Record<string, string>
+}
 interface ApiReturn<T> {
   loading: boolean
   error: string | null
   data: T | null
 }
 
-export function useApi<T>(path: string, options?: ApiOptions, deps: any[] = []): ApiReturn<T> {
+export function useApi<T>(
+  path: string,
+  options?: ApiOptions,
+  deps: any[] = []
+): ApiReturn<T> {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<null | string>(null)
   const [data, setData] = useState<null | T>(null)
@@ -17,11 +23,17 @@ export function useApi<T>(path: string, options?: ApiOptions, deps: any[] = []):
     setLoading(true)
     const url = new URL(Boolean(API_ENDPOINT) ? API_ENDPOINT : location.origin)
     url.pathname = path
+    if (options && options.params)
+      Object.keys(options.params).map((r) =>
+        url.searchParams.append(r, options.params![r])
+      )
+
+    console.log('url.href:', url.href)
     fetch(
       url,
       !options
         ? { credentials: 'include' }
-        : Object.assign(options, { credentials: 'include' }),
+        : Object.assign(options, { credentials: 'include' })
     )
       .then((r) => r.json())
       .catch((r) => ({ error: true, info: r.message }))

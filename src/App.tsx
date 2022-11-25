@@ -5,6 +5,7 @@ import { Header } from './components/header'
 import { CREATOR_ENDPOINT } from './constants/api'
 import { getUser } from './features/auth'
 import { useHeaderFooter } from './hooks/state'
+import { AuthorList } from './screens/author/List'
 import Home from './screens/Home'
 import { Login } from './screens/Login'
 import { NotFound } from './screens/NotFound'
@@ -37,9 +38,10 @@ function App() {
             <Route path='search' element={<Search />} />
           </>
         ) : null}
-            <Route path='recipes'>
-              <Route index element={<RecipeList />} />
-            </Route>
+        <Route path='recipes'>
+          <Route index element={<RecipeList />} />
+        </Route>
+        <Route path='authors' element={<AuthorList />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
       {headFoot.visible ? <Footer /> : null}

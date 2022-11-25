@@ -9,7 +9,7 @@ export function Footer(): ReactElement {
         <Link to='/'>
           <img className='w-50 invert' src='/logo.svg' alt='logo' />
         </Link>
-        <div className='flex items-center gap-5 flex-col md:flex-row'>
+        <div className='flex items-center gap-5 flex-col md:flex-row ml-5'>
           <Link className='font-bold c-primary decoration-none' to='/contact'>
             Contact
           </Link>

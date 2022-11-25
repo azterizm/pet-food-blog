@@ -1,15 +1,16 @@
 import { CaretLeft } from 'phosphor-react'
 import { ReactElement, ReactNode, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { TypeAnimation } from 'react-type-animation'
 import { useHeaderFooter } from '../hooks/state'
 
 export interface TwoColumnLayoutProps {
-  subTitle: [string, string, string]
-  title: string
+  subTitle?: [string, string, string]
+  title?: string
   children: ReactNode
   image: string
-  containerClass? : string
+  containerClass?: string
+  backText?: string
 }
 
 export function TwoColumnLayout({
@@ -18,6 +19,7 @@ export function TwoColumnLayout({
   containerClass,
   title,
   image,
+  backText = 'Back to Homepage',
 }: TwoColumnLayoutProps): ReactElement {
   const navigate = useNavigate()
   const headFoot = useHeaderFooter()
@@ -40,19 +42,23 @@ export function TwoColumnLayout({
           onClick={() => navigate('/')}
         >
           <CaretLeft size={36} className='c-primary' />
-          <span className='font-medium c-primary text-lg'>
-            Back to Homepage
-          </span>
+          <span className='font-medium c-primary text-lg'>{backText}</span>
         </div>
         <div className='px-5 flex justify-center flex-col h-80% items-center c-primary relative'>
-          <h1>{title}</h1>
-          <TypeAnimation
-            sequence={[subTitle[0], 1000, subTitle[1], 1500, subTitle[2]]}
-            wrapper='div'
-            cursor
-            repeat={0}
-            style={{ fontSize: '2rem', textAlign: 'center', maxWidth: '35rem' }}
-          />
+          {title && <h1>{title}</h1>}
+          {subTitle && (
+            <TypeAnimation
+              sequence={[subTitle[0], 1000, subTitle[1], 1500, subTitle[2]]}
+              wrapper='div'
+              cursor
+              repeat={0}
+              style={{
+                fontSize: '2rem',
+                textAlign: 'center',
+                maxWidth: '35rem',
+              }}
+            />
+          )}
           {children}
         </div>
         <img

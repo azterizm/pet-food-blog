@@ -1,28 +1,38 @@
-import { CaretDown, FunnelSimple } from 'phosphor-react'
+import { CaretDown } from 'phosphor-react'
 import type { ReactElement } from 'react'
 import { Recipe } from '../../components/home/Recipe'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT } from '../../constants/api'
 import { useApi } from '../../hooks/api'
-import { Recipe as RecipeT } from '../../types/api'
+import { categories, categoryLabel, Recipe as RecipeT } from '../../types/api'
 
 export function RecipeList(): ReactElement {
-  const { data, error, loading } = useApi<
-    (RecipeT & { author: { id: number; name: string } })[]
-  >('/recipe/get_recipes/main/new/0')
+  const { data, error, loading } = useApi<RecipeT[]>(
+    '/recipe/get_recipes/main/new/0',
+    { params: { category: 'meal' } }
+  )
   console.log('data:', data)
   return (
-    <div>
-      <div className='text-center mb-10'>
+    <div className='min-h-100vh'>
+      <div className='text-center my-10'>
         <span className='text-4xl block font-bold mb-2'>Recipes</span>
         <span>All the food your pet ever needs.</span>
       </div>
-      <div className='mb-5 flex justify-between items-center'>
+      <div className='justify-center mt-5 flex flex-wrap items-center gap-5'>
+        {categories.map((r, i) => (
+          <div
+            className='bg-gray-300 block px-5 py-2 rounded-full c-black'
+            key={'category_' + i}
+          >
+            {categoryLabel[r]}
+          </div>
+        ))}
+      </div>
+      <div className='mb-5 mt-10 flex justify-between items-center'>
         <div className='flex items-center gap-2'>
           <CaretDown size={16} />
           <span>Sort by: Newest</span>
         </div>
-        <FunnelSimple size={24} />
       </div>
       {loading ? (
         <Loader />

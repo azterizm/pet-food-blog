@@ -12,7 +12,6 @@ export interface MobileMenuProps {
 
 const menuItems = [
   ['/recipes', 'Recipes'],
-  ['/categories', 'Categories'],
   ['/blog', 'Blog'],
   ['/authors', 'Chefs'],
   ['/contact', 'Contact'],
@@ -68,10 +67,16 @@ export function MobileMenu({
       <div className='mt-10' onClick={() => onChange(false)}>
         {!user ? (
           <>
-            <button onClick={() => navigate('/login')} className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'>
+            <button
+              onClick={() => navigate('/login')}
+              className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'
+            >
               Login
             </button>
-            <button onClick={() => navigate('/register')} className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'>
+            <button
+              onClick={() => navigate('/register')}
+              className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'
+            >
               Sign Up
             </button>
           </>
