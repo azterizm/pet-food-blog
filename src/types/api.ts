@@ -42,3 +42,13 @@ export const categoryLabel = {
   treat: 'Treats',
   vegan: 'Vegetarian',
 } as Record<Category, string>
+
+export interface Author {
+  id: number
+  email: string
+  username: string
+  phone: string
+  name: string
+  createdAt: Date
+  updatedAt: Date
+}

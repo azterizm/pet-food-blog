@@ -12,7 +12,7 @@ export async function logoutUser() {
   window.location.href = '/'
 }
 
-export async function getUser() {
+export async function getUser(): Promise<IUser | null> {
   let user = localStorage.getItem('user')
 
   if (!user || user === 'null') {
@@ -23,8 +23,10 @@ export async function getUser() {
 
     if (data.error) {
       return null
-    } else if ((data as IUser).type === 'author')
-      return (window.location.href = CREATOR_ENDPOINT)
+    } else if ((data as IUser).type === 'author') {
+      window.location.href = CREATOR_ENDPOINT
+      return null
+    }
 
     user = data
     localStorage.setItem('user', JSON.stringify(data))
@@ -33,7 +35,7 @@ export async function getUser() {
     if (parsedUser.error) {
       localStorage.clear()
       window.alert(parsedUser.info)
-      return
+      return null
     } else user = parsedUser
   }
 

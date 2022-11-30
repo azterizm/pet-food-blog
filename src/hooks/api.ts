@@ -3,6 +3,7 @@ import { API_ENDPOINT } from '../constants/api'
 
 interface ApiOptions extends Partial<Request> {
   params?: Record<string, string>
+  debounce?: number
 }
 interface ApiReturn<T> {
   loading: boolean
@@ -20,28 +21,49 @@ export function useApi<T>(
   const [data, setData] = useState<null | T>(null)
 
   useEffect(() => {
-    setLoading(true)
-    const url = new URL(Boolean(API_ENDPOINT) ? API_ENDPOINT : location.origin)
-    url.pathname = path
-    if (options && options.params)
-      Object.keys(options.params).map((r) =>
-        url.searchParams.append(r, options.params![r])
+    ;(async () => {
+      setLoading(true)
+      const url = new URL(
+        Boolean(API_ENDPOINT) ? API_ENDPOINT : location.origin
       )
+      url.pathname = path
+      if (options && options.params)
+        Object.keys(options.params).map((r) =>
+          url.searchParams.append(r, options.params![r])
+        )
 
-    console.log('url.href:', url.href)
-    fetch(
-      url,
-      !options
-        ? { credentials: 'include' }
-        : Object.assign(options, { credentials: 'include' })
-    )
-      .then((r) => r.json())
-      .catch((r) => ({ error: true, info: r.message }))
-      .then((r) => {
-        setLoading(false)
-        if (r.error) setError(r.info)
-        else setData(r)
-      })
+      if (options && options.debounce) {
+        localStorage.setItem('debounce', '1')
+        await new Promise<void>((r) => {
+          setTimeout(() => {
+            r()
+          }, options.debounce)
+        })
+        localStorage.setItem('debounce', '0')
+      }
+
+      fetch(
+        url,
+        !options
+          ? { credentials: 'include' }
+          : Object.assign(options, { credentials: 'include' })
+      )
+        .then((r) => r.json())
+        .catch((r) => ({ error: true, info: r.message }))
+        .then((r) => {
+          setLoading(false)
+          if (r.error) {
+            console.error(
+              'Fetch request failed on',
+              url.href,
+              'with info',
+              r.info
+            )
+
+            setError(r.info)
+          } else setData(r)
+        })
+    })()
   }, deps)
 
   return { loading, error, data }

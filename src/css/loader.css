@@ -1,35 +1,47 @@
-.loader {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
+svg#loader {
+  width: 200px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  animation: rotation 3.5s infinite ease-in-out;
+  animation-fill-mode: forwards;
+  transform-origin: bottom;
 }
-.loader div {
-  box-sizing: border-box;
-  display: block;
-  position: absolute;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border: 8px solid #161b3d;
-  border-radius: 50%;
-  animation: loader 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #161b3d transparent transparent transparent;
-}
-.loader div:nth-child(1) {
-  animation-delay: -0.45s;
-}
-.loader div:nth-child(2) {
-  animation-delay: -0.3s;
-}
-.loader div:nth-child(3) {
-  animation-delay: -0.15s;
-}
-@keyframes loader {
+@keyframes rotation {
   0% {
-    transform: rotate(0deg);
+    transform: rotate(0deg) scale(0.5);
   }
   100% {
-    transform: rotate(360deg);
+    transform: rotate(720deg) scale(0.5);
   }
+}
+
+.back-legs-front {
+  fill: #c8bfae;
+}
+.back-legs-back {
+  fill: #c8bfae;
+}
+.legs-front {
+  fill: #f5e9d4;
+}
+
+.body {
+  fill: #f5e9d4;
+}
+.tail {
+  fill: #f5e9d4;
+}
+.head {
+  fill: #f5e9d4;
+}
+
+.ear {
+  fill: #e8c9b0;
+}
+
+.mouth {
+  fill: #e5856f;
 }

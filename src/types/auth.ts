@@ -1,3 +1,4 @@
+import { IUser as UserT } from '@backend/models/user'
 export type AuthType = 'user' | 'author'
 
 export interface DBEssentials {
@@ -5,13 +6,8 @@ export interface DBEssentials {
   createdAt: Date
   updatedAt: Date
 }
-export type AuthUser = DBEssentials & IUser & { type: AuthType }
-export interface IUser extends DBEssentials {
-  email: string
-  username: string
-  name: string
-  createdAt: Date
-  type: string
-  deposit: number
-  id: number
+
+export type AuthUser = IUser
+export interface IUser extends UserT {
+  type: AuthType
 }
