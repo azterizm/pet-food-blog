@@ -1,3 +1,5 @@
+import { AuthorSort } from '@backend/zod/api'
+
 export interface Recipe {
   ingredients: string[]
   categories: string[]
@@ -42,6 +44,12 @@ export const categoryLabel = {
   treat: 'Treats',
   vegan: 'Vegetarian',
 } as Record<Category, string>
+
+export const sortLabel = {
+  new: 'Newest',
+  popular: 'Popular',
+  liked: 'Most liked',
+} as Record<NonNullable<AuthorSort>, string>
 
 export interface Author {
   id: number

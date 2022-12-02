@@ -1,0 +1,24 @@
+ul.list_nav {
+  margin-top: 3rem;
+}
+ul.list_nav a {
+  color: black;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+ul.list_nav .disabled a {
+  color: gray;
+}
+ul.list_nav .selected a {
+  background-color: #2563eb;
+  padding: 0.5rem 1rem;
+  color: #fff;
+}
+ul.list_nav .selected a:focus {
+  outline: none;
+}
+
+ul.list_nav li {
+  cursor: pointer;
+}

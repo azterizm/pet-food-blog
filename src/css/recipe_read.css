@@ -1,0 +1,8 @@
+#instructions::after {
+  content: '';
+  width: 1px;
+  height: 100%;
+  background-color: #161b3d80;
+  position: absolute;
+  left: 1.25rem;
+}

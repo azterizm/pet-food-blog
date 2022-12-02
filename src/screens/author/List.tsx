@@ -4,6 +4,7 @@ import { Loader } from '../../components/Loader'
 import { useApi } from '../../hooks/api'
 import { IAuthor } from '@backend/models/author'
 import { API_ENDPOINT } from '../../constants/api'
+import { useNavigate } from 'react-router-dom'
 
 const OFFSET = 20
 
@@ -12,7 +13,7 @@ export function AuthorList(): ReactElement {
   const { data, error, loading } = useApi<{ data: IAuthor[]; total: number }>(
     '/author/main_list/new/' + page * OFFSET + '/' + OFFSET
   )
-  console.log('data:', data)
+  const navigate = useNavigate()
 
   return (
     <div className='mt-10 min-h-100vh flex flex-wrap gap-5 justify-center'>
@@ -25,7 +26,11 @@ export function AuthorList(): ReactElement {
       ) : (
         <>
           {data.data.map((r) => (
-            <div className='flex flex-col w-80' key={r.id}>
+            <div
+              className='flex flex-col w-80 cursor-pointer'
+              onClick={() => navigate(String(r.id))}
+              key={r.id}
+            >
               <img
                 className='object-cover w-80 object-cover rounded-t-lg'
                 src={API_ENDPOINT + '/auth/profile/' + r.id}

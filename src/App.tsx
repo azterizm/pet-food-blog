@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react'
-import { Route, Routes, useNavigate } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/header'
 import { CREATOR_ENDPOINT } from './constants/api'
@@ -12,6 +12,7 @@ import { NotFound } from './screens/NotFound'
 import { Onboard } from './screens/Onboard'
 import { Profile } from './screens/Profile'
 import { RecipeList } from './screens/recipe/List'
+import { RecipeRead } from './screens/recipe/Read'
 import { Register } from './screens/Register'
 import { Search } from './screens/Search'
 import { AuthUser } from './types/auth'
@@ -31,7 +32,10 @@ function App() {
     })
   }, [])
   return (
-    <div className={`${headFoot.visible ? 'px-10' : ''} antialiased`}>
+    <div
+      id='route_container'
+      className={`${headFoot.visible ? 'px-10' : ''} antialiased`}
+    >
       {headFoot.visible ? <Header user={user} /> : null}
       <Routes>
         <Route path='/' element={<Home />} />
@@ -44,6 +48,7 @@ function App() {
           </>
         ) : null}
         <Route path='recipes'>
+          <Route path='read/:id' element={<RecipeRead />} />
           <Route index element={<RecipeList />} />
         </Route>
         <Route path='authors'>

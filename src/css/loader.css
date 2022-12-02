@@ -8,13 +8,14 @@ svg#loader {
   animation: rotation 3.5s infinite ease-in-out;
   animation-fill-mode: forwards;
   transform-origin: bottom;
+  margin-bottom: 20rem;
 }
 @keyframes rotation {
   0% {
-    transform: rotate(0deg) scale(0.5);
+    transform: rotate(0deg);
   }
   100% {
-    transform: rotate(720deg) scale(0.5);
+    transform: rotate(720deg);
   }
 }
 
