@@ -19,7 +19,7 @@ export function Search(): ReactElement {
   const { data: searchData, loading: searchLoading } = useApi<{
     recipes: Pick<IRecipe, 'id' | 'title' | 'mainImage'>[]
     authors: Pick<IAuthor, 'id' | 'name'>[]
-  }>('/search/' + search, { method: 'get', debounce: 800 }, [search])
+  }>('/search/input/' + search, { method: 'get', debounce: 800 }, [search])
   console.log('searchData:', searchData)
 
   return (

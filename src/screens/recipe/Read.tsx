@@ -1,58 +1,149 @@
 import { IAuthor } from '@backend/models/author'
 import { IRecipe } from '@backend/models/recipe'
-import { Article, Check, Circle, Heart, Money } from 'phosphor-react'
-import { ReactElement, useEffect, useState } from 'react'
+import { Article, Check, Circle, Heart, Lock, Money } from 'phosphor-react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { GoBack } from '../../components/GoBack'
 import { Hero } from '../../components/home/Hero'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT } from '../../constants/api'
 import '../../css/recipe_read.css'
-import { getUser } from '../../features/auth'
-import { useApi } from '../../hooks/api'
+import { useApi, useAuth } from '../../hooks/api'
+import { ApiProcess } from '../../types/api'
 import { showDuration, showPluralS } from '../../util/ui'
 
-//TODO test images in directions
 export function RecipeRead(): ReactElement {
   const { id } = useParams() as { id: string }
-  const { data, error, loading } = useApi<IRecipe & { author: IAuthor }>(
-    '/recipe/read/' + id
-  )
-  console.log('data:', data)
+  const { data, error, loading, refetch } = useApi<
+    IRecipe & { author: IAuthor }
+  >('/recipe/read/' + id)
   const navigate = useNavigate()
   const [checkedIng, setCheckedIng] = useState<number[]>([])
+  const [liked, setLiked] = useState(false)
+  const [likes, setLikes] = useState(0)
+  const [user, changeUser] = useAuth()
 
   useEffect(() => {
     if (!id) window.location.href = '/'
   }, [])
 
-  async function likePost() {
-    const user = await getUser()
-    if (!user) return navigate('/login')
+  useEffect(() => {
+    if (user && user.likes.includes(Number(id))) setLiked(true)
+  }, [user])
+
+  useEffect(() => {
+    if (data) setLikes(data.likes)
+  }, [data])
+
+  async function like() {
+    if (!user || !id) return navigate('/login')
+    let likes = user.likes
+    const newLiked = !liked
+    setLiked((e) => !e)
+    const data: ApiProcess = await fetch(API_ENDPOINT + '/recipe/like/' + id, {
+      method: 'post',
+      credentials: 'include',
+    }).then((r) => r.json())
+    if (data.error) {
+      likes = likes.filter((r) => r !== Number(id))
+      setLiked((e) => !e)
+      alert(data.info)
+      return
+    }
+    if (newLiked) {
+      likes = likes.filter((r) => r !== Number(id)).concat(Number(id))
+      setLikes((e) => e + 1)
+    } else {
+      likes = likes.filter((r) => r !== Number(id))
+      setLikes((e) => e - 1)
+    }
+    const newUser = { ...user, likes }
+    changeUser(newUser)
   }
+
+  async function purchase() {
+    if (!errorUnpaid || !user || !data) return
+    const payResponse: ApiProcess = await fetch(
+      API_ENDPOINT + '/recipe/pay/' + id,
+      {
+        method: 'post',
+        credentials: 'include',
+      }
+    ).then((r) => r.json())
+    if (payResponse.error) {
+      alert(payResponse.info)
+      return
+    }
+    const newDeposit = user.deposit - data.price
+    changeUser({ ...user, deposit: newDeposit })
+    refetch()
+  }
+
+  const errorUnpaid = useMemo(() => {
+    return Boolean(error && error.includes('paid'))
+  }, [error])
 
   return (
     <div className='min-h-100vh'>
       {loading ? (
         <Loader />
       ) : error || !data ? (
-        <div className='absolute-center flex flex-col justify-center items-center gap-5'>
-          <span className='c-red text-lg'>Error occured: {error}</span>
-          <span>Please try again later</span>
-          <button
-            onClick={() => navigate('/')}
-            className='rounded-lg px-5 py-3 bg-blue-600 c-white border-none font-bold'
-          >
-            Go home
-          </button>
+        <div className='absolute-center text-center flex flex-col justify-center items-center gap-5'>
+          {errorUnpaid ? <Lock className='w-30% h-30%' /> : null}
+          <span className='c-red text-lg'>
+            {errorUnpaid ? error : 'Error occured: ' + error}
+          </span>
+          <span>
+            {errorUnpaid
+              ? `You can either purchase only this recipe for $${
+                  data?.price || 0
+                } or subscribe to chef to unlock all and future recipes.`
+              : 'Please try again later'}
+          </span>
+          {errorUnpaid ? (
+            <div className='flex items-center gap-2'>
+              <button
+                onClick={() =>
+                  !data ? null : navigate('/authors/' + data.author.id)
+                }
+                className='rounded-lg px-5 py-3 c-blue-600 bg-white border-none font-bold'
+              >
+                See Chef
+              </button>
+              <button
+                onClick={purchase}
+                className='rounded-lg px-5 py-3 bg-blue-600 c-white border-none font-bold'
+              >
+                Purchase
+              </button>
+              <button
+                onClick={() => navigate('/')}
+                className='rounded-lg px-5 py-3 c-blue-600 bg-white border-none font-bold'
+              >
+                Go home
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => navigate('/')}
+              className='rounded-lg px-5 py-3 bg-blue-600 c-white border-none font-bold'
+            >
+              Go home
+            </button>
+          )}
         </div>
       ) : (
         <div id='recipe_read'>
+          <div className='mb-5'>
+            <GoBack />
+          </div>
           <Hero
             authors={[data.author]}
             title={data.title}
             image={API_ENDPOINT + data.mainImage}
             categories={data.categories}
             publishedOn={data.createdAt || new Date()}
+            paid={data.price}
           />
           <div className='flex justify-center items-center gap-2 uppercase font-medium text-primary text-xs mt-5'>
             <span>{showDuration(data.duration)}</span>
@@ -111,7 +202,12 @@ export function RecipeRead(): ReactElement {
                   id='instructions'
                 >
                   {data.instructions.map(([images, content], i) => (
-                    <div key={i}>
+                    <div
+                      key={i}
+                      id={
+                        i + 1 === data.instructions.length ? '' : 'instruction'
+                      }
+                    >
                       <div className='flex items-center gap-5 ml-10 mb-5'>
                         {images.map((image, i) => (
                           <img
@@ -143,21 +239,26 @@ export function RecipeRead(): ReactElement {
                   ))}
                 </div>
               </div>
-              <div className='flex items-center gap-5'>
+              <div className='flex items-center gap-5 c-primary'>
                 <div
-                  onClick={likePost}
-                  className='flex items-center gap-2 font-medium text-md bg-gray-300 px-5 py-3 rounded-lg'
+                  onClick={like}
+                  className='flex items-center gap-2 font-medium text-md bg-gray-300 px-5 py-3 rounded-lg hover:bg-gray-400 cursor-pointer'
                 >
-                  <Heart size={20} />
+                  <Heart
+                    weight={liked ? 'fill' : 'regular'}
+                    size={20}
+                    className={liked ? 'c-red' : 'c-primary'}
+                  />
                   <span>
-                    {data.likes} Like{showPluralS(data.likes)}
+                    {likes} Like
+                    {showPluralS(data.likes)}
                   </span>
                 </div>
-                <div className='flex items-center gap-2 font-medium text-md bg-gray-300 px-5 py-3 rounded-lg'>
+                <div className='flex items-center gap-2 font-medium text-md bg-gray-300 px-5 py-3 rounded-lg hover:bg-gray-400 cursor-pointer'>
                   <Article size={20} />
                   <span>Print</span>
                 </div>
-                <div className='flex items-center gap-2 font-medium text-md bg-gray-300 px-5 py-3 rounded-lg'>
+                <div className='flex items-center gap-2 font-medium text-md bg-gray-300 px-5 py-3 rounded-lg hover:bg-gray-400 cursor-pointer'>
                   <Money size={20} />
                   <span>Donate</span>
                 </div>

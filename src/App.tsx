@@ -1,11 +1,10 @@
-import { useLayoutEffect, useState } from 'react'
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/header'
-import { CREATOR_ENDPOINT } from './constants/api'
-import { getUser } from './features/auth'
+import { useAuth } from './hooks/api'
 import { useHeaderFooter } from './hooks/state'
 import { AuthorList } from './screens/author/List'
+import { Deposit } from './screens/Deposit'
 import Home from './screens/Home'
 import { Login } from './screens/Login'
 import { NotFound } from './screens/NotFound'
@@ -15,22 +14,10 @@ import { RecipeList } from './screens/recipe/List'
 import { RecipeRead } from './screens/recipe/Read'
 import { Register } from './screens/Register'
 import { Search } from './screens/Search'
-import { AuthUser } from './types/auth'
 
 function App() {
   const headFoot = useHeaderFooter()
-  const [user, setUser] = useState<null | AuthUser>(null)
-  const navigate = useNavigate()
-  useLayoutEffect(() => {
-    getUser().then((r) => {
-      if (r && r.type === 'author') window.location.href = CREATOR_ENDPOINT
-      else {
-        if (!r) return
-        setUser(r)
-        if (!r.profile) navigate('/onboard')
-      }
-    })
-  }, [])
+  const [user] = useAuth()
   return (
     <div
       id='route_container'
@@ -43,8 +30,9 @@ function App() {
         <Route path='register' element={<Register />} />
         {user ? (
           <>
-            <Route path='profile' element={<Profile user={user} />} />
+            <Route path='profile' element={<Profile />} />
             <Route path='onboard' element={<Onboard />} />
+            <Route path='deposit' element={<Deposit />} />
           </>
         ) : null}
         <Route path='recipes'>

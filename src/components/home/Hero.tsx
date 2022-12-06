@@ -13,6 +13,7 @@ interface Props {
   featured?: boolean
   categories?: Category[]
   average?: number
+  paid?: number
 }
 
 export function Hero(props: Props) {
@@ -68,6 +69,11 @@ export function Hero(props: Props) {
           </b>{' '}
           {moment(props.publishedOn).fromNow()}
         </span>
+        {props.paid ? (
+          <span className='block uppercase bg-white c-primary px-3 py-2 w-max rounded-full mt-2 text-sm font-bold'>
+            Paid ${props.paid}
+          </span>
+        ) : null}
         {props.average ? (
           <div className='flex items-center gap-2'>
             <Timer />

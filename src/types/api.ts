@@ -60,3 +60,8 @@ export interface Author {
   createdAt: Date
   updatedAt: Date
 }
+
+export interface ApiProcess {
+  error: boolean
+  info: string
+}

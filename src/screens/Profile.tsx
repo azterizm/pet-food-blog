@@ -1,13 +1,14 @@
 import type { ReactElement } from 'react'
+import { Link } from 'react-router-dom'
 import { GoBack } from '../components/GoBack'
 import { logoutUser } from '../features/auth'
-import { AuthUser } from '../types/auth'
+import { useAuth } from '../hooks/api'
 
-export interface ProfileProps {
-  user: AuthUser
-}
+export interface ProfileProps {}
 
-export function Profile({ user }: ProfileProps): ReactElement {
+export function Profile({}: ProfileProps): ReactElement {
+  const [user] = useAuth()
+  if (!user) return <span>Loading...</span>
   return (
     <div className='min-h-100vh w-full'>
       <GoBack />
@@ -23,12 +24,24 @@ export function Profile({ user }: ProfileProps): ReactElement {
         <span>${user.deposit}</span>
       </div>
       <div className='mt-5 block'>
-        <button className='bg-primary block mb-5 c-white font-bold px-5 py-3 border-none rounded-lg cursor-pointer hover:brightness-75'>
+        <Link
+          to='/deposit'
+          className='bg-primary block mb-5 c-white font-bold w-max font-medium no-underline px-5 py-3 border-none rounded-lg cursor-pointer hover:brightness-75'
+        >
+          Add deposit
+        </Link>
+        <Link
+          to='/purchases'
+          className='bg-primary block mb-5 c-white font-bold w-max font-medium no-underline px-5 py-3 border-none rounded-lg cursor-pointer hover:brightness-75'
+        >
           See recent purchases
-        </button>
-        <button className='bg-primary block c-white font-bold px-5 py-3 border-none rounded-lg cursor-pointer hover:brightness-75'>
+        </Link>
+        <Link
+          to='/subcribed'
+          className='bg-primary block mb-5 c-white font-bold w-max font-medium no-underline px-5 py-3 border-none rounded-lg cursor-pointer hover:brightness-75'
+        >
           Subscribed authors
-        </button>
+        </Link>
       </div>
       <div className='mt-5 block'>
         <button
