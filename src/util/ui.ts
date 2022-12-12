@@ -2,6 +2,11 @@ export function showPluralS(arg: number) {
   return arg > 1 ? 's' : ''
 }
 
+export function showCompactNumber(arg: number) {
+  const formatter = new Intl.NumberFormat('en',{notation: 'compact'})
+  return formatter.format(arg)
+}
+
 export function showDuration(arg: number | string) {
   const sec_num = parseInt(String(arg)) * 60 // don't forget the second param
   const hours: number | string = Math.floor(sec_num / 3600)

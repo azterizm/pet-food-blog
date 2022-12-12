@@ -41,10 +41,7 @@ export function Hero(props: Props) {
         {props.categories && props.categories.length
           ? props.categories.map((r, i) => (
               <span
-                className={
-                  'uppercase font-bold text-sm mr-2 bg-white c-primary px-3 py-1 rounded-full tracking-widest ' +
-                  (i === 0 ? 'px-3 lg:pr-3 lg:pl-0' : 'px-3')
-                }
+                className='uppercase font-bold text-sm mr-2 bg-white c-primary px-3 py-1 rounded-full tracking-widest lg:border-2'
                 key={r + '_' + i}
               >
                 {categoryLabel[r]}
@@ -70,7 +67,7 @@ export function Hero(props: Props) {
           {moment(props.publishedOn).fromNow()}
         </span>
         {props.paid ? (
-          <span className='block uppercase bg-white c-primary px-3 py-2 w-max rounded-full mt-2 text-sm font-bold'>
+          <span className='block uppercase bg-white c-primary px-3 py-2 w-max rounded-full mt-2 text-sm font-bold lg:pl-0'>
             Paid ${props.paid}
           </span>
         ) : null}

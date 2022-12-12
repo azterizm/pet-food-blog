@@ -10,6 +10,7 @@ import { Login } from './screens/Login'
 import { NotFound } from './screens/NotFound'
 import { Onboard } from './screens/Onboard'
 import { Profile } from './screens/Profile'
+import { Purchases } from './screens/Purchases'
 import { RecipeList } from './screens/recipe/List'
 import { RecipeRead } from './screens/recipe/Read'
 import { Register } from './screens/Register'
@@ -33,6 +34,7 @@ function App() {
             <Route path='profile' element={<Profile />} />
             <Route path='onboard' element={<Onboard />} />
             <Route path='deposit' element={<Deposit />} />
+            <Route path='purchases' element={<Purchases />} />
           </>
         ) : null}
         <Route path='recipes'>
