@@ -1,18 +1,22 @@
-import { FacebookLogo, SnapchatLogo, YoutubeLogo } from 'phosphor-react'
-import { ReactElement, useState } from 'react'
-import { Loader } from '../../components/Loader'
-import { useApi } from '../../hooks/api'
 import { IAuthor } from '@backend/models/author'
-import { API_ENDPOINT } from '../../constants/api'
+import { ISocialMedia } from '@backend/models/socialMedia'
+import { capitalize } from 'lodash'
+import { ReactElement, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { RenderIconByName } from '../../components/icons/RenderIconByName'
+import { Loader } from '../../components/Loader'
+import { API_ENDPOINT } from '../../constants/api'
+import { useApi } from '../../hooks/api'
 
 const OFFSET = 20
 
 export function AuthorList(): ReactElement {
   const [page, setPage] = useState(0)
-  const { data, error, loading } = useApi<{ data: IAuthor[]; total: number }>(
-    '/author/main_list/new/' + page * OFFSET + '/' + OFFSET
-  )
+  const { data, error, loading } = useApi<{
+    data: (IAuthor & { socialMedia: ISocialMedia[] })[]
+    total: number
+  }>('/author/main_list/new/' + page * OFFSET + '/' + OFFSET)
+  console.log('data:', data)
   const navigate = useNavigate()
 
   return (
@@ -39,11 +43,23 @@ export function AuthorList(): ReactElement {
               <div className='px-5 py-3 bg-neutral-300 rounded-b-lg'>
                 <span className='text-2xl font-bold mt-5 block'>{r.name}</span>
                 <div className='flex items-center gap-5 my-5'>
-                  <FacebookLogo size={20} />
-                  <SnapchatLogo size={20} />
-                  <YoutubeLogo size={20} />
+                  {r.socialMedia.length
+                    ? r.socialMedia.map((s) => (
+                        <RenderIconByName
+                          name={capitalize(s.name) + 'Logo'}
+                          size={20}
+                          key={s.id}
+                        />
+                      ))
+                    : null}
                 </div>
-                <span className='mb-10 block'>{r.bio}</span>
+                <span className='mb-10 block'>
+                  {!r.bio
+                    ? null
+                    : r.bio.length > 150
+                    ? r.bio.slice(0, 147) + '...'
+                    : r.bio}
+                </span>
               </div>
             </div>
           ))}

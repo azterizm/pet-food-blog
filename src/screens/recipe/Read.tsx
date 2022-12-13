@@ -3,6 +3,7 @@ import { IRecipe } from '@backend/models/recipe'
 import { Article, Check, Circle, Heart, Money } from 'phosphor-react'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { ErrorDialog } from '../../components/ErrorDialog'
 import { GoBack } from '../../components/GoBack'
 import { Hero } from '../../components/home/Hero'
 import { Loader } from '../../components/Loader'
@@ -89,16 +90,7 @@ export function RecipeRead(): ReactElement {
       {loading ? (
         <Loader />
       ) : (error && !errorUnpaid) || !data ? (
-        <div className='absolute-center text-center flex flex-col justify-center items-center gap-5'>
-          <span className='c-red text-lg'>Error occured: {error}</span>
-          <span>Please try again later</span>
-          <button
-            onClick={() => navigate('/')}
-            className='rounded-lg px-5 py-3 bg-blue-600 c-white border-none font-bold'
-          >
-            Go home
-          </button>
-        </div>
+        <ErrorDialog text={error} />
       ) : (
         <div id='recipe_read'>
           <div className='mb-5'>

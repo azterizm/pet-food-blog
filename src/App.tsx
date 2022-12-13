@@ -4,6 +4,7 @@ import { Header } from './components/header'
 import { useAuth } from './hooks/api'
 import { useHeaderFooter } from './hooks/state'
 import { AuthorList } from './screens/author/List'
+import { AuthorProfile } from './screens/author/Profile'
 import { Deposit } from './screens/Deposit'
 import Home from './screens/Home'
 import { Login } from './screens/Login'
@@ -42,6 +43,7 @@ function App() {
           <Route index element={<RecipeList />} />
         </Route>
         <Route path='authors'>
+          <Route path=':id' element={<AuthorProfile />} />
           <Route index element={<AuthorList />} />
         </Route>
         <Route path='search' element={<Search />} />
