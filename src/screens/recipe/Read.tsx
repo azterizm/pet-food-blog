@@ -90,7 +90,7 @@ export function RecipeRead(): ReactElement {
       {loading ? (
         <Loader />
       ) : (error && !errorUnpaid) || !data ? (
-        <ErrorDialog text={error} />
+        <ErrorDialog text={error || 'Recipe not found'} />
       ) : (
         <div id='recipe_read'>
           <div className='mb-5'>

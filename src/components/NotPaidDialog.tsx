@@ -42,9 +42,18 @@ export function NotPaidDialog(props: Props): ReactElement {
               access to the full collection of recipes for paying subscribers
               only.
             </p>
-            <button onClick={() => navigate('/register')}>Sign up now</button>
-            <button onClick={() => navigate('/login')}>
-              <span>Already have an account?</span> Login
+            <button
+              className='bg-white border-none p-5 rounded-full font-bold tracking-0.5 pr-4 text-md'
+              onClick={() => navigate('/register')}
+            >
+              Sign up now
+            </button>
+            <button
+              className='font-bold bg-transparent border-none c-white'
+              onClick={() => navigate('/login')}
+            >
+              <span className='!font-medium'>Already have an account?</span>{' '}
+              Login
             </button>
           </>
         )}

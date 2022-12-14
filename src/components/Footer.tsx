@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 export function Footer(): ReactElement {
   return (
     <footer className='mt-10 py-5 border-t-2 border-gray-200'>
-      <div className='flex justify-between items-center'>
+      <div className='flex justify-between items-center flex-col sm:flex-row gap-10 sm:gap-0'>
         <Link to='/'>
           <img className='w-50 invert' src='/logo.svg' alt='logo' />
         </Link>

@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { showDuration } from '../../util/ui'
 interface Props {
   title: string
-  authors: Pick<IAuthor, 'id' | 'name'>[]
+  authors?: Pick<IAuthor, 'id' | 'name'>[]
   postedOn: Date
-  reviews: number
+  reviews?: number
   image: string
   duration: number
   large?: boolean
@@ -20,7 +20,7 @@ export function Recipe({
   large = false,
   image,
   title,
-  reviews,
+  reviews = 0,
   postedOn,
   authors,
   onClick,
@@ -37,17 +37,19 @@ export function Recipe({
       <div className='z-1'>
         <h1>{title}</h1>
         <span>
-          by{' '}
-          {authors.map((r, i) => (
-            <b
-              className='hover:underline cursor-pointer'
-              onClick={() => navigate('/authors/' + r.id)}
-              key={r.id}
-            >
-              {r.name}
-              {i + 1 === authors.length ? '' : ', '}
-            </b>
-          ))}{' '}
+          {authors && authors.length ? 'by' : ''}{' '}
+          {!authors || !authors.length
+            ? null
+            : authors.map((r, i) => (
+                <b
+                  className='hover:underline cursor-pointer'
+                  onClick={() => navigate('/authors/' + r.id)}
+                  key={r.id}
+                >
+                  {r.name}
+                  {i + 1 === authors.length ? '' : ', '}
+                </b>
+              ))}{' '}
           {moment(postedOn).fromNow()}
         </span>
         {paid ? (

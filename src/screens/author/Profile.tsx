@@ -3,9 +3,10 @@ import { IRecipe } from '@backend/models/recipe'
 import { ISocialMedia } from '@backend/models/socialMedia'
 import { capitalize } from 'lodash'
 import type { ReactElement } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ErrorDialog } from '../../components/ErrorDialog'
 import { GoBack } from '../../components/GoBack'
+import { Recipe } from '../../components/home/Recipe'
 import { RenderIconByName } from '../../components/icons/RenderIconByName'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT } from '../../constants/api'
@@ -14,10 +15,13 @@ import { useUndefinedParam } from '../../hooks/ui'
 
 export function AuthorProfile(): ReactElement {
   const { id } = useParams()
+  const navigate = useNavigate()
   const { data, loading, error } = useApi<
     IAuthor & { recipes: IRecipe[]; socialMedia: ISocialMedia[] }
   >('/author/one/' + id)
   useUndefinedParam(id)
+
+  async function subscribe() {}
 
   return (
     <div className='min-h-100vh'>
@@ -47,6 +51,26 @@ export function AuthorProfile(): ReactElement {
               ))}
             </div>
             <p className='text-center max-w-100'>{data.bio}</p>
+
+            <button
+              onClick={subscribe}
+              className='bg-primary c-white px-5 py-3 rounded-full text-lg font-bold border-none'
+            >
+              Subscribe
+            </button>
+          </div>
+
+          <div className='flex flex-wrap gap-10 items-center'>
+            {data.recipes.map((r) => (
+              <Recipe
+                key={r.id}
+                image={API_ENDPOINT + r.mainImage}
+                postedOn={r.createdAt!}
+                reviews={r.likes}
+                onClick={() => navigate('/recipes/read/' + r.id)}
+                {...r}
+              />
+            ))}
           </div>
         </div>
       )}

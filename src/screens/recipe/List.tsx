@@ -6,14 +6,10 @@ import { Recipe } from '../../components/home/Recipe'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT } from '../../constants/api'
 import { useApi } from '../../hooks/api'
-import {
-  categories,
-  Category,
-  categoryLabel,
-  Recipe as RecipeT,
-  sortLabel,
-} from '../../types/api'
+import { categories, Category, categoryLabel, sortLabel } from '../../types/api'
 import { AuthorSort } from '@backend/zod/api'
+import { IRecipe } from '@backend/models/recipe'
+import { IAuthor } from '@backend/models/author'
 
 const OFFSET = 20
 
@@ -23,7 +19,7 @@ export function RecipeList(): ReactElement {
   const [showSort, setShowSort] = useState(false)
   const [page, setPage] = useState(0)
   const { data, error, loading } = useApi<{
-    recipes: RecipeT[]
+    recipes: (IRecipe & { author: IAuthor })[]
     total: number
   }>(
     `/recipe/get_client_recipes/${category}/${sort}/${page * OFFSET}`,
@@ -96,8 +92,8 @@ export function RecipeList(): ReactElement {
                 authors={[r.author]}
                 duration={r.duration}
                 image={API_ENDPOINT + r.mainImage}
-                postedOn={r.createdAt}
-                reviews={0}
+                postedOn={r.createdAt!}
+                reviews={r.likes}
                 title={r.title}
                 onClick={() => navigate('/recipes/read/' + r.id)}
                 paid={Boolean(r.price)}
