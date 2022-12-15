@@ -12,10 +12,10 @@ export async function logoutUser() {
   window.location.href = '/'
 }
 
-export async function getUser(): Promise<IUser | null> {
+export async function getUser(force: boolean = false): Promise<IUser | null> {
   let user = localStorage.getItem('user')
 
-  if (!user || user === 'null') {
+  if (!user || user === 'null' || force) {
     const data = await fetch(API_ENDPOINT + '/auth/user', {
       headers: { 'content-type': 'application/json' },
       credentials: 'include',

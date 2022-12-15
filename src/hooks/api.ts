@@ -84,14 +84,7 @@ export function useAuth() {
   const [user, setUser] = useState<null | AuthUser>(null)
   const navigate = useNavigate()
   useLayoutEffect(() => {
-    getUser().then((r) => {
-      if (r && r.type === 'author') window.location.href = CREATOR_ENDPOINT
-      else {
-        if (!r) return
-        setUser(r)
-        if (!r.profile) navigate('/onboard')
-      }
-    })
+    fetch()
   }, [])
 
   function changeUser(arg: AuthUser) {
@@ -99,5 +92,24 @@ export function useAuth() {
     localStorage.setItem('user', JSON.stringify(arg))
   }
 
-  return [user, changeUser] as [null | AuthUser, (arg: AuthUser) => void]
+  function fetch(force: boolean = false) {
+    getUser(force).then((r) => {
+      if (r && r.type === 'author') window.location.href = CREATOR_ENDPOINT
+      else {
+        if (!r) return
+        setUser(r)
+        if (!r.profile) navigate('/onboard')
+      }
+    })
+  }
+
+  function refetch() {
+    fetch(true)
+  }
+
+  return [user, changeUser, refetch] as [
+    null | AuthUser,
+    (arg: AuthUser) => void,
+    () => void
+  ]
 }
