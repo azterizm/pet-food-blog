@@ -2,7 +2,7 @@ import { IAuthor } from '@backend/models/author'
 import moment from 'moment'
 import { Star } from 'phosphor-react'
 import { useNavigate } from 'react-router-dom'
-import { showDuration } from '../../util/ui'
+import { showDuration, showPluralS } from '../../util/ui'
 interface Props {
   title: string
   authors?: Pick<IAuthor, 'id' | 'name'>[]
@@ -62,17 +62,13 @@ export function Recipe({
         <span className='uppercase text-sm font-medium'>
           {showDuration(duration)}
         </span>
-        <div className='flex items-center gap-2'>
-          <span>{reviews.toFixed(1)}</span>
-          <div>
-            {new Array(Math.floor(reviews)).fill(null).map((_, i) => (
-              <Star key={i} weight='fill' />
-            ))}
-            {new Array(5 - Math.floor(reviews)).fill(null).map((_, i) => (
-              <Star key={i} weight='bold' />
-            ))}
-          </div>
-        </div>
+        {!reviews ? (
+          <span>No likes</span>
+        ) : (
+          <span>
+            {reviews} like{showPluralS(reviews)}
+          </span>
+        )}
       </div>
       <img
         className='w-full h-full absolute top-0 left-0 rounded-7 brightness-50 object-cover'

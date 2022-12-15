@@ -33,6 +33,8 @@ export function Header({ user }: Props) {
         <Link className='no-underline c-black' to='/blog'>
           Blog
         </Link>
+      </div>
+      <div className='items-center gap-6 hidden lg:flex font-bold'>
         {user ? (
           <div
             className='cursor-pointer p-5'
@@ -60,7 +62,7 @@ export function Header({ user }: Props) {
           <MagnifyingGlass weight='bold' size={24} />
         </Link>
       </div>
-      <div className='visible lg:invisible' onClick={() => setMenuOpen(true)}>
+      <div className='block lg:hidden' onClick={() => setMenuOpen(true)}>
         <List weight='bold' size={46} />
       </div>
       <MobileMenu user={user} open={menuOpen} onChange={setMenuOpen} />

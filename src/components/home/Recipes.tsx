@@ -1,15 +1,18 @@
+import { IAuthor } from '@backend/models/author'
+import { IRecipe } from '@backend/models/recipe'
 import type { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { animated as a, config, useSpring } from 'react-spring'
 import { API_ENDPOINT } from '../../constants/api'
 import { useApi } from '../../hooks/api'
-import { Recipe as RecipeT } from '../../types/api'
 import { Loader } from '../Loader'
 import { MainButton } from '../MainButton'
 import { Recipe } from './Recipe'
 
 export function Recipes(): ReactElement {
-  const { data, error, loading } = useApi<RecipeT[]>(`/recipe/get_client_feat`)
+  const { data, error, loading } = useApi<(IRecipe & { author: IAuthor })[]>(
+    `/recipe/get_client_feat`
+  )
   const navigate = useNavigate()
   const main = useSpring({
     from: {
@@ -35,8 +38,8 @@ export function Recipes(): ReactElement {
             authors={[r.author]}
             duration={r.duration}
             image={API_ENDPOINT + r.mainImage}
-            postedOn={r.createdAt}
-            reviews={0}
+            postedOn={r.createdAt!}
+            reviews={r.likes}
             title={r.title}
             onClick={() => navigate('/recipes/read/' + r.id)}
             paid={Boolean(r.price)}
