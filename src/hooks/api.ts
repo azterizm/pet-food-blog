@@ -7,6 +7,7 @@ import { AuthUser } from '../types/auth'
 interface ApiOptions extends Partial<Request> {
   params?: Record<string, string>
   debounce?: number
+  onSuccess?: (response: any) => void
 }
 interface ApiReturn<T> {
   loading: boolean
@@ -69,6 +70,8 @@ export function useApi<T>(
 
           setError(r.info)
         } else setError(null)
+
+        if (options?.onSuccess) options.onSuccess(r)
       })
   }
 

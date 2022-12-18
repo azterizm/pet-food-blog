@@ -17,8 +17,13 @@ import { showCompactNumber, showDuration, showPluralS } from '../../util/ui'
 export function RecipeRead(): ReactElement {
   const { id } = useParams() as { id: string }
   const { data, error, loading, refetch } = useApi<
-    IRecipe & { author: IAuthor }
-  >('/recipe/read/' + id)
+    IRecipe & { author: IAuthor; userLiked: boolean }
+  >('/recipe/read/' + id, {
+    onSuccess: (r) => {
+      const d = data || r
+      if (d) setLiked(d.userLiked)
+    },
+  })
   const navigate = useNavigate()
   const [checkedIng, setCheckedIng] = useState<number[]>([])
   const [liked, setLiked] = useState(false)
@@ -30,18 +35,12 @@ export function RecipeRead(): ReactElement {
   }, [])
 
   useEffect(() => {
-    if (user && user.likes.includes(Number(id))) setLiked(true)
-  }, [user])
-
-  useEffect(() => {
     if (data) setLikes(data.likes)
   }, [data])
 
   async function like() {
-    if (!user || !id) return navigate('/login')
-    let likes = user.likes
-    const newLiked = !liked
-    setLiked((e) => !e)
+    if (!id) return navigate('/login')
+    let likes = !user ? [] : user.likes
     const data: ApiProcess = await fetch(API_ENDPOINT + '/recipe/like/' + id, {
       method: 'post',
       credentials: 'include',
@@ -52,15 +51,18 @@ export function RecipeRead(): ReactElement {
       alert(data.info)
       return
     }
-    if (newLiked) {
+    if (!liked) {
       likes = likes.filter((r) => r !== Number(id)).concat(Number(id))
       setLikes((e) => e + 1)
     } else {
       likes = likes.filter((r) => r !== Number(id))
       setLikes((e) => e - 1)
     }
-    const newUser = { ...user, likes }
-    changeUser(newUser)
+    if (user) {
+      const newUser = { ...user, likes }
+      changeUser(newUser)
+    }
+    setLiked((e) => !e)
   }
 
   async function purchase() {
