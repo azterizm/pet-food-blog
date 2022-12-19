@@ -25,7 +25,7 @@ export function RecipeRead(): ReactElement {
     },
   })
   const navigate = useNavigate()
-  const [checkedIng, setCheckedIng] = useState<number[]>([])
+  const [checkedIng, setCheckedIng] = useState<string[]>([])
   const [liked, setLiked] = useState(false)
   const [likes, setLikes] = useState(0)
   const [user, changeUser] = useAuth()
@@ -140,34 +140,65 @@ export function RecipeRead(): ReactElement {
                   <span className='text-xl font-bold my-5 block'>
                     Ingredients
                   </span>
-                  {data.ingredients.map((r, i) => (
-                    <div className='flex items-center gap-2' key={i}>
-                      <span
-                        className={
-                          'cursor-pointer border-2 border-element border-r-0 w-10 h-10 flex items-center justify-center ' +
-                          (i + 1 === data.ingredients.length
-                            ? ''
-                            : 'border-b-0')
-                        }
-                        onClick={() =>
-                          setCheckedIng((e) =>
-                            e.includes(i) ? e.filter((r) => r !== i) : [...e, i]
-                          )
-                        }
-                      >
-                        {checkedIng.includes(i) ? (
-                          <Check size={16} />
-                        ) : (
-                          <Circle size={16} />
-                        )}
+                  {data.ingredients.map((ingredient, ingredientIndex) => (
+                    <div key={ingredientIndex}>
+                      <span className='block text-lg font-bold mt-5'>
+                        {ingredient.title}
                       </span>
-                      <span
-                        className={`border-2 border-element ml--2 w-full border-r-0 pl-5 h-10 flex items-center justify-start ${
-                          i + 1 === data.ingredients.length ? '' : 'border-b-0'
-                        } ${checkedIng.includes(i) ? 'line-through' : ''}`}
-                      >
-                        {r}
-                      </span>
+                      {ingredient.items.map((item, itemIndex) => (
+                        <div
+                          key={itemIndex}
+                          className='flex items-center gap-2'
+                        >
+                          <span
+                            className={
+                              'cursor-pointer border-2 border-element border-r-0 w-10 h-10 flex items-center justify-center ' +
+                              (itemIndex + 1 === ingredient.items.length
+                                ? ''
+                                : 'border-b-0')
+                            }
+                            onClick={() =>
+                              setCheckedIng((e) =>
+                                e.includes(
+                                  [ingredientIndex, itemIndex].join(':')
+                                )
+                                  ? e.filter(
+                                      (r) =>
+                                        r !==
+                                        [ingredientIndex, itemIndex].join(':')
+                                    )
+                                  : [
+                                      ...e,
+                                      [ingredientIndex, itemIndex].join(':'),
+                                    ]
+                              )
+                            }
+                          >
+                            {checkedIng.includes(
+                              ingredientIndex + ':' + itemIndex
+                            ) ? (
+                              <Check size={16} />
+                            ) : (
+                              <Circle size={16} />
+                            )}
+                          </span>
+                          <span
+                            className={`border-2 border-element ml--2 w-full border-r-0 pl-5 h-10 flex items-center justify-start ${
+                              itemIndex + 1 === ingredient.items.length
+                                ? ''
+                                : 'border-b-0'
+                            } ${
+                              checkedIng.includes(
+                                ingredientIndex + ':' + itemIndex
+                              )
+                                ? 'line-through'
+                                : ''
+                            }`}
+                          >
+                            {item}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   ))}
                 </div>
@@ -179,30 +210,16 @@ export function RecipeRead(): ReactElement {
                     className='flex flex-col items-start gap-5 relative'
                     id='instructions'
                   >
-                    {data.instructions.map(([images, content], i) => (
-                      <div
-                        key={i}
-                        id={
-                          i + 1 === data.instructions.length
-                            ? ''
-                            : 'instruction'
-                        }
-                      >
-                        <div className='flex items-center gap-5 ml-10 mb-5'>
-                          {images.map((image, i) => (
-                            <img
-                              className='max-w-50 max-w-50 object-cover rounded-lg'
-                              src={API_ENDPOINT + image}
-                              alt=''
-                              key={'i_' + i}
-                            />
-                          ))}
-                        </div>
-                        <div className='flex items-center gap-5'>
+                    {data.instructions.map((content, i) => (
+                      <div key={i} id={'instruction'}>
+                        <div className='flex items-start gap-5'>
                           <span className='z-5 bg-primary c-white min-w-10 min-h-10 flex-center rounded-full'>
                             {i + 1}.
                           </span>
-                          <span>{content}</span>
+                          <div
+                            className='translate-y--2'
+                            dangerouslySetInnerHTML={{ __html: content }}
+                          />
                         </div>
                       </div>
                     ))}
@@ -248,11 +265,7 @@ export function RecipeRead(): ReactElement {
                   {!data.tags.length ? (
                     <span>No tags.</span>
                   ) : (
-                    data.tags.map((tag, i) => (
-                      <span key={i} className='block mr-1'>
-                        {tag}
-                      </span>
-                    ))
+                    <span>{data.tags.join(', ')}</span>
                   )}
                 </div>
               </div>

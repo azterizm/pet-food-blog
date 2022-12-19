@@ -1,9 +1,14 @@
 #instruction::after {
   content: '';
-  width: 1px;
-  height: 95%;
-  background-color: #161b3d80;
+  display: inline-block;
+  width: 2px;
+  background-color: #161b3d;
   position: absolute;
   left: 1.25rem;
-  top: 1.25rem;
+  top: 10px;
+  height: calc(100% - 20px);
+}
+
+#recipe_read img {
+  max-width: 100%;
 }
