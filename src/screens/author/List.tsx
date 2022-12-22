@@ -16,7 +16,6 @@ export function AuthorList(): ReactElement {
     data: (IAuthor & { socialMedia: ISocialMedia[] })[]
     total: number
   }>('/author/main_list/new/' + page * OFFSET + '/' + OFFSET)
-  console.log('data:', data)
   const navigate = useNavigate()
 
   return (
