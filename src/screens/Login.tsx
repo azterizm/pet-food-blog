@@ -16,15 +16,12 @@ export function Login(): ReactElement {
     setError('')
     if (!input) return setError('Input is needed to login.')
     setLoading(true)
-    const data = await fetch(
-      API_ENDPOINT + '/auth/login',
-      {
-        body: JSON.stringify({ input, type, password: 'placeholder' }),
-        headers: { 'content-type': 'application/json' },
-        method: 'post',
-        credentials: 'include',
-      },
-    ).then((r) => r.json())
+    const data = await fetch(API_ENDPOINT + '/auth/login', {
+      body: JSON.stringify({ input, type, password: 'placeholder' }),
+      headers: { 'content-type': 'application/json' },
+      method: 'post',
+      credentials: 'include',
+    }).then((r) => r.json())
     setLoading(false)
     if (data.error) return setError(data.info)
     window.location.href = '/'
@@ -41,7 +38,9 @@ export function Login(): ReactElement {
       title='Welcome back!'
     >
       {loading ? (
-        <h1>Logging in...</h1>
+        <div className='absolute top-10 left-50% translate-x--50%'>
+          <Loader />
+        </div>
       ) : (
         <>
           <input
@@ -82,11 +81,6 @@ export function Login(): ReactElement {
           </p>
         </>
       )}
-      {loading ? (
-        <div className='absolute top-10 left-50% translate-x--50%'>
-          <Loader />
-        </div>
-      ) : null}
     </TwoColumnLayout>
   )
 }

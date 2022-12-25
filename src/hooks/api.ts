@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { API_ENDPOINT, CREATOR_ENDPOINT } from '../constants/api'
+import { API_ENDPOINT } from '../constants/api'
 import { getUser } from '../features/auth'
 import { AuthUser } from '../types/auth'
 
@@ -97,12 +97,9 @@ export function useAuth() {
 
   function fetch(force: boolean = false) {
     getUser(force).then((r) => {
-      if (r && r.type === 'author') window.location.href = CREATOR_ENDPOINT
-      else {
-        if (!r) return
-        setUser(r)
-        if (!r.profile) navigate('/onboard')
-      }
+      if (!r) return
+      setUser(r)
+      if (!r.profile) navigate('/onboard')
     })
   }
 

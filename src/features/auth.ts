@@ -1,4 +1,4 @@
-import { API_ENDPOINT, CREATOR_ENDPOINT } from '../constants/api'
+import { API_ENDPOINT } from '../constants/api'
 import { IUser } from '../types/auth'
 
 export async function logoutUser() {
@@ -23,9 +23,6 @@ export async function getUser(force: boolean = false): Promise<IUser | null> {
 
     if (data.error) {
       return null
-    } else if ((data as IUser).type === 'author') {
-      window.location.href = CREATOR_ENDPOINT
-      return null
     }
 
     user = data
@@ -40,8 +37,4 @@ export async function getUser(force: boolean = false): Promise<IUser | null> {
   }
 
   return user as any
-}
-
-export async function openCreatorPage() {
-  window.location.href = CREATOR_ENDPOINT
 }

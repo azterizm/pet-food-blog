@@ -1,6 +1,7 @@
 import { List, MagnifyingGlass, User } from 'phosphor-react'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { CREATOR_ENDPOINT } from '../../constants/api'
 import { AuthUser } from '../../types/auth'
 import { MobileMenu } from '../header/MobileMenu'
 
@@ -36,12 +37,20 @@ export function Header({ user }: Props) {
       </div>
       <div className='items-center gap-6 hidden lg:flex font-bold'>
         {user ? (
-          <div
-            className='cursor-pointer p-5'
-            onClick={() => navigate('/profile')}
-          >
-            <User size={24} weight='bold' />
-          </div>
+          <>
+            <button
+              onClick={() => (window.location.href = CREATOR_ENDPOINT)}
+              className='bg-#2821fc c-white rounded-full c-black border-none font-bold px-7 py-2 hover:brightness-75 translate-y--1'
+            >
+              Create
+            </button>
+            <div
+              className='cursor-pointer p-5 pl-0'
+              onClick={() => navigate('/profile')}
+            >
+              <User size={24} weight='bold' />
+            </div>
+          </>
         ) : (
           <>
             <button
