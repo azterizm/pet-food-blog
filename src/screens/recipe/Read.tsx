@@ -1,4 +1,5 @@
 import { IAuthor } from '@backend/models/author'
+import { Portal } from 'react-portal'
 import { IRecipe } from '@backend/models/recipe'
 import { Article, Check, Circle, Heart, Money } from 'phosphor-react'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
@@ -13,6 +14,7 @@ import '../../css/recipe_read.css'
 import { useApi, useAuth } from '../../hooks/api'
 import { ApiProcess } from '../../types/api'
 import { showCompactNumber, showDuration, showPluralS } from '../../util/ui'
+import { useFade } from '../../hooks/state'
 
 export function RecipeRead(): ReactElement {
   const { id } = useParams() as { id: string }
@@ -29,6 +31,8 @@ export function RecipeRead(): ReactElement {
   const [liked, setLiked] = useState(false)
   const [likes, setLikes] = useState(0)
   const [user, changeUser] = useAuth()
+  const [confirmPurchase, setConfirmPurchase] = useState(false)
+  const fade = useFade()
 
   useEffect(() => {
     if (!id) window.location.href = '/'
@@ -104,7 +108,6 @@ export function RecipeRead(): ReactElement {
             image={API_ENDPOINT + data.mainImage}
             categories={data.categories}
             publishedOn={data.createdAt || new Date()}
-            paid={data.price}
           />
           <div className='flex justify-center items-center gap-2 uppercase font-medium text-primary text-xs mt-5'>
             <span>{showDuration(data.duration)}</span>
@@ -129,10 +132,12 @@ export function RecipeRead(): ReactElement {
             </div>
             {errorUnpaid ? (
               <NotPaidDialog
-                onPurchase={purchase}
+                onPurchase={() => (setConfirmPurchase(true), fade.show())}
                 onSubscribe={() => navigate('/authors/' + data.author.id)}
                 loggedIn={Boolean(user)}
                 price={data.price}
+                priceType={data.priceType}
+                subscribeCost={data.author.subscribeCost}
               />
             ) : (
               <div className='flex flex-col gap-5 mt-10'>
@@ -271,6 +276,29 @@ export function RecipeRead(): ReactElement {
               </div>
             )}
           </div>
+          {confirmPurchase ? (
+            <Portal>
+              <div className='shadow-lg fixed-center bg-white p-8 rounded-lg text-center c-primary max-w-100'>
+                <h3>Are you sure that you want to purchase this recipe?</h3>
+                <div className='flex gap-5 justify-center'>
+                  <button
+                    onClick={() => (
+                      purchase(), fade.hide(), setConfirmPurchase(false)
+                    )}
+                    className='rounded-lg font-bold px-5 py-3 c-white bg-secondary border-none'
+                  >
+                    Purchase
+                  </button>
+                  <button
+                    onClick={() => (setConfirmPurchase(false), fade.hide())}
+                    className='bg-transparent c-primary font-bold border-none'
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </Portal>
+          ) : null}
         </div>
       )}
     </div>

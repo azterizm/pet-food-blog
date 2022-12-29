@@ -7,3 +7,10 @@ export const useHeaderFooter = create<HeaderFooterState>()((set) => ({
   hide: () => set({ visible: false }),
   toggle: () => set((s) => ({ visible: !s.visible })),
 }))
+
+export const useFade = create<HeaderFooterState>((set) => ({
+  visible: false,
+  show: () => set({ visible: true }),
+  hide: () => set({ visible: false }),
+  toggle: () => set((s: any) => ({ visible: !s.visible })),
+}))

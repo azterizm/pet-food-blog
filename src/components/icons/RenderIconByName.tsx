@@ -19,7 +19,7 @@ export interface RenderIconByNameProps
   name: string
 }
 
-const Icons = [
+const Icons = {
   FacebookLogo,
   InstagramLogo,
   LinkedinLogo,
@@ -30,7 +30,7 @@ const Icons = [
   TiktokLogo,
   TwitterLogo,
   YoutubeLogo,
-]
+}
 
 export function RenderIconByName(props: RenderIconByNameProps): ReactElement {
   const Component = (Icons as any)[props.name]

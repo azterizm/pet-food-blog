@@ -13,6 +13,7 @@ export function Recipes(): ReactElement {
   const { data, error, loading } = useApi<(IRecipe & { author: IAuthor })[]>(
     `/recipe/get_client_feat`
   )
+  console.log('data:', data)
   const navigate = useNavigate()
   const main = useSpring({
     from: {
@@ -42,14 +43,16 @@ export function Recipes(): ReactElement {
             reviews={r.likes}
             title={r.title}
             onClick={() => navigate('/recipes/read/' + r.id)}
-            paid={Boolean(r.price)}
+            priceType={r.priceType}
             key={r.id}
           />
         ))
       )}
-      <MainButton onClick={() => navigate('/recipes')}>
-        See all recipes
-      </MainButton>
+      {data && data.length >= 10 ? (
+        <MainButton onClick={() => navigate('/recipes')}>
+          See all recipes
+        </MainButton>
+      ) : null}
     </a.div>
   )
 }

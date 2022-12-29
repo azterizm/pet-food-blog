@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/header'
 import { useAuth } from './hooks/api'
-import { useHeaderFooter } from './hooks/state'
+import { useFade, useHeaderFooter } from './hooks/state'
 import { AuthorList } from './screens/author/List'
 import { AuthorProfile } from './screens/author/Profile'
 import { Deposit } from './screens/Deposit'
@@ -20,6 +20,7 @@ import { Search } from './screens/Search'
 function App() {
   const headFoot = useHeaderFooter()
   const [user] = useAuth()
+  const fade = useFade()
   return (
     <div
       id='route_container'
@@ -49,6 +50,9 @@ function App() {
         <Route path='search' element={<Search />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
+      {fade.visible ? (
+        <div className='fixed top-0 left-0 w-full h-full bg-black opacity-50'></div>
+      ) : null}
       {headFoot.visible ? <Footer /> : null}
     </div>
   )

@@ -1,7 +1,7 @@
 import { IAuthor } from '@backend/models/author'
 import moment from 'moment'
-import { Star } from 'phosphor-react'
 import { useNavigate } from 'react-router-dom'
+import { PriceType } from '../../types/ui'
 import { showDuration, showPluralS } from '../../util/ui'
 interface Props {
   title: string
@@ -11,11 +11,11 @@ interface Props {
   image: string
   duration: number
   large?: boolean
-  paid?: boolean
+  priceType?: PriceType
   onClick?: () => void
 }
 export function Recipe({
-  paid = false,
+  priceType,
   duration,
   large = false,
   image,
@@ -52,9 +52,9 @@ export function Recipe({
               ))}{' '}
           {moment(postedOn).fromNow()}
         </span>
-        {paid ? (
+        {priceType && priceType !== 'free' ? (
           <span className='block w-max mt-2 font-bold m-0 p-0 uppercase border-1 border-white w-max-content text-sm px-3 py-1 rounded-full'>
-            paid members only
+            {priceType.toUpperCase()} members only
           </span>
         ) : null}
       </div>
