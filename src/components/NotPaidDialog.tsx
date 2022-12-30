@@ -16,8 +16,9 @@ export function NotPaidDialog(props: Props): ReactElement {
     <div className='relative bg-gradient-to-b from-indigo-400 to-indigo-600 p-10 rounded-8 c-white text-center translate-y--5 mb-50vh'>
       <div className='flex-center flex-col z-2 gap-5'>
         <p className='text-xl font-bold m-0'>
-          This recipe must be {props.priceType}
-          {props.priceType === 'subscribe' ? 'd' : ''} to be accessed
+          {props.priceType === 'subscribe'
+            ? 'You must subscribe the chef to access this recipe'
+            : 'This recipe must be paid to be accessed'}
         </p>
         {props.loggedIn ? (
           <>

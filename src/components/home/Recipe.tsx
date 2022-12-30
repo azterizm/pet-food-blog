@@ -54,7 +54,8 @@ export function Recipe({
         </span>
         {priceType && priceType !== 'free' ? (
           <span className='block w-max mt-2 font-bold m-0 p-0 uppercase border-1 border-white w-max-content text-sm px-3 py-1 rounded-full'>
-            {priceType.toUpperCase()} members only
+            {priceType.toUpperCase()}
+            {priceType === 'subscribe' ? 'd' : ''} members only
           </span>
         ) : null}
       </div>

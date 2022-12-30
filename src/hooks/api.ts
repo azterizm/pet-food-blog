@@ -57,7 +57,6 @@ export function useApi<T>(
       .then((r) => r.json())
       .catch((r) => ({ error: true, info: r.message }))
       .then((r) => {
-        console.log('data', r)
         setLoading(false)
         setData(r)
         if (r.error) {

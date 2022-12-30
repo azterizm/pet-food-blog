@@ -38,12 +38,14 @@ export function Header({ user }: Props) {
       <div className='items-center gap-6 hidden lg:flex font-bold'>
         {user ? (
           <>
-            <button
-              onClick={() => (window.location.href = CREATOR_ENDPOINT)}
-              className='bg-#2821fc c-white rounded-full c-black border-none font-bold px-7 py-2 hover:brightness-75 translate-y--1'
-            >
-              Create
-            </button>
+            {user.type === 'author' ? (
+              <button
+                onClick={() => (window.location.href = CREATOR_ENDPOINT)}
+                className='bg-#2821fc c-white rounded-full c-black border-none font-bold px-7 py-2 hover:brightness-75 translate-y--1'
+              >
+                Create
+              </button>
+            ) : null}
             <div
               className='cursor-pointer p-5 pl-0'
               onClick={() => navigate('/profile')}

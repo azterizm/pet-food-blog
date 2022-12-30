@@ -1,7 +1,8 @@
-import { User, X } from 'phosphor-react'
+import { Dog, MagnifyingGlass, User, X } from 'phosphor-react'
 import type { ReactElement } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSpring, animated as a, config, useTrail } from 'react-spring'
+import { CREATOR_ENDPOINT } from '../../constants/api'
 import { AuthUser } from '../../types/auth'
 
 export interface MobileMenuProps {
@@ -45,7 +46,7 @@ export function MobileMenu({
         backgroundImage: `url('/images/menu.jpg')`,
       }}
     >
-      <div className='flex justify-end items-start gap-10 flex-col h-70%'>
+      <div className='flex justify-start items-start gap-10 flex-col h-70%'>
         {items.map((styles, i) => (
           <a.div
             style={{
@@ -64,7 +65,7 @@ export function MobileMenu({
           </a.div>
         ))}
       </div>
-      <div className='mt-10' onClick={() => onChange(false)}>
+      <div className='mt-10 translate-y--10' onClick={() => onChange(false)}>
         {!user ? (
           <>
             <button
@@ -81,15 +82,29 @@ export function MobileMenu({
             </button>
           </>
         ) : (
-          <>
+          <div className='flex items-start gap-5 flex-col ml--5'>
             <div
-              className='shadow-lg w-max px-5 flex items-center gap-2'
+              className='w-max px-5 flex items-center gap-2'
+              onClick={() => (window.location.href = CREATOR_ENDPOINT)}
+            >
+              <Dog size={48} />
+              <span className='text-xl'>Create</span>
+            </div>
+            <div
+              className='w-max px-5 flex items-center gap-2'
               onClick={() => navigate('/profile')}
             >
               <User size={48} />
               <span className='text-xl'>Profile</span>
             </div>
-          </>
+            <div
+              className='w-max px-5 flex items-center gap-2'
+              onClick={() => navigate('/search')}
+            >
+              <MagnifyingGlass size={48} />
+              <span className='text-xl'>Search</span>
+            </div>
+          </div>
         )}
       </div>
       <div
