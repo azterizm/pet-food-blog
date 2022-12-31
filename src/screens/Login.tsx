@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthTypeSelector } from '../components/AuthTypeSelector'
 import { Loader } from '../components/Loader'
@@ -11,6 +11,10 @@ export function Login(): ReactElement {
   const [type, setType] = useState<AuthType>('user')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    window.localStorage.removeItem('user')
+  }, [])
 
   async function handleSubmit() {
     setError('')

@@ -25,6 +25,8 @@ export function Register(): ReactElement {
 
   useEffect(() => {
     setUsername(generateUsername({ useHyphen: false }))
+
+    window.localStorage.removeItem('user')
   }, [])
 
   async function handleSubmit() {
@@ -32,32 +34,29 @@ export function Register(): ReactElement {
     const okEmail = emailRegex.test(email)
     if (!okEmail)
       return setError(
-        'Please enter correct email address. It does not seem valid.',
+        'Please enter correct email address. It does not seem valid.'
       )
     const okUsername = usernameRegex.test(username)
     if (!okUsername)
       return setError(
-        'Username has invalid characters. Please choose another one.',
+        'Username has invalid characters. Please choose another one.'
       )
 
     setLoading(true)
-    const data = await fetch(
-      `${API_ENDPOINT}/auth/register/${type}`,
-      {
-        body: JSON.stringify({
-          name,
-          email,
-          phone,
-          username,
-          type,
-          input: username,
-          password: 'placeholder',
-        }),
-        headers: { 'content-type': 'application/json' },
-        method: 'post',
-        credentials: 'include',
-      },
-    ).then((r) => r.json())
+    const data = await fetch(`${API_ENDPOINT}/auth/register/${type}`, {
+      body: JSON.stringify({
+        name,
+        email,
+        phone,
+        username,
+        type,
+        input: username,
+        password: 'placeholder',
+      }),
+      headers: { 'content-type': 'application/json' },
+      method: 'post',
+      credentials: 'include',
+    }).then((r) => r.json())
     setLoading(false)
     if (data.error) return setError(data.info)
     setLogging(true)
@@ -71,7 +70,7 @@ export function Register(): ReactElement {
     const okEmail = emailRegex.test(email)
     if (!okEmail)
       return setError(
-        'Please enter correct email address. It does not seem valid.',
+        'Please enter correct email address. It does not seem valid.'
       )
     setStage(true)
   }
