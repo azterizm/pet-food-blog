@@ -5,6 +5,7 @@ import { capitalize } from 'lodash'
 import { Check, UserMinus } from 'phosphor-react'
 import { ReactElement, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { AuthorProfileImage } from '../../components/AuthorProfileImage'
 import { ErrorDialog } from '../../components/ErrorDialog'
 import { GoBack } from '../../components/GoBack'
 import { Recipe } from '../../components/home/Recipe'
@@ -25,6 +26,7 @@ export function AuthorProfile(): ReactElement {
       subscribed: boolean
     }
   >('/author/one/' + id)
+  console.log('data:', data)
   const [unsubscribe, setUnsubscribe] = useState(false)
   useUndefinedParam(id)
 
@@ -52,11 +54,7 @@ export function AuthorProfile(): ReactElement {
         <div>
           <GoBack />
           <div className='flex-center flex-col my-20 gap-4'>
-            <img
-              src={API_ENDPOINT + '/auth/profile/' + data.id}
-              alt='profile picture'
-              className='w-40 h-40 object-cover rounded-lg shadow-lg'
-            />
+            <AuthorProfileImage author={data} />
             <p className='text-4xl font-bold'>{data.name}</p>
             <div className='flex-center gap-5'>
               {data.socialMedia.map((s, i) => (

@@ -32,12 +32,13 @@ export function Purchases(): ReactElement {
             <Recipe
               key={recipe.id}
               title={recipe.title}
-              authors={[recipe.author]}
+              author={recipe.author}
               postedOn={recipe.createdAt!}
               reviews={recipe.likes}
               image={API_ENDPOINT + recipe.mainImage}
               duration={recipe.duration}
               onClick={() => navigate('/recipes/read/' + recipe.id)}
+              categories={recipe.categories}
             />
           ))}
         </div>

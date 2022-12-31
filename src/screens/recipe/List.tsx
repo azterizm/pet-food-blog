@@ -6,7 +6,13 @@ import { Recipe } from '../../components/home/Recipe'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT } from '../../constants/api'
 import { useApi } from '../../hooks/api'
-import { categories, Category, categoryLabel, sortLabel } from '../../types/api'
+import {
+  AuthorTotalRecipe,
+  categories,
+  Category,
+  categoryLabel,
+  sortLabel,
+} from '../../types/api'
 import { AuthorSort } from '@backend/zod/api'
 import { IRecipe } from '@backend/models/recipe'
 import { IAuthor } from '@backend/models/author'
@@ -20,12 +26,14 @@ export function RecipeList(): ReactElement {
   const [page, setPage] = useState(0)
   const { data, error, loading } = useApi<{
     recipes: (IRecipe & { author: IAuthor })[]
+    authorTotalRecipes: AuthorTotalRecipe[]
     total: number
   }>(
     `/recipe/get_client_recipes/${category}/${sort}/${page * OFFSET}`,
     { debounce: 800 },
     [sort, category]
   )
+  console.log('data:', data)
   const navigate = useNavigate()
   return (
     <div className='min-h-100vh'>
@@ -89,7 +97,7 @@ export function RecipeList(): ReactElement {
           <div className='flex flex-wrap gap-10 items-center'>
             {data.recipes.map((r) => (
               <Recipe
-                authors={[r.author]}
+                author={r.author}
                 duration={r.duration}
                 image={API_ENDPOINT + r.mainImage}
                 postedOn={r.createdAt!}
@@ -98,6 +106,12 @@ export function RecipeList(): ReactElement {
                 onClick={() => navigate('/recipes/read/' + r.id)}
                 priceType={r.priceType}
                 key={r.id}
+                categories={r.categories}
+                price={r.price}
+                authorTotalRecipes={
+                  data.authorTotalRecipes.find((v) => v.id === r.author.id)
+                    ?.total || 0
+                }
               />
             ))}
           </div>

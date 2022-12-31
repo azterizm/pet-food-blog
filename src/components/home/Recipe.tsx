@@ -1,81 +1,121 @@
 import { IAuthor } from '@backend/models/author'
+import { RecipeCategory } from '@backend/models/recipe'
 import moment from 'moment'
+import { Heart } from 'phosphor-react'
 import { useNavigate } from 'react-router-dom'
+import { API_ENDPOINT } from '../../constants/api'
+import { categoryLabel } from '../../types/api'
 import { PriceType } from '../../types/ui'
 import { showDuration, showPluralS } from '../../util/ui'
+import { categoryRenders } from '../icons/RecipeCategory'
 interface Props {
   title: string
-  authors?: Pick<IAuthor, 'id' | 'name'>[]
+  author?: Pick<IAuthor, 'id' | 'name' | 'subscribeCost' | 'profile'>
   postedOn: Date
   reviews?: number
   image: string
   duration: number
-  large?: boolean
+  authorTotalRecipes?: number
   priceType?: PriceType
+  price?: number
+  categories: RecipeCategory[]
   onClick?: () => void
 }
 export function Recipe({
   priceType,
+  price,
   duration,
-  large = false,
   image,
   title,
   reviews = 0,
   postedOn,
-  authors,
+  author,
   onClick,
+  categories,
+  authorTotalRecipes,
 }: Props) {
   const navigate = useNavigate()
   return (
-    <div
-      className={
-        'h-70 p-10 rounded-7 w-full c-white flex justify-between items-start flex-col relative shadow-lg hover:translate-y--2 transition hover:shadow-xl cursor-pointer ' +
-        (large ? 'xl:w-170' : 'xl:w-70')
-      }
-      onClick={onClick}
-    >
-      <div className='z-1'>
-        <h1>{title}</h1>
-        <span>
-          {authors && authors.length ? 'by' : ''}{' '}
-          {!authors || !authors.length
-            ? null
-            : authors.map((r, i) => (
-                <b
-                  className='hover:underline cursor-pointer'
-                  onClick={() => navigate('/authors/' + r.id)}
-                  key={r.id}
-                >
-                  {r.name}
-                  {i + 1 === authors.length ? '' : ', '}
-                </b>
-              ))}{' '}
-          {moment(postedOn).fromNow()}
-        </span>
-        {priceType && priceType !== 'free' ? (
-          <span className='block w-max mt-2 font-bold m-0 p-0 uppercase border-1 border-white w-max-content text-sm px-3 py-1 rounded-full'>
-            {priceType.toUpperCase()}
-            {priceType === 'subscribe' ? 'd' : ''} members only
-          </span>
-        ) : null}
-      </div>
-      <div className='flex justify-between items-center w-full z-1'>
-        <span className='uppercase text-sm font-medium'>
-          {showDuration(duration)}
-        </span>
-        {!reviews ? (
-          <span>No likes</span>
-        ) : (
-          <span>
-            {reviews} like{showPluralS(reviews)}
-          </span>
-        )}
-      </div>
+    <div className='m-0 p-0 shadow-lg rounded-lg max-w-80'>
       <img
-        className='w-full h-full absolute top-0 left-0 rounded-7 brightness-50 object-cover'
+        onClick={onClick}
+        className='cursor-pointer max-w-80 rounded-t-lg'
         src={image}
-        alt={title + ' image'}
+        alt='recipe image'
       />
+      <div className='p-5 relative'>
+        <div
+          className='flex items-start flex-col cursor-pointer'
+          onClick={onClick}
+        >
+          <div className='flex justify-between items-center w-full mt-2.5'>
+            <span>{showDuration(duration)}</span>
+            <span>{moment(postedOn).fromNow()}</span>
+          </div>
+          <span className='text-2xl font-bold'>{title}</span>
+        </div>
+
+        <div className='flex items-center flex-wrap gap-5 mt-5 border-b-2 border-neutral-300 pb-8 border-dashed border-t-0 border-l-0 border-r-0'>
+          {categories.map((category, i) => (
+            <span
+              key={i}
+              style={{
+                color: categoryRenders.find((r) => r.value === category)
+                  ?.color[0],
+                backgroundColor: categoryRenders.find(
+                  (r) => r.value === category
+                )?.color[1],
+              }}
+              className='px-5 py-3 rounded-full flex items-center gap-2'
+            >
+              {categoryRenders.find((r) => r.value === category)?.icon}
+              {(categoryLabel as any)[category]}
+            </span>
+          ))}
+        </div>
+
+        <div className='mt-8 flex items-center flex-col gap-2 w-full'>
+          <button className='w-full bg-secondary c-white border-none py-2 text-lg font-medium rounded-full'>
+            Share
+          </button>
+          <button className='w-full bg-secondary c-white border-none py-2 text-lg font-medium rounded-full'>
+            Save
+          </button>
+          <div className='flex items-center justify-around w-full bg-blue-100 c-secondary rounded-full py-2'>
+            <span>Wow</span>
+            <Heart size={24} weight='fill' className='c-red translate-x--2.5' />
+            <span>{reviews}</span>
+          </div>
+          <div
+            className='flex items-center justify-center flex-col cursor-pointer mt-5'
+            onClick={() => navigate('/authors/' + author?.id)}
+          >
+            <img
+              src={
+                !author?.profile
+                  ? './images/avatar.webp'
+                  : API_ENDPOINT + '/auth/profile/' + author.id
+              }
+              alt='author image'
+              className='w-15 h-15 rounded-full'
+            />
+            <span className='block mt-2'>{author?.name}</span>
+            {authorTotalRecipes ? (
+              <span className='font-medium c-secondary'>
+                {authorTotalRecipes} Recipe{showPluralS(authorTotalRecipes)}
+              </span>
+            ) : null}
+          </div>
+        </div>
+
+        <span className='absolute top--8 right-5 block bg-black c-white px-5 py-3 rounded-full'>
+          {priceType === 'free'
+            ? 'Free'
+            : priceType === 'paid'
+            ? `Unlock \$${price}`
+            : `Subscribe Channel \$${author?.subscribeCost}`}
+        </span>
+      </div>
     </div>
   )
 }

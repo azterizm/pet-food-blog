@@ -65,3 +65,7 @@ export interface ApiProcess {
   error: boolean
   info: string
 }
+export interface AuthorTotalRecipe {
+  id: number
+  total: number
+}

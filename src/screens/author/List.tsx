@@ -3,6 +3,7 @@ import { ISocialMedia } from '@backend/models/socialMedia'
 import { capitalize } from 'lodash'
 import { ReactElement, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AuthorProfileImage } from '../../components/AuthorProfileImage'
 import { RenderIconByName } from '../../components/icons/RenderIconByName'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT } from '../../constants/api'
@@ -34,11 +35,7 @@ export function AuthorList(): ReactElement {
               onClick={() => navigate(String(r.id))}
               key={r.id}
             >
-              <img
-                className='object-cover w-80 object-cover rounded-t-lg'
-                src={API_ENDPOINT + '/auth/profile/' + r.id}
-                alt='profile'
-              />
+              <AuthorProfileImage author={r} />
               <div className='px-5 py-3 bg-neutral-300 rounded-b-lg'>
                 <span className='text-2xl font-bold mt-5 block'>{r.name}</span>
                 <div className='flex items-center gap-5 my-5'>
