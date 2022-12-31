@@ -96,7 +96,7 @@ export function RecipeList(): ReactElement {
                 reviews={r.likes}
                 title={r.title}
                 onClick={() => navigate('/recipes/read/' + r.id)}
-                paid={Boolean(r.price)}
+                priceType={r.priceType}
                 key={r.id}
               />
             ))}

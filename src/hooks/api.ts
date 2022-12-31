@@ -98,7 +98,6 @@ export function useAuth() {
     getUser(force).then((r) => {
       if (!r) return
       setUser(r)
-      if (!r.profile) navigate('/onboard')
     })
   }
 

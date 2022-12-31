@@ -9,7 +9,6 @@ import { Deposit } from './screens/Deposit'
 import Home from './screens/Home'
 import { Login } from './screens/Login'
 import { NotFound } from './screens/NotFound'
-import { Onboard } from './screens/Onboard'
 import { Profile } from './screens/Profile'
 import { Purchases } from './screens/Purchases'
 import { RecipeList } from './screens/recipe/List'
@@ -34,7 +33,6 @@ function App() {
         {user ? (
           <>
             <Route path='profile' element={<Profile />} />
-            <Route path='onboard' element={<Onboard />} />
             <Route path='deposit' element={<Deposit />} />
             <Route path='purchases' element={<Purchases />} />
           </>
