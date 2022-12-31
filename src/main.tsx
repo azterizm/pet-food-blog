@@ -5,7 +5,6 @@ import 'uno.css'
 import App from './App'
 import './css/global.css'
 
-//test
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <HashRouter>
