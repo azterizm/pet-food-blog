@@ -1,9 +1,11 @@
+import { lazy } from 'react'
+
 export function showPluralS(arg: number) {
   return arg > 1 ? 's' : ''
 }
 
 export function showCompactNumber(arg: number) {
-  const formatter = new Intl.NumberFormat('en',{notation: 'compact'})
+  const formatter = new Intl.NumberFormat('en', { notation: 'compact' })
   return formatter.format(arg)
 }
 
@@ -21,6 +23,15 @@ export function showDuration(arg: number | string) {
 
 function decideDuration(arg: number, label: string) {
   return arg > 0 ? `${arg} ${label}${showPluralS(arg)}` : ''
+}
+export function lazyImport<
+  T extends React.ComponentType<any>,
+  I extends { [K2 in K]: T },
+  K extends keyof I
+>(factory: () => Promise<I>, name: K): I {
+  return Object.create({
+    [name]: lazy(() => factory().then((module) => ({ default: module[name] }))),
+  })
 }
 
 export const isFirefox = typeof (window as any).InstallTrigger !== 'undefined'

@@ -14,6 +14,7 @@ export interface MobileMenuProps {
 const menuItems = [
   ['/recipes', 'Recipes'],
   ['/blog', 'Blog'],
+  ['/free', 'Free Stuff'],
   ['/authors', 'Chefs'],
   ['/contact', 'Contact'],
   ['/about', 'About'],

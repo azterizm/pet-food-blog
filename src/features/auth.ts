@@ -9,6 +9,7 @@ export async function logoutUser() {
   }).then((r) => r.json())
   if (data.error) return window.alert(data.info)
   localStorage.removeItem('user')
+  localStorage.removeItem('hintShown')
   window.location.href = '/'
 }
 
