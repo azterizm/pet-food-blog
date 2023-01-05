@@ -84,7 +84,6 @@ export function useApi<T>(
 
 export function useAuth() {
   const [user, setUser] = useState<null | AuthUser>(null)
-  const navigate = useNavigate()
   useLayoutEffect(() => {
     fetch()
   }, [])

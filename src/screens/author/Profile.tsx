@@ -26,7 +26,6 @@ export function AuthorProfile(): ReactElement {
       subscribed: boolean
     }
   >('/author/one/' + id)
-  console.log('data:', data)
   const [unsubscribe, setUnsubscribe] = useState(false)
   useUndefinedParam(id)
 
@@ -76,9 +75,7 @@ export function AuthorProfile(): ReactElement {
               >
                 Subscribe for {data.subscribeCost}$/month
               </button>
-            ) : null}
-
-            {data.subscribed ? (
+            ) : (
               <div
                 className='cursor-pointer flex-center gap-2 border-2 border-primary px-5 py-3 rounded-full'
                 onClick={() => setUnsubscribe((e) => !e)}
@@ -86,7 +83,7 @@ export function AuthorProfile(): ReactElement {
                 <span>Subscribed</span>
                 <Check />
               </div>
-            ) : null}
+            )}
           </div>
 
           <div className='flex flex-wrap gap-10 items-center'>
