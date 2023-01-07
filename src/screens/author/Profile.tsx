@@ -68,14 +68,16 @@ export function AuthorProfile(): ReactElement {
             </div>
             <p className='text-center max-w-100'>{data.bio}</p>
 
-            {data.subscribeCost > 0 && !data.subscribed ? (
+            {data.subscribeCost > 0 && !data.subscribed && user?.id !== id ? (
               <button
                 onClick={() => subscribe(true)}
                 className='bg-primary c-white px-5 py-3 rounded-full text-lg font-bold border-none'
               >
                 Subscribe for {data.subscribeCost}$/month
               </button>
-            ) : (
+            ) : null}
+
+            {data.subscribed ? (
               <div
                 className='cursor-pointer flex-center gap-2 border-2 border-primary px-5 py-3 rounded-full'
                 onClick={() => setUnsubscribe((e) => !e)}
@@ -83,7 +85,7 @@ export function AuthorProfile(): ReactElement {
                 <span>Subscribed</span>
                 <Check />
               </div>
-            )}
+            ) : null}
           </div>
 
           <div className='flex flex-wrap gap-10 items-center'>

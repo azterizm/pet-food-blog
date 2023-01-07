@@ -9,6 +9,7 @@ export async function logoutUser() {
   }).then((r) => r.json())
   if (data.error) return window.alert(data.info)
   localStorage.removeItem('user')
+  localStorage.removeItem('recipe_auto_save')
   localStorage.removeItem('hintShown')
   window.location.href = '/'
 }
@@ -31,7 +32,7 @@ export async function getUser(force: boolean = false): Promise<IUser | null> {
   } else {
     const parsedUser = JSON.parse(user)
     if (parsedUser.error) {
-      localStorage.clear()
+      localStorage.removeItem('user')
       window.alert(parsedUser.info)
       return null
     } else user = parsedUser

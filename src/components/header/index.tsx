@@ -70,6 +70,7 @@ export function Header({ user }: Props) {
               Create
             </button>
             <animated.div
+              onClick={closeHint}
               className='absolute right-0 bottom--45 bg-secondary c-white p-5 rounded-lg w-50 font-medium z-1'
               style={{
                 opacity: hintOpacity,
@@ -79,10 +80,7 @@ export function Header({ user }: Props) {
               <span>
                 Click to create recipes or articles and access your admin panel.
               </span>
-              <div
-                className='flex items-center justify-start gap-2 mt-4 bg-blue-700 w-max px-2 py-1 rounded-lg cursor-pointer'
-                onClick={closeHint}
-              >
+              <div className='flex items-center justify-start gap-2 mt-4 bg-blue-700 w-max px-2 py-1 rounded-lg cursor-pointer'>
                 <X weight='bold' />
                 <span>Close</span>
               </div>

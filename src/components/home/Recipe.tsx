@@ -112,8 +112,8 @@ export function Recipe({
           {priceType === 'free'
             ? 'Free'
             : priceType === 'paid'
-            ? `Unlock \$${price}`
-            : `Subscribe Channel \$${author?.subscribeCost}`}
+            ? `Unlock \$${price || 0}`
+            : `Subscribe Channel \$${author?.subscribeCost || 0}`}
         </span>
       </div>
     </div>
