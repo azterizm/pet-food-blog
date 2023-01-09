@@ -22,7 +22,11 @@ export function Subscribed(): ReactElement {
         ) : !data || !data.length ? (
           <span>No authors available.</span>
         ) : (
-          data.map((r) => <AuthorListItem data={r} key={r.id} />)
+          <div className='flex flex-wrap gap-5 justify-start'>
+            {data.map((r) => (
+              <AuthorListItem data={r} key={r.id} />
+            ))}
+          </div>
         )}
       </div>
     </div>

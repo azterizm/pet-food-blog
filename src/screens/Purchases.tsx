@@ -11,6 +11,7 @@ export function Purchases(): ReactElement {
   const navigate = useNavigate()
   const { data, error, loading } =
     useApi<(IRecipe & { author: IAuthor })[]>('/user/purchases')
+  console.log('data:', data)
   return (
     <div className='my-5'>
       <span className='uppercase c-primary text-xl font-bold'>Purchases</span>
@@ -21,7 +22,7 @@ export function Purchases(): ReactElement {
           {!data || !data.length ? 'No purchases' : error}
         </p>
       ) : (
-        <div className='flex flex-wrap gap-10 justify-center items-center'>
+        <div className='flex flex-wrap gap-10 justify-start items-center'>
           {data.map((recipe) => (
             <Recipe
               key={recipe.id}
@@ -33,6 +34,8 @@ export function Purchases(): ReactElement {
               duration={recipe.duration}
               onClick={() => navigate('/recipes/read/' + recipe.id)}
               categories={recipe.categories}
+              price={recipe.price}
+              priceType={recipe.priceType}
             />
           ))}
         </div>

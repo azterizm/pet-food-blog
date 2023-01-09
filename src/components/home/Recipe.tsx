@@ -34,6 +34,7 @@ export function Recipe({
   categories,
   authorTotalRecipes,
 }: Props) {
+  console.log('author:', author)
   const navigate = useNavigate()
   return (
     <div className='m-0 p-0 shadow-lg rounded-lg max-w-80'>

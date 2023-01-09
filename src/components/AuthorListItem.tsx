@@ -14,7 +14,7 @@ export function AuthorListItem(props: AuthorListItemProps): ReactElement {
   const navigate = useNavigate()
   return (
     <div
-      className='flex flex-col w-80 cursor-pointer'
+      className='flex flex-col w-80 cursor-pointer shadow-lg'
       onClick={() => navigate('/authors/' + String(props.data.id))}
     >
       <AuthorProfileImage author={props.data} />

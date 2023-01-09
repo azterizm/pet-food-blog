@@ -26,6 +26,7 @@ export function AuthorProfile(): ReactElement {
       subscribed: boolean
     }
   >('/author/one/' + id)
+  console.log('data:', data)
   const [unsubscribe, setUnsubscribe] = useState(false)
   useUndefinedParam(id)
 
@@ -68,7 +69,9 @@ export function AuthorProfile(): ReactElement {
             </div>
             <p className='text-center max-w-100'>{data.bio}</p>
 
-            {data.subscribeCost > 0 && !data.subscribed && user?.id !== id ? (
+            {user?.type === 'author' &&
+            user.id == id ? null : data.subscribeCost > 0 &&
+              !data.subscribed ? (
               <button
                 onClick={() => subscribe(true)}
                 className='bg-primary c-white px-5 py-3 rounded-full text-lg font-bold border-none'
@@ -94,8 +97,8 @@ export function AuthorProfile(): ReactElement {
                 key={r.id}
                 image={API_ENDPOINT + r.mainImage}
                 postedOn={r.createdAt!}
-                reviews={r.likes}
                 onClick={() => navigate('/recipes/read/' + r.id)}
+                author={data}
                 {...r}
               />
             ))}
