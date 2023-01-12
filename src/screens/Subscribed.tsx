@@ -8,7 +8,6 @@ import { useApi } from '../hooks/api'
 export function Subscribed(): ReactElement {
   const { data, error, loading } =
     useApi<(IAuthor & { socialMedia: ISocialMedia[] })[]>('/user/subscribed')
-  console.log('data:', data)
   return (
     <div className='my-5'>
       <span className='uppercase c-primary text-xl font-bold'>

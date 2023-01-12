@@ -11,7 +11,6 @@ export function Purchases(): ReactElement {
   const navigate = useNavigate()
   const { data, error, loading } =
     useApi<(IRecipe & { author: IAuthor })[]>('/user/purchases')
-  console.log('data:', data)
   return (
     <div className='my-5'>
       <span className='uppercase c-primary text-xl font-bold'>Purchases</span>

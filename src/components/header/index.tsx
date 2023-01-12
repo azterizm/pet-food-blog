@@ -31,9 +31,9 @@ export function Header({ user }: Props) {
 
   useEffect(() => {
     const hintShown = window.localStorage.getItem('hintShown')
-    if (!hintShown) hintOpacity.start(1)
-    else setRemoveHint(true)
-  }, [])
+    if (!hintShown && !user) hintOpacity.start(1)
+    else setRemoveHint(true), hintOpacity.start(0)
+  }, [user])
 
   function closeHint() {
     hintOpacity.start(0)
@@ -74,7 +74,7 @@ export function Header({ user }: Props) {
               className='absolute right-0 bottom--45 bg-secondary c-white p-5 rounded-lg w-50 font-medium z-1'
               style={{
                 opacity: hintOpacity,
-                display: removeHint ? 'none' : 'block',
+                display: removeHint || user ? 'none' : 'block',
               }}
             >
               <span>

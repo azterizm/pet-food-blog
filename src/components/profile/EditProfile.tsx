@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { API_ENDPOINT } from '../../constants/api'
 import { useAuth } from '../../hooks/api'
+import { useFade } from '../../hooks/state'
 import { ProfileImage } from '../ProfileImage'
 
 interface Inputs {
@@ -17,16 +18,19 @@ interface Inputs {
 const inputs = ['email', 'name', 'username', 'phone']
 const emailReg =
   /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
 export function EditProfile(): ReactElement {
   const [user] = useAuth()
-  const [editMode, setEditMode] = useState(false)
-
   const profileImage = useRef<HTMLInputElement>(null)
   const [newProfile, setNewProfile] = useState('')
+  const [newProfileDialog, setNewProfileDialog] = useState('')
+  const [editMode, setEditMode] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const fade = useFade()
   const { register, handleSubmit, setValue } = useForm<Inputs>({
     defaultValues: _.pick(user, inputs) as Inputs,
   })
-  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     if (user) {
       inputs.forEach((input) => setValue(input as any, (user as any)[input]))
@@ -59,7 +63,11 @@ export function EditProfile(): ReactElement {
   function addProfileImage() {
     const file = profileImage.current?.files?.item(0)
     if (!file) return
-    setNewProfile(URL.createObjectURL(file))
+    const imageURL = URL.createObjectURL(file)
+    setNewProfile(imageURL)
+    setNewProfileDialog(imageURL)
+    fade.show()
+    profileImage.current!.value = ''
   }
 
   function handleChangeEditMode() {
@@ -70,6 +78,7 @@ export function EditProfile(): ReactElement {
     }
     setEditMode((e) => !e)
   }
+
   return (
     <form
       onSubmit={handleSubmit(submitEdit)}
@@ -131,9 +140,61 @@ export function EditProfile(): ReactElement {
           {loading ? 'Saving changes...' : 'Save changes'}
         </button>
       ) : null}
-      <button className='bg-primary px-5 py-3 rounded-lg c-white font-bold mt-2'>
-        Edit profile
+      <button
+        onClick={handleChangeEditMode}
+        className='bg-primary px-5 py-3 rounded-lg c-white font-bold mt-2'
+        type='button'
+      >
+        {editMode ? 'Cancel edit' : 'Edit profile'}
       </button>
+      {newProfileDialog ? (
+        <div className='fixed-center bg-white w-80vw py-5 z-101 px-5 rounded-lg'>
+          <span className='font-medium font-lg pb-5 block'>
+            Change profile picture
+          </span>
+          <img
+            className='max-h-80% object-contain ml--5'
+            src={newProfileDialog}
+            style={{ width: 'calc(100% + 2.5rem)' }}
+          />
+          <div className='flex items-center justify-between mt-5'>
+            <button
+              onClick={() => (
+                setNewProfile(''),
+                setNewProfileDialog(''),
+                fade.hide(),
+                (profileImage.current!.value = '')
+              )}
+              className='bg-white c-primary text-md border-0 font-medum'
+            >
+              Cancel
+            </button>
+            <div className='flex justify-end items-center gap-5'>
+              <button
+                onClick={() => (
+                  setNewProfileDialog(''),
+                  setNewProfile(''),
+                  (profileImage.current!.value = ''),
+                  profileImage.current!.click()
+                )}
+                className='c-primary bg-white font-medium border-0'
+              >
+                Change
+              </button>
+              <button
+                onClick={() => (
+                  setNewProfileDialog(''),
+                  (profileImage.current!.value = ''),
+                  fade.hide()
+                )}
+                className='bg-primary c-white font-bold rounded-lg px-5 py-3 border-0'
+              >
+                Proceed
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </form>
   )
 }
