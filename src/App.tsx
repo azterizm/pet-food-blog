@@ -43,6 +43,7 @@ const { FreeStuff } = lazyImport(
   () => import('./screens/FreeStuff'),
   'FreeStuff'
 )
+const { Saved } = lazyImport(() => import('./screens/Saved'), 'Saved')
 
 function App() {
   const headFoot = useHeaderFooter()
@@ -64,6 +65,7 @@ function App() {
               <Route path='profile' element={<Profile />} />
               <Route path='deposit' element={<Deposit />} />
               <Route path='free' element={<FreeStuff />} />
+              <Route path='saved' element={<Saved />} />
               <Route path='purchases' element={<Purchases />} />
               <Route path='subscribed' element={<Subscribed />} />
             </>

@@ -52,9 +52,17 @@ export function Header({ user }: Props) {
         <Link className='no-underline c-black' to='/blog'>
           Blog
         </Link>
-        <Link className='no-underline c-black' to='/free'>
-          Free Stuff
-        </Link>
+        {user ? (
+          <>
+            <div className='w-0.5 h-5 bg-black'></div>
+            <Link className='no-underline c-black' to='/free'>
+              Free Stuff
+            </Link>
+            <Link className='no-underline c-black' to='/saved'>
+              Saved
+            </Link>
+          </>
+        ) : null}
       </div>
       <div className='items-center gap-6 hidden lg:flex font-bold'>
         {!user || user.type === 'author' ? (

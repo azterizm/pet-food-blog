@@ -1,8 +1,16 @@
 import { IAuthor } from '@backend/models/author'
-import type { ReactElement } from 'react'
+import type { DetailedHTMLProps, ReactElement } from 'react'
 import { API_ENDPOINT } from '../constants/api'
 
-export function AuthorProfileImage(props: { author: IAuthor }): ReactElement {
+interface Props
+  extends DetailedHTMLProps<
+    React.ImgHTMLAttributes<HTMLImageElement>,
+    HTMLImageElement
+  > {
+  author: IAuthor
+}
+
+export function AuthorProfileImage(props: Props): ReactElement {
   return (
     <img
       className='object-cover w-80 object-cover rounded-t-lg'
@@ -12,6 +20,7 @@ export function AuthorProfileImage(props: { author: IAuthor }): ReactElement {
           : API_ENDPOINT + '/auth/profile/' + props.author.id
       }
       alt='profile'
+      {...props}
     />
   )
 }

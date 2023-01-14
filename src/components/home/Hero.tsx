@@ -1,14 +1,14 @@
 import { IAuthor } from '@backend/models/author'
 import moment from 'moment'
 import { Star, Timer } from 'phosphor-react'
-import { Link } from 'react-router-dom'
 import { Category, categoryLabel } from '../../types/api'
 import { isFirefox } from '../../util/ui'
+import { AuthorProfileImage } from '../AuthorProfileImage'
 
 interface Props {
   image: string
   title: string
-  authors: (IAuthor | { id: number | string; name: string })[]
+  author?: IAuthor
   publishedOn: Date | string
   featured?: boolean
   categories?: Category[]
@@ -19,12 +19,12 @@ export function Hero(props: Props) {
   return (
     <div
       className={
-        'flex items-center ml--10 xl:ml-10 gap-20 relative ' +
+        'flex items-center ml--10 mr--10 xl:ml-10 xl:mr--10 gap-20 relative ' +
         (isFirefox ? 'mr--10' : '')
       }
     >
       <img
-        className='brightness-65 lg:brightness-100 w-120% lg:w-50% h-70vh xl:rounded-lg lg:rounded-r-lg object-right aspect-video object-cover'
+        className='brightness-65 lg:brightness-100 w-120% lg:w-50% h-90vh xl:rounded-lg lg:rounded-r-lg object-right aspect-video object-cover'
         src={props.image}
         alt={props.title + ' ' + props.image}
       />
@@ -37,34 +37,22 @@ export function Hero(props: Props) {
             </span>
           </div>
         ) : null}
-        {props.categories && props.categories.length
-          ? props.categories.map((r, i) => (
-              <span
-                className='uppercase font-bold text-sm mr-2 bg-white c-primary px-3 py-1 rounded-full tracking-widest lg:border-2'
-                key={r + '_' + i}
-              >
-                {categoryLabel[r]}
-              </span>
-            ))
-          : null}
-        <h1 className='max-w-80vw text-3xl md:text-5xl md:leading-15'>
+        <div className='flex flex-wrap items-center gap-y-2'>
+          {props.categories && props.categories.length
+            ? props.categories.map((r, i) => (
+                <span
+                  className='uppercase font-bold text-sm mr-2 bg-white c-primary px-3 py-1 rounded-full tracking-widest lg:border-2'
+                  key={r + '_' + i}
+                >
+                  {categoryLabel[r]}
+                </span>
+              ))
+            : null}
+        </div>
+        <h1 className='max-w-80vw text-3xl mb-0 md:text-5xl md:leading-15'>
           {props.title}
         </h1>
-        <span>
-          by{' '}
-          <b>
-            {props.authors.map((r) => (
-              <Link
-                className='decoration-none hover:underline cursor-pointer c-inherit'
-                to={'/authors/' + r.id}
-                key={r.id}
-              >
-                {r.name}
-              </Link>
-            ))}
-          </b>{' '}
-          {moment(props.publishedOn).fromNow()}
-        </span>
+        <span>{moment(props.publishedOn).fromNow()}</span>
         {props.average ? (
           <div className='flex items-center gap-2'>
             <Timer />
@@ -72,6 +60,19 @@ export function Hero(props: Props) {
               {props.average} {props.average > 1 ? 'mins' : 'min'} read
             </span>
           </div>
+        ) : null}
+        {props.author ? (
+          <>
+            <AuthorProfileImage
+              className='w-50 h-80 object-cover rounded-lg mt-10 block'
+              author={props.author as IAuthor}
+            />
+            <p className='mb-0 font-bold text-lg'>{props.author.name}</p>
+            <p className='m-0'>{props.author.bio}</p>
+            <button className='bg-secondary px-5 py-3 border-0 rounded-full mt-5 c-white font-bold'>
+              Follow
+            </button>
+          </>
         ) : null}
       </div>
     </div>

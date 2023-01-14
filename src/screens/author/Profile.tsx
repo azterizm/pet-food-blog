@@ -99,6 +99,7 @@ export function AuthorProfile(): ReactElement {
                 postedOn={r.createdAt!}
                 onClick={() => navigate('/recipes/read/' + r.id)}
                 author={data}
+                id={r.id!}
                 {...r}
               />
             ))}

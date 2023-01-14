@@ -2,11 +2,11 @@
   content: '';
   display: inline-block;
   width: 2px;
-  background-color: #161b3d;
+  background-color: #2821fc;
   position: absolute;
   left: 1.25rem;
   top: 10px;
-  height: calc(100% - 20px);
+  height: calc(100% - 2rem);
 }
 
 #recipe_read img {

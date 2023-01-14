@@ -24,10 +24,11 @@ export function Recipes(): ReactElement {
     to: { y: 0 },
     config: config.slow,
   })
+
   return (
     <a.div
       style={{ transform: main.y.to((r) => `translate3d(0,${r}px,0)`) }}
-      className='flex flex-wrap gap-10 xl:w-300 block m-auto relative bottom-10 flex justify-center items-center'
+      className='flex flex-wrap gap-10 xl:w-300 block m-auto relative bottom-10 flex justify-center items-start'
     >
       {loading ? (
         <Loader />
@@ -38,6 +39,7 @@ export function Recipes(): ReactElement {
       ) : (
         data.recipes.map((r) => (
           <Recipe
+            id={r.id!}
             author={r.author}
             image={API_ENDPOINT + r.mainImage}
             postedOn={r.createdAt!}

@@ -7,12 +7,6 @@ function Home() {
       <Hero
         title='I am passionate about the food and the tradition of making it.'
         image='/images/main.avif'
-        authors={[
-          {
-            name: 'Sean Hamilton',
-            id: 1,
-          },
-        ]}
         featured
         publishedOn={new Date()}
       />

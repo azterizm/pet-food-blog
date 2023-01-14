@@ -35,6 +35,7 @@ export function Purchases(): ReactElement {
               categories={recipe.categories}
               price={recipe.price}
               priceType={recipe.priceType}
+              id={recipe.id!}
             />
           ))}
         </div>

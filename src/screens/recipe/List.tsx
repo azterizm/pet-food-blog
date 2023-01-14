@@ -94,10 +94,11 @@ export function RecipeList(): ReactElement {
         <span>{error}</span>
       ) : data && data.recipes.length ? (
         <div>
-          <div className='flex flex-wrap gap-10 items-center'>
+          <div className='flex flex-wrap gap-10 items-start'>
             {data.recipes.map((r) => (
               <Recipe
                 author={r.author}
+                id={r.id!}
                 duration={r.duration}
                 image={API_ENDPOINT + r.mainImage}
                 postedOn={r.createdAt!}
