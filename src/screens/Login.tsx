@@ -56,7 +56,7 @@ export function Login(): ReactElement {
             value={input}
             data-lpignore='true'
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+            onKeyDown={(e) => e.key.toLowerCase() == 'enter' && handleSubmit()}
           />
           <AuthTypeSelector
             type={type}

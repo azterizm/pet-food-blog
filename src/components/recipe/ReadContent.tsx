@@ -59,7 +59,7 @@ export function ReadContent({
   return (
     <div className='flex flex-col gap-5 mt-10'>
       <div>
-        <span className='text-xl font-bold my-5 block'>Ingredients</span>
+        <span className='text-3xl font-bold my-5 block'>Ingredients</span>
         {props.data.ingredients.map((ingredient, ingredientIndex) => (
           <div key={ingredientIndex}>
             <span className='block text-lg font-bold mt-5'>
@@ -109,7 +109,7 @@ export function ReadContent({
         ))}
       </div>
       <div>
-        <span className='text-xl font-bold my-5 block'>Directions</span>
+        <span className='text-3xl font-bold my-5 block'>Directions</span>
         <div
           className='flex flex-col items-start gap-5 relative'
           id='instructions'
@@ -117,7 +117,7 @@ export function ReadContent({
           {props.data.instructions.map((content, i) => (
             <div key={i} id={'instruction'}>
               <div className='flex items-start gap-5'>
-                <span className='z-5 bg-secondary c-white min-w-10 min-h-10 flex-center rounded-full font-bold'>
+                <span className='z-5 bg-secondary c-white min-w-12.5 min-h-12.5 flex-center rounded-full font-bold text-2xl translate-x--1'>
                   {i + 1}.
                 </span>
                 <div
@@ -130,7 +130,7 @@ export function ReadContent({
         </div>
       </div>
       <div>
-        <div className='text-xl font-bold mt-5 mb-2 block'>Notes</div>
+        <div className='text-2xl font-bold mt-5 mb-2 block'>Notes</div>
         <div className='flex flex-col gap-2'>
           {props.data.notes.map((note, i) => (
             <div key={i} className='flex items-center gap-2'>
@@ -151,7 +151,7 @@ export function ReadContent({
             className={liked ? 'c-red' : 'c-primary'}
           />
           <span>
-            {showCompactNumber(likes)} Like
+            {showCompactNumber(likes)} like
             {showPluralS(props.data.likes)}
           </span>
         </div>
@@ -165,7 +165,7 @@ export function ReadContent({
         </div>
       </div>
       <div>
-        <div className='text-lg font-bold mt-5 mb-2 block'>Tags</div>
+        <div className='text-xl font-bold mt-5 mb-2 block'>Tags</div>
         {!props.data.tags.length ? (
           <span>No tags.</span>
         ) : (

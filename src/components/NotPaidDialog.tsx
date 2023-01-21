@@ -23,9 +23,7 @@ export function NotPaidDialog(props: Props): ReactElement {
         {props.loggedIn ? (
           <>
             {props.priceType === 'paid' ? (
-              <p>
-                You can only purchase this recipe and read it anytime you want.
-              </p>
+              <p>You can purchase this recipe and read it anytime you want.</p>
             ) : props.priceType === 'subscribe' ? (
               <p>
                 You must subscribe the chef of this recipe to get access to this

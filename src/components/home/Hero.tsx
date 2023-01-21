@@ -1,6 +1,7 @@
 import { IAuthor } from '@backend/models/author'
 import moment from 'moment'
 import { Star, Timer } from 'phosphor-react'
+import { useNavigate } from 'react-router-dom'
 import { Category, categoryLabel } from '../../types/api'
 import { isFirefox } from '../../util/ui'
 import { AuthorProfileImage } from '../AuthorProfileImage'
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export function Hero(props: Props) {
+  const navigate = useNavigate()
   return (
     <div
       className={
@@ -62,7 +64,10 @@ export function Hero(props: Props) {
           </div>
         ) : null}
         {props.author ? (
-          <>
+          <div
+            className='cursor-pointer'
+            onClick={() => navigate('/authors/' + props.author?.id)}
+          >
             <AuthorProfileImage
               className='w-50 h-80 object-cover rounded-lg mt-10 block'
               author={props.author as IAuthor}
@@ -72,7 +77,7 @@ export function Hero(props: Props) {
             <button className='bg-secondary px-5 py-3 border-0 rounded-full mt-5 c-white font-bold'>
               Follow
             </button>
-          </>
+          </div>
         ) : null}
       </div>
     </div>

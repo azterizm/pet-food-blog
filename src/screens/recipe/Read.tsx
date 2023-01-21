@@ -18,16 +18,25 @@ import { useFade } from '../../hooks/state'
 import { ApiProcess } from '../../types/api'
 import { showDuration, showPluralS } from '../../util/ui'
 
+interface ReadData extends IRecipe {
+  author: IAuthor & { recipes: IRecipe[] }
+  userLiked: boolean
+  popular: IRecipe[]
+}
+
 export function RecipeRead(): ReactElement {
   const { id } = useParams() as { id: string }
-  const { data, error, loading, refetch } = useApi<
-    IRecipe & { author: IAuthor; userLiked: boolean }
-  >('/recipe/read/' + id, {
-    onSuccess: (r) => {
-      const d = data || r
-      if (d) setLiked(d.userLiked)
+  const { data, error, loading, refetch } = useApi<ReadData>(
+    '/recipe/read/' + id,
+    {
+      onSuccess: (r) => {
+        const d = data || r
+        if (d) setLiked(d.userLiked)
+      },
     },
-  })
+    [id]
+  )
+
   const navigate = useNavigate()
   const [liked, setLiked] = useState(false)
   const [user, changeUser] = useAuth()
@@ -109,7 +118,7 @@ export function RecipeRead(): ReactElement {
                 subscribeCost={data.author.subscribeCost}
               />
             ) : (
-              <div className='w-full flex items-center'>
+              <div className='w-full flex items-start'>
                 <div className='flex-1'>
                   <ReadContent
                     changeLiked={setLiked}
@@ -121,28 +130,11 @@ export function RecipeRead(): ReactElement {
                 <div className='ml-10 hidden md:flex flex-col items-center gap-20'>
                   <Recommendation
                     title='latest recipes'
-                    items={[
-                      {
-                        title: 'title',
-                        createdAt: moment().subtract(5, 'day').toDate(),
-                        image: 'images/auth2.jpg',
-                      },
-                      {
-                        title: 'title',
-                        createdAt: moment().subtract(5, 'day').toDate(),
-                        image: 'images/auth.jpg',
-                      },
-                    ]}
+                    items={data.author.recipes}
                   />
                   <Recommendation
                     title='popular articles'
-                    items={[
-                      {
-                        title: 'title',
-                        createdAt: moment().subtract(5, 'day').toDate(),
-                        image: 'images/auth.jpg',
-                      },
-                    ]}
+                    items={data.popular}
                   />
                 </div>
               </div>
