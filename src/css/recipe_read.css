@@ -4,9 +4,9 @@
   width: 2px;
   background-color: #2821fc;
   position: absolute;
-  left: 1.25rem;
+  left: -3rem;
   top: 10px;
-  height: calc(100% - 2rem);
+  height: calc(100% + 2rem);
 }
 
 #recipe_read img {

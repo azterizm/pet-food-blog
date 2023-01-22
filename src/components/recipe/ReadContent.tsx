@@ -115,12 +115,17 @@ export function ReadContent({
           id='instructions'
         >
           {props.data.instructions.map((content, i) => (
-            <div key={i} id={'instruction'}>
+            <div key={i}>
               <div className='flex items-start gap-5'>
                 <span className='z-5 bg-secondary c-white min-w-12.5 min-h-12.5 flex-center rounded-full font-bold text-2xl translate-x--1'>
                   {i + 1}.
                 </span>
                 <div
+                  id={
+                    i === props.data.instructions.length - 1
+                      ? ''
+                      : 'instruction'
+                  }
                   className='translate-y--2'
                   dangerouslySetInnerHTML={{ __html: content }}
                 />

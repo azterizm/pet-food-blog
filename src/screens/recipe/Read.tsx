@@ -1,6 +1,5 @@
 import { IAuthor } from '@backend/models/author'
 import { IRecipe } from '@backend/models/recipe'
-import moment from 'moment'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Portal } from 'react-portal'
 import { useNavigate, useParams } from 'react-router-dom'
