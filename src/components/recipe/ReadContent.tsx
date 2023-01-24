@@ -1,12 +1,15 @@
+import { Donate } from './Donate'
 import { IAuthor } from '@backend/models/author'
 import { IRecipe } from '@backend/models/recipe'
-import { Article, Check, Circle, Heart, Money } from 'phosphor-react'
-import { ReactElement, useEffect, useState } from 'react'
+import { Article, Check, Circle, Heart } from 'phosphor-react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_ENDPOINT } from '../../constants/api'
 import { useAuth } from '../../hooks/api'
 import { ApiProcess } from '../../types/api'
 import { showCompactNumber, showPluralS } from '../../util/ui'
+import { AuthorProfileImage } from '../AuthorProfileImage'
+import { Sharing } from './Sharing'
 
 export interface ReadContentProps {
   data: IRecipe & { author: IAuthor; userLiked: boolean }
@@ -24,6 +27,8 @@ export function ReadContent({
   const [likes, setLikes] = useState(0)
   const [user, changeUser] = useAuth()
   const navigate = useNavigate()
+
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (props.data) setLikes(props.data.likes)
@@ -56,8 +61,12 @@ export function ReadContent({
     props.changeLiked(!liked)
   }
 
+  function onPrint() {
+    window.print()
+  }
+
   return (
-    <div className='flex flex-col gap-5 mt-10'>
+    <div className='flex flex-col gap-5 mt-10' id='content' ref={containerRef}>
       <div>
         <span className='text-3xl font-bold my-5 block'>Ingredients</span>
         {props.data.ingredients.map((ingredient, ingredientIndex) => (
@@ -145,38 +154,59 @@ export function ReadContent({
           ))}
         </div>
       </div>
-      <div className='flex items-center gap-5 c-primary'>
-        <div
-          onClick={like}
-          className='flex items-center gap-2 font-medium text-md bg-gray-300 px-5 py-3 rounded-lg hover:bg-gray-400 cursor-pointer'
-        >
-          <Heart
-            weight={liked ? 'fill' : 'regular'}
-            size={20}
-            className={liked ? 'c-red' : 'c-primary'}
-          />
-          <span>
-            {showCompactNumber(likes)} like
-            {showPluralS(props.data.likes)}
-          </span>
-        </div>
-        <div className='flex items-center gap-2 font-medium text-md bg-gray-300 px-5 py-3 rounded-lg hover:bg-gray-400 cursor-pointer'>
-          <Article size={20} />
-          <span>Print</span>
-        </div>
-        <div className='flex items-center gap-2 font-medium text-md bg-gray-300 px-5 py-3 rounded-lg hover:bg-gray-400 cursor-pointer'>
-          <Money size={20} />
-          <span>Donate</span>
+      <div>
+        <h3 className='text-xl font-bold bg-neutral-200 ml--10 pl-10 py-3 w-full'>
+          Do you like this recipe?
+        </h3>
+
+        <div className='flex items-center gap-5 c-black'>
+          <div
+            onClick={like}
+            className='flex items-center gap-2 font-medium text-md bg-neutral-200 px-5 py-3 rounded-full hover:bg-neutral-300 cursor-pointer'
+          >
+            <Heart
+              weight={liked ? 'fill' : 'regular'}
+              size={20}
+              className={liked ? 'c-red' : 'c-black'}
+            />
+            <span className='whitespace-nowrap'>
+              {showCompactNumber(likes)} like
+              {showPluralS(props.data.likes)}
+            </span>
+          </div>
+          <div
+            onClick={onPrint}
+            className='flex items-center gap-2 font-medium text-md bg-neutral-200 px-5 py-3 rounded-full hover:bg-neutral-300 cursor-pointer'
+          >
+            <Article size={20} />
+            <span>Print</span>
+          </div>
         </div>
       </div>
       <div>
-        <div className='text-xl font-bold mt-5 mb-2 block'>Tags</div>
-        {!props.data.tags.length ? (
-          <span>No tags.</span>
-        ) : (
-          <span>{props.data.tags.join(', ')}</span>
-        )}
+        <h3 className='text-xl font-bold bg-neutral-200 ml--10 pl-10 py-3 w-full'>
+          You can help dogs by sharing
+        </h3>
+        <div className='flex items-center flex-col lg:flex-row lg:justify-between'>
+          <div className='flex items-center gap-2 justify-center'>
+            <AuthorProfileImage
+              author={props.data.author}
+              className='w-20 h-20 rounded-full object-cover'
+            />
+            <div className='flex items-start flex-col ml-5'>
+              <span className='text-lg font-bold'>
+                {props.data.author.name}
+              </span>
+              <span>
+                Chef since{' '}
+                {new Date(props.data.author.createdAt!).getFullYear()}
+              </span>
+            </div>
+          </div>
+          <Sharing />
+        </div>
       </div>
+      <Donate name={props.data.author.name} />
     </div>
   )
 }
