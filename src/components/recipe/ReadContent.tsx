@@ -10,6 +10,7 @@ import { ApiProcess } from '../../types/api'
 import { showCompactNumber, showPluralS } from '../../util/ui'
 import { AuthorProfileImage } from '../AuthorProfileImage'
 import { Sharing } from './Sharing'
+import { DonateStatus } from '../../types/ui'
 
 export interface ReadContentProps {
   data: IRecipe & { author: IAuthor; userLiked: boolean }
@@ -26,6 +27,10 @@ export function ReadContent({
   const [checkedIng, setCheckedIng] = useState<string[]>([])
   const [likes, setLikes] = useState(0)
   const [user, changeUser] = useAuth()
+  const [donateStatus, setDonateStatus] = useState<DonateStatus>(
+    DonateStatus.Idle
+  )
+
   const navigate = useNavigate()
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -59,6 +64,24 @@ export function ReadContent({
       changeUser(newUser)
     }
     props.changeLiked(!liked)
+  }
+
+  async function donate(amount: number) {
+    if (!amount) return
+    setDonateStatus(DonateStatus.Process)
+    const data: ApiProcess = await fetch(API_ENDPOINT + '/author/donate', {
+      method: 'post',
+      credentials: 'include',
+      body: JSON.stringify({
+        id: Number(props.data.author.id),
+        amount: parseInt(String(amount)),
+      }),
+      headers: { 'content-type': 'application/json' },
+    }).then((r) => r.json())
+    setDonateStatus(DonateStatus.Process)
+    if (data.error) return alert(data.info)
+
+    setDonateStatus(DonateStatus.Done)
   }
 
   function onPrint() {
@@ -206,7 +229,12 @@ export function ReadContent({
           <Sharing />
         </div>
       </div>
-      <Donate name={props.data.author.name} />
+      <Donate
+        status={donateStatus}
+        onDonate={donate}
+        name={props.data.author.name}
+        onReset={() => setDonateStatus(DonateStatus.Idle)}
+      />
     </div>
   )
 }
