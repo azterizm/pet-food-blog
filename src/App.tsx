@@ -44,6 +44,14 @@ const { FreeStuff } = lazyImport(
   'FreeStuff'
 )
 const { Saved } = lazyImport(() => import('./screens/Saved'), 'Saved')
+const { List: BlogList } = lazyImport(
+  () => import('./screens/blog/List'),
+  'List'
+)
+const { Read: BlogRead } = lazyImport(
+  () => import('./screens/blog/Read'),
+  'Read'
+)
 
 function App() {
   const headFoot = useHeaderFooter()
@@ -77,6 +85,10 @@ function App() {
           <Route path='authors'>
             <Route path=':id' element={<AuthorProfile />} />
             <Route index element={<AuthorList />} />
+          </Route>
+          <Route path='blog'>
+            <Route index element={<BlogList />} />
+            <Route path=':id' element={<BlogRead />} />
           </Route>
           <Route path='search' element={<Search />} />
           <Route path='*' element={<NotFound />} />

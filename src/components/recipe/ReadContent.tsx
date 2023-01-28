@@ -1,16 +1,16 @@
-import { Donate } from './Donate'
 import { IAuthor } from '@backend/models/author'
 import { IRecipe } from '@backend/models/recipe'
-import { Article, Check, Circle, Heart } from 'phosphor-react'
+import { Check, Circle } from 'phosphor-react'
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_ENDPOINT } from '../../constants/api'
+import { donateAuthor } from '../../features/author'
 import { useAuth } from '../../hooks/api'
 import { ApiProcess } from '../../types/api'
-import { showCompactNumber, showPluralS } from '../../util/ui'
-import { AuthorProfileImage } from '../AuthorProfileImage'
-import { Sharing } from './Sharing'
 import { DonateStatus } from '../../types/ui'
+import { Donate } from './Donate'
+import { HelpSection } from './HelpSection'
+import { LikeSection } from './LikeSection'
 
 export interface ReadContentProps {
   data: IRecipe & { author: IAuthor; userLiked: boolean }
@@ -39,9 +39,9 @@ export function ReadContent({
     if (props.data) setLikes(props.data.likes)
   }, [props.data])
 
-  async function like() {
+  async function onLike() {
     if (!id) return navigate('/login')
-    let likes = !user ? [] : user.likes
+    let likes = !user ? [] : user.recipeLikes
     const data: ApiProcess = await fetch(API_ENDPOINT + '/recipe/like/' + id, {
       method: 'post',
       credentials: 'include',
@@ -69,18 +69,12 @@ export function ReadContent({
   async function donate(amount: number) {
     if (!amount) return
     setDonateStatus(DonateStatus.Process)
-    const data: ApiProcess = await fetch(API_ENDPOINT + '/author/donate', {
-      method: 'post',
-      credentials: 'include',
-      body: JSON.stringify({
-        id: Number(props.data.author.id),
-        amount: parseInt(String(amount)),
-      }),
-      headers: { 'content-type': 'application/json' },
-    }).then((r) => r.json())
+    const data: ApiProcess = await donateAuthor({
+      id: props.data.author.id!,
+      amount,
+    })
     setDonateStatus(DonateStatus.Process)
     if (data.error) return alert(data.info)
-
     setDonateStatus(DonateStatus.Done)
   }
 
@@ -177,58 +171,13 @@ export function ReadContent({
           ))}
         </div>
       </div>
-      <div>
-        <h3 className='text-xl font-bold bg-neutral-200 ml--10 pl-10 py-3 w-full'>
-          Do you like this recipe?
-        </h3>
-
-        <div className='flex items-center gap-5 c-black'>
-          <div
-            onClick={like}
-            className='flex items-center gap-2 font-medium text-md bg-neutral-200 px-5 py-3 rounded-full hover:bg-neutral-300 cursor-pointer'
-          >
-            <Heart
-              weight={liked ? 'fill' : 'regular'}
-              size={20}
-              className={liked ? 'c-red' : 'c-black'}
-            />
-            <span className='whitespace-nowrap'>
-              {showCompactNumber(likes)} like
-              {showPluralS(props.data.likes)}
-            </span>
-          </div>
-          <div
-            onClick={onPrint}
-            className='flex items-center gap-2 font-medium text-md bg-neutral-200 px-5 py-3 rounded-full hover:bg-neutral-300 cursor-pointer'
-          >
-            <Article size={20} />
-            <span>Print</span>
-          </div>
-        </div>
-      </div>
-      <div>
-        <h3 className='text-xl font-bold bg-neutral-200 ml--10 pl-10 py-3 w-full'>
-          You can help dogs by sharing
-        </h3>
-        <div className='flex items-center flex-col lg:flex-row lg:justify-between'>
-          <div className='flex items-center gap-2 justify-center'>
-            <AuthorProfileImage
-              author={props.data.author}
-              className='w-20 h-20 rounded-full object-cover'
-            />
-            <div className='flex items-start flex-col ml-5'>
-              <span className='text-lg font-bold'>
-                {props.data.author.name}
-              </span>
-              <span>
-                Chef since{' '}
-                {new Date(props.data.author.createdAt!).getFullYear()}
-              </span>
-            </div>
-          </div>
-          <Sharing />
-        </div>
-      </div>
+      <LikeSection
+        liked={liked}
+        likes={likes}
+        onLike={onLike}
+        onPrint={onPrint}
+      />
+      <HelpSection author={props.data.author} />
       <Donate
         status={donateStatus}
         onDonate={donate}

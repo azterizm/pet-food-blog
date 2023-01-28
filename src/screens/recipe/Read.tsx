@@ -127,14 +127,8 @@ export function RecipeRead(): ReactElement {
                   />
                 </div>
                 <div className='ml-10 hidden md:flex flex-col items-center gap-20'>
-                  <Recommendation
-                    title='latest recipes'
-                    items={data.author.recipes}
-                  />
-                  <Recommendation
-                    title='popular articles'
-                    items={data.popular}
-                  />
+                  <Recommendation title='latest' items={data.author.recipes} />
+                  <Recommendation title='popular' items={data.popular} />
                 </div>
               </div>
             )}

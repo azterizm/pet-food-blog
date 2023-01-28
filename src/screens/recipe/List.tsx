@@ -4,7 +4,7 @@ import { ReactElement, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Recipe } from '../../components/home/Recipe'
 import { Loader } from '../../components/Loader'
-import { API_ENDPOINT } from '../../constants/api'
+import { API_ENDPOINT, PAGE_OFFSET } from '../../constants/api'
 import { useApi } from '../../hooks/api'
 import {
   AuthorTotalRecipe,
@@ -17,8 +17,6 @@ import { AuthorSort } from '@backend/zod/api'
 import { IRecipe } from '@backend/models/recipe'
 import { IAuthor } from '@backend/models/author'
 
-const OFFSET = 20
-
 export function RecipeList(): ReactElement {
   const [category, setCategory] = useState<Category>('meal')
   const [sort, setSort] = useState<AuthorSort>('new')
@@ -29,7 +27,7 @@ export function RecipeList(): ReactElement {
     authorTotalRecipes: AuthorTotalRecipe[]
     total: number
   }>(
-    `/recipe/get_client_recipes/${category}/${sort}/${page * OFFSET}`,
+    `/recipe/get_client_recipes/${category}/${sort}/${page * PAGE_OFFSET}`,
     { debounce: 800 },
     [sort, category]
   )
@@ -118,7 +116,7 @@ export function RecipeList(): ReactElement {
           </div>
           {data.total > data.recipes.length ? (
             <Paginate
-              pageCount={Math.floor(data.total / 20)}
+              pageCount={Math.floor(data.total / PAGE_OFFSET)}
               breakLabel='...'
               containerClassName='list_nav flex justify-center items-center gap-10 list-none'
               onPageChange={(e) => setPage(e.selected)}
