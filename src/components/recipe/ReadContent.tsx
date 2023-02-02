@@ -1,11 +1,11 @@
 import { IAuthor } from '@backend/models/author'
+import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
 import { Check, Circle } from 'phosphor-react'
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_ENDPOINT } from '../../constants/api'
 import { donateAuthor } from '../../features/author'
-import { useAuth } from '../../hooks/api'
 import { ApiProcess } from '../../types/api'
 import { DonateStatus } from '../../types/ui'
 import { Donate } from './Donate'
@@ -13,7 +13,7 @@ import { HelpSection } from './HelpSection'
 import { LikeSection } from './LikeSection'
 
 export interface ReadContentProps {
-  data: IRecipe & { author: IAuthor; userLiked: boolean }
+  data: IRecipe & { author: IAuthor; userLiked: boolean; likes: ILike[] }
   id: string
   liked: boolean
   changeLiked: (arg: boolean) => void
@@ -26,7 +26,6 @@ export function ReadContent({
 }: ReadContentProps): ReactElement {
   const [checkedIng, setCheckedIng] = useState<string[]>([])
   const [likes, setLikes] = useState(0)
-  const [user, changeUser] = useAuth()
   const [donateStatus, setDonateStatus] = useState<DonateStatus>(
     DonateStatus.Idle
   )
@@ -36,33 +35,23 @@ export function ReadContent({
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (props.data) setLikes(props.data.likes)
+    if (props.data) setLikes(props.data.likes.length)
   }, [props.data])
 
   async function onLike() {
     if (!id) return navigate('/login')
-    let likes = !user ? [] : user.recipeLikes
     const data: ApiProcess = await fetch(API_ENDPOINT + '/recipe/like/' + id, {
       method: 'post',
       credentials: 'include',
     }).then((r) => r.json())
     if (data.error) {
-      likes = likes.filter((r) => r !== Number(id))
       props.changeLiked(!liked)
       alert(data.info)
       return
     }
-    if (!liked) {
-      likes = likes.filter((r) => r !== Number(id)).concat(Number(id))
-      setLikes((e) => e + 1)
-    } else {
-      likes = likes.filter((r) => r !== Number(id))
-      setLikes((e) => e - 1)
-    }
-    if (user) {
-      const newUser = { ...user, likes }
-      changeUser(newUser)
-    }
+    if (!liked) setLikes((e) => e + 1)
+    else setLikes((e) => e - 1)
+
     props.changeLiked(!liked)
   }
 

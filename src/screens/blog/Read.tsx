@@ -9,13 +9,12 @@ import { HelpSection } from '../../components/recipe/HelpSection'
 import { LikeSection } from '../../components/recipe/LikeSection'
 import { API_ENDPOINT } from '../../constants/api'
 import { donateAuthor } from '../../features/author'
-import { useApi, useAuth } from '../../hooks/api'
+import { useApi } from '../../hooks/api'
 import { ApiProcess } from '../../types/api'
 import { DonateStatus } from '../../types/ui'
 
 export function Read(): ReactElement {
   const { id } = useParams()
-  const [user, changeUser] = useAuth()
   const [loaded, setLoaded] = useState(false)
   const [liked, setLiked] = useState(false)
   const [likes, setLikes] = useState(0)
@@ -45,29 +44,21 @@ export function Read(): ReactElement {
 
   async function onLike() {
     if (!id) return navigate('/login')
-    let likes = !user ? [] : user.postLikes
     const data: ApiProcess = await fetch(API_ENDPOINT + '/blog/like/' + id, {
       method: 'post',
       credentials: 'include',
     }).then((r) => r.json())
     if (data.error) {
-      likes = likes.filter((r) => r !== Number(id))
       setLiked(!liked)
       alert(data.info)
       return
     }
     if (!liked) {
-      likes = likes.filter((r) => r !== Number(id)).concat(Number(id))
       setLikes((e) => e + 1)
       setLiked(true)
     } else {
-      likes = likes.filter((r) => r !== Number(id))
       setLikes((e) => e - 1)
       setLiked(false)
-    }
-    if (user) {
-      const newUser = { ...user, likes }
-      changeUser(newUser)
     }
   }
 

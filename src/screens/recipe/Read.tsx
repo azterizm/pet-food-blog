@@ -1,4 +1,5 @@
 import { IAuthor } from '@backend/models/author'
+import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Portal } from 'react-portal'
@@ -17,10 +18,13 @@ import { useFade } from '../../hooks/state'
 import { ApiProcess } from '../../types/api'
 import { showDuration, showPluralS } from '../../util/ui'
 
+// data: IRecipe & { author: IAuthor; userLiked: boolean; likes: ILike[] }
+
 interface ReadData extends IRecipe {
   author: IAuthor & { recipes: IRecipe[] }
   userLiked: boolean
   popular: IRecipe[]
+  likes: ILike[]
 }
 
 export function RecipeRead(): ReactElement {

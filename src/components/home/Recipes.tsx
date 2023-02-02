@@ -1,3 +1,4 @@
+import { ILike } from '@backend/models/like'
 import { IAuthor } from '@backend/models/author'
 import { IRecipe } from '@backend/models/recipe'
 import type { ReactElement } from 'react'
@@ -12,7 +13,7 @@ import { Recipe } from './Recipe'
 
 export function Recipes(): ReactElement {
   const { data, error, loading } = useApi<{
-    recipes: (IRecipe & { author: IAuthor })[]
+    recipes: (IRecipe & { author: IAuthor; likes: ILike[] })[]
     authorTotalRecipes: AuthorTotalRecipe[]
   }>(`/recipe/get_client_feat`)
   console.log('data:', data)
@@ -43,7 +44,7 @@ export function Recipes(): ReactElement {
             author={r.author}
             image={API_ENDPOINT + r.mainImage}
             postedOn={r.createdAt!}
-            reviews={r.likes}
+            reviews={r.likes.length}
             onClick={() => navigate('/recipes/read/' + r.id)}
             key={r.id}
             categories={r.categories}

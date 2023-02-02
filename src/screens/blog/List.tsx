@@ -9,13 +9,14 @@ import moment from 'moment'
 import { useNavigate } from 'react-router-dom'
 import { Heart } from 'phosphor-react'
 import { showCompactNumber } from '../../util/ui'
+import { ILike } from '@backend/models/like'
 
 export function List(): ReactElement {
   const [pageNumber, setPageNumber] = useState(0)
   const navigate = useNavigate()
   const { data, loading, error } = useApi<{
     count: number
-    rows: (IPost & { author: IAuthor })[]
+    rows: (IPost & { author: IAuthor; likes: ILike[] })[]
   }>('/blog/get_posts/' + pageNumber * PAGE_OFFSET, {}, [pageNumber])
 
   console.log('data:', data)
@@ -54,7 +55,7 @@ export function List(): ReactElement {
                   <span className='text-sm'>
                     {!post.likes
                       ? 'Be first to like!'
-                      : showCompactNumber(post.likes)}
+                      : showCompactNumber(post.likes.length)}
                   </span>
                 </div>
               </div>
