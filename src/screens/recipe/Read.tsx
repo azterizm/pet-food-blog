@@ -23,6 +23,7 @@ import { showDuration, showPluralS } from '../../util/ui'
 interface ReadData extends IRecipe {
   author: IAuthor & { recipes: IRecipe[] }
   userLiked: boolean
+  userSaved: boolean
   popular: IRecipe[]
   likes: ILike[]
 }

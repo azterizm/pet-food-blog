@@ -5,18 +5,24 @@ import type { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { animated as a, config, useSpring } from 'react-spring'
 import { API_ENDPOINT } from '../../constants/api'
-import { useApi } from '../../hooks/api'
+import { useApi, useAuth } from '../../hooks/api'
 import { AuthorTotalRecipe } from '../../types/api'
 import { Loader } from '../Loader'
 import { MainButton } from '../MainButton'
 import { Recipe } from './Recipe'
+import { ISave } from '@backend/models/save'
+import { isSaved, onSave } from '../../features/save'
 
 export function Recipes(): ReactElement {
   const { data, error, loading } = useApi<{
     recipes: (IRecipe & { author: IAuthor; likes: ILike[] })[]
     authorTotalRecipes: AuthorTotalRecipe[]
+    saves: ISave[]
   }>(`/recipe/get_client_feat`)
+
   console.log('data:', data)
+
+  const [user] = useAuth()
   const navigate = useNavigate()
   const main = useSpring({
     from: {
@@ -56,6 +62,17 @@ export function Recipes(): ReactElement {
               data.authorTotalRecipes.find((v) => v.id === r.author.id)
                 ?.total || 0
             }
+            onSave={() =>
+              onSave({
+                id: r.id,
+                user,
+              })
+            }
+            saved={isSaved({
+              id: r.id,
+              user,
+              data,
+            })}
           />
         ))
       )}

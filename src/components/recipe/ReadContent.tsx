@@ -6,6 +6,8 @@ import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { API_ENDPOINT } from '../../constants/api'
 import { donateAuthor } from '../../features/author'
+import { onSave } from '../../features/save'
+import { useAuth } from '../../hooks/api'
 import { ApiProcess } from '../../types/api'
 import { DonateStatus } from '../../types/ui'
 import { Donate } from './Donate'
@@ -13,7 +15,12 @@ import { HelpSection } from './HelpSection'
 import { LikeSection } from './LikeSection'
 
 export interface ReadContentProps {
-  data: IRecipe & { author: IAuthor; userLiked: boolean; likes: ILike[] }
+  data: IRecipe & {
+    author: IAuthor
+    userLiked: boolean
+    likes: ILike[]
+    userSaved: boolean
+  }
   id: string
   liked: boolean
   changeLiked: (arg: boolean) => void
@@ -24,6 +31,7 @@ export function ReadContent({
   id,
   ...props
 }: ReadContentProps): ReactElement {
+  const [user] = useAuth()
   const [checkedIng, setCheckedIng] = useState<string[]>([])
   const [likes, setLikes] = useState(0)
   const [donateStatus, setDonateStatus] = useState<DonateStatus>(
@@ -161,6 +169,8 @@ export function ReadContent({
         </div>
       </div>
       <LikeSection
+        saved={props.data.userSaved}
+        onSave={() => onSave({ id, user })}
         liked={liked}
         likes={likes}
         onLike={onLike}

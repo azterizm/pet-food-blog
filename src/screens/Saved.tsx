@@ -1,19 +1,20 @@
 import { IAuthor } from '@backend/models/author'
+import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
+import { ISave } from '@backend/models/save'
 import { ReactElement } from 'react'
 import { GoBack } from '../components/GoBack'
 import { Recipe } from '../components/home/Recipe'
 import { Loader } from '../components/Loader'
 import { API_ENDPOINT } from '../constants/api'
+import { isSaved, onSave } from '../features/save'
 import { useApi, useAuth } from '../hooks/api'
 
 export function Saved(): ReactElement {
   const [user] = useAuth()
-  const { data, error, loading } = useApi<(IRecipe & { author: IAuthor })[]>(
-    '/recipe/saved',
-    undefined,
-    [user]
-  )
+  const { data, error, loading } = useApi<
+    (ISave & { recipe: IRecipe & { author: IAuthor; likes: ILike[] } })[]
+  >('/recipe/saved', undefined, [user])
 
   return (
     <div className='min-h-100vh w-full'>
@@ -27,11 +28,13 @@ export function Saved(): ReactElement {
         <div className='flex flex-wrap gap-5'>
           {data.map((r) => (
             <Recipe
-              key={r.id}
-              image={API_ENDPOINT + r.mainImage}
-              postedOn={r.createdAt!}
-              id={r.id!}
-              {...r}
+              key={r.recipe.id}
+              image={API_ENDPOINT + r.recipe.mainImage}
+              postedOn={r.recipe.createdAt!}
+              id={r.recipe.id!}
+              {...r.recipe}
+              saved={isSaved({ data: { saves: data }, user, id: r.recipe.id })}
+              onSave={() => onSave({ user, id: r.recipe.id })}
             />
           ))}
         </div>

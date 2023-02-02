@@ -6,10 +6,12 @@ import { useNavigate } from 'react-router-dom'
 import { Recipe } from '../components/home/Recipe'
 import { Loader } from '../components/Loader'
 import { API_ENDPOINT } from '../constants/api'
-import { useApi } from '../hooks/api'
+import { isSaved, onSave } from '../features/save'
+import { useApi, useAuth } from '../hooks/api'
 
 export function Purchases(): ReactElement {
   const navigate = useNavigate()
+  const [user] = useAuth()
   const { data, error, loading } =
     useApi<(IRecipe & { author: IAuthor; likes: ILike[] })[]>('/user/purchases')
   return (
@@ -37,6 +39,13 @@ export function Purchases(): ReactElement {
               price={recipe.price}
               priceType={recipe.priceType}
               id={recipe.id!}
+              onSave={() =>
+                onSave({
+                  user,
+                  id: recipe.id,
+                })
+              }
+              saved={isSaved({ data: { saves: data }, user, id: recipe.id })}
             />
           ))}
         </div>

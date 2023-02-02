@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Recipe } from '../../components/home/Recipe'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT, PAGE_OFFSET } from '../../constants/api'
-import { useApi } from '../../hooks/api'
+import { useApi, useAuth } from '../../hooks/api'
 import {
   AuthorTotalRecipe,
   categories,
@@ -17,15 +17,18 @@ import { AuthorSort } from '@backend/zod/api'
 import { IRecipe } from '@backend/models/recipe'
 import { IAuthor } from '@backend/models/author'
 import { ILike } from '@backend/models/like'
+import { isSaved, onSave } from '../../features/save'
+import { ISave } from '@backend/models/save'
 
 export function RecipeList(): ReactElement {
   const navigate = useNavigate()
+  const [user] = useAuth()
   const [category, setCategory] = useState<Category>('meal')
   const [sort, setSort] = useState<AuthorSort>('new')
   const [showSort, setShowSort] = useState(false)
   const [page, setPage] = useState(0)
   const { data, error, loading } = useApi<{
-    recipes: (IRecipe & { author: IAuthor; likes: ILike[] })[]
+    recipes: (IRecipe & { author: IAuthor; likes: ILike[]; saves: ISave[] })[]
     authorTotalRecipes: AuthorTotalRecipe[]
     total: number
   }>(
@@ -112,6 +115,8 @@ export function RecipeList(): ReactElement {
                   data.authorTotalRecipes.find((v) => v.id === r.author.id)
                     ?.total || 0
                 }
+                onSave={() => onSave({ user, id: r.id })}
+                saved={isSaved({ data: r, user, id: r.id })}
               />
             ))}
           </div>

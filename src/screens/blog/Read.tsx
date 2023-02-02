@@ -1,4 +1,5 @@
 import { IAuthor } from '@backend/models/author'
+import { ILike } from '@backend/models/like'
 import { IPost } from '@backend/models/post'
 import { ReactElement, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -13,6 +14,11 @@ import { useApi } from '../../hooks/api'
 import { ApiProcess } from '../../types/api'
 import { DonateStatus } from '../../types/ui'
 
+interface FetchData {
+  author: IAuthor
+  userLiked: boolean
+  likes: ILike[]
+}
 export function Read(): ReactElement {
   const { id } = useParams()
   const [loaded, setLoaded] = useState(false)
@@ -24,17 +30,15 @@ export function Read(): ReactElement {
 
   const navigate = useNavigate()
 
-  const { data, loading, error } = useApi<
-    IPost & { author: IAuthor; userLiked: boolean }
-  >(
+  const { data, loading, error } = useApi<IPost & FetchData>(
     '/blog/one/' + id,
     {
       onSuccess: (r) => {
-        const d = data || r
+        const d: FetchData = data || r
         console.log('d:', d)
         if (d && !loaded) {
           setLiked(d.userLiked)
-          setLikes(d.likes)
+          setLikes(d.likes.length)
           setLoaded(true)
         }
       },
