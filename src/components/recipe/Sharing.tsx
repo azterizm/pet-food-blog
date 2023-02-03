@@ -14,25 +14,38 @@ import {
   TwitterShareButton,
   WhatsappShareButton,
 } from 'react-share'
-export const Sharing = () => (
-  <div className='flex items-center gap-5 text-3xl mt-5'>
-    <FacebookShareButton url={window.location.href}>
-      <FacebookLogo />
-    </FacebookShareButton>
-    <TwitterShareButton url={window.location.href}>
-      <TwitterLogo />
-    </TwitterShareButton>
-    <LinkedinShareButton url={window.location.href}>
-      <LinkedinLogo />
-    </LinkedinShareButton>
-    <RedditShareButton url={window.location.href}>
-      <RedditLogo />
-    </RedditShareButton>
-    <WhatsappShareButton url={window.location.href}>
-      <WhatsappLogo />
-    </WhatsappShareButton>
-    <EmailShareButton url={window.location.href}>
-      <Envelope />
-    </EmailShareButton>
-  </div>
-)
+import { API_ENDPOINT } from '../../constants/api'
+export const Sharing = ({ id }: { id: number | string }) => {
+  const attr = {
+    url: window.location.href,
+    onClick: () =>
+      fetch(API_ENDPOINT + '/recipe/share/' + id, {
+        credentials: 'include',
+        method: 'post',
+      })
+        .then((r) => r.json())
+        .then(console.log),
+  }
+  return (
+    <div className='flex items-center gap-5 text-3xl mt-5'>
+      <FacebookShareButton {...attr}>
+        <FacebookLogo />
+      </FacebookShareButton>
+      <TwitterShareButton {...attr}>
+        <TwitterLogo />
+      </TwitterShareButton>
+      <LinkedinShareButton {...attr}>
+        <LinkedinLogo />
+      </LinkedinShareButton>
+      <RedditShareButton {...attr}>
+        <RedditLogo />
+      </RedditShareButton>
+      <WhatsappShareButton {...attr}>
+        <WhatsappLogo />
+      </WhatsappShareButton>
+      <EmailShareButton {...attr}>
+        <Envelope />
+      </EmailShareButton>
+    </div>
+  )
+}

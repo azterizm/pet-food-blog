@@ -4,6 +4,7 @@ import { Sharing } from './Sharing'
 
 interface Props {
   author: IAuthor
+  recipeId: number | string
 }
 
 export const HelpSection = (props: Props) => (
@@ -24,7 +25,7 @@ export const HelpSection = (props: Props) => (
           </span>
         </div>
       </div>
-      <Sharing />
+      <Sharing id={props.recipeId} />
     </div>
   </div>
 )

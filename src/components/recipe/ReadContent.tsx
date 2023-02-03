@@ -176,7 +176,7 @@ export function ReadContent({
         onLike={onLike}
         onPrint={onPrint}
       />
-      <HelpSection author={props.data.author} />
+      <HelpSection author={props.data.author} recipeId={props.data.id!} />
       <Donate
         status={donateStatus}
         onDonate={donate}
