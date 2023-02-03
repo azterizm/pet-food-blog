@@ -103,7 +103,7 @@ export function Read(): ReactElement {
           onLike={onLike}
           readType='post'
         />
-        <HelpSection author={data.author} />
+        <HelpSection author={data.author} recipeId={data.id!} />
         <Donate
           name={data.author.name}
           status={donateStatus}
