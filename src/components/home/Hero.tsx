@@ -1,6 +1,7 @@
 import { IAuthor } from '@backend/models/author'
+import { IVetInfo } from '@backend/models/vetInfo'
 import moment from 'moment'
-import { Star, Timer } from 'phosphor-react'
+import { PawPrint, Star, Timer } from 'phosphor-react'
 import { useNavigate } from 'react-router-dom'
 import { Category, categoryLabel } from '../../types/api'
 import { isFirefox } from '../../util/ui'
@@ -14,6 +15,7 @@ interface Props {
   featured?: boolean
   categories?: Category[]
   average?: number
+  vetApprover?: IVetInfo
 }
 
 export function Hero(props: Props) {
@@ -64,19 +66,41 @@ export function Hero(props: Props) {
           </div>
         ) : null}
         {props.author ? (
-          <div
-            className='cursor-pointer'
-            onClick={() => navigate('/authors/' + props.author?.id)}
-          >
+          <div>
             <AuthorProfileImage
-              className='w-50 h-80 object-cover rounded-lg mt-10 block'
+              className='w-50 h-80 object-cover rounded-lg mt-10 block cursor-pointer'
               author={props.author as IAuthor}
+              onClick={() => navigate('/authors/' + props.author?.id)}
             />
-            <p className='mb-0 font-bold text-lg'>{props.author.name}</p>
+            <p
+              onClick={() => navigate('/authors/' + props.author?.id)}
+              className=' cursor-pointer mb-0 font-bold text-lg'
+            >
+              {props.author.name}
+            </p>
             <p className='m-0'>{props.author.bio}</p>
-            <button className='bg-secondary px-5 py-3 border-0 rounded-full mt-5 c-white font-bold'>
+            <button
+              onClick={() => navigate('/authors/' + props.author?.id)}
+              className='bg-secondary px-5 py-3 border-0 rounded-full mt-5 c-white font-bold'
+            >
               Follow
             </button>
+            {props.vetApprover ? (
+              <div
+                className='cursor-pointer'
+                onClick={() => window.open(props.vetApprover?.web, '_blank')}
+              >
+                <div className='uppercase c-green flex items-center mt-5 gap-2'>
+                  <PawPrint className='text-5xl' />
+                  <span className='text-3xl font-bold'>vet approved</span>
+                </div>
+                <p
+                  onClick={() => window.open(props.vetApprover?.web, '_blank')}
+                >
+                  This recipe is approved by {props.vetApprover.name}
+                </p>
+              </div>
+            ) : null}
           </div>
         ) : null}
       </div>

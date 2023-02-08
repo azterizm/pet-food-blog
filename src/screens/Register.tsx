@@ -36,11 +36,6 @@ export function Register(): ReactElement {
       return setError(
         'Please enter correct email address. It does not seem valid.'
       )
-    const okUsername = usernameRegex.test(username)
-    if (!okUsername)
-      return setError(
-        'Username has invalid characters. Please choose another one.'
-      )
 
     setLoading(true)
     const data = await fetch(`${API_ENDPOINT}/auth/register/${type}`, {
@@ -57,6 +52,7 @@ export function Register(): ReactElement {
       method: 'post',
       credentials: 'include',
     }).then((r) => r.json())
+    console.log('data:', data)
     setLoading(false)
     if (data.error) return setError(data.info)
     setLogging(true)
@@ -162,7 +158,9 @@ export function Register(): ReactElement {
             <div
               className='bg-element p-2 rounded-lg translate-y--4 ml-2 flex items-center focus:brightness-75 cursor-pointer'
               onClick={() =>
-                setUsername(generateUsername({ useHyphen: false }))
+                setUsername(
+                  generateUsername({ useHyphen: false, useRandomNumber: true })
+                )
               }
             >
               <MagicWand size={24} weight='bold' />

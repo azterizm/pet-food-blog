@@ -34,7 +34,7 @@ export function TwoColumnLayout({
       <img
         src={image}
         alt='dog food'
-        className='w-50% object-cover object-top ml--10 h-100vh hidden lg:block'
+        className='w-50% object-cover object-center ml--10 h-100vh hidden lg:block'
       />
       <div className='flex-1 py-5'>
         <div

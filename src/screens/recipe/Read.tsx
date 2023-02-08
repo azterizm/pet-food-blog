@@ -1,4 +1,5 @@
 import { IAuthor } from '@backend/models/author'
+import { IVetInfo } from '@backend/models/vetInfo'
 import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
@@ -26,6 +27,7 @@ interface ReadData extends IRecipe {
   userSaved: boolean
   popular: IRecipe[]
   likes: ILike[]
+  vetinfo?: IVetInfo
 }
 
 export function RecipeRead(): ReactElement {
@@ -40,6 +42,8 @@ export function RecipeRead(): ReactElement {
     },
     [id]
   )
+
+  console.log('data:', data)
 
   const navigate = useNavigate()
   const [liked, setLiked] = useState(false)
@@ -90,6 +94,7 @@ export function RecipeRead(): ReactElement {
             image={API_ENDPOINT + data.mainImage}
             categories={data.categories}
             publishedOn={data.createdAt || new Date()}
+            vetApprover={data.vetinfo}
           />
           <div className='flex justify-center items-center gap-2 uppercase font-medium text-primary text-xs mt-5'>
             <span>{showDuration(data.duration)}</span>
