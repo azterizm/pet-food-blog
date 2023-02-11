@@ -52,6 +52,14 @@ const { Read: BlogRead } = lazyImport(
   () => import('./screens/blog/Read'),
   'Read'
 )
+const { SuccessPayment } = lazyImport(
+  () => import('./screens/payment/Success'),
+  'SuccessPayment'
+)
+const { CanceledPayment } = lazyImport(
+  () => import('./screens/payment/Canceled'),
+  'CanceledPayment'
+)
 
 function App() {
   const headFoot = useHeaderFooter()
@@ -89,6 +97,10 @@ function App() {
           <Route path='blog'>
             <Route index element={<BlogList />} />
             <Route path=':id' element={<BlogRead />} />
+          </Route>
+          <Route path='payment'>
+            <Route path='success' element={<SuccessPayment />} />
+            <Route path='cancel' element={<CanceledPayment />} />
           </Route>
           <Route path='search' element={<Search />} />
           <Route path='*' element={<NotFound />} />
