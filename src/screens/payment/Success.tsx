@@ -1,16 +1,19 @@
 import { CheckCircle } from 'phosphor-react'
-import { ReactElement, useEffect } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../hooks/api'
 
 export function SuccessPayment(): ReactElement {
   const [query] = useSearchParams()
   const [user, changeUser] = useAuth()
+  const [loaded, setLoaded] = useState(false)
   useEffect(() => {
     const amountStr = query.get('amount')
-    if (user && amountStr)
-      changeUser({ ...user, deposit: user?.deposit + parseInt(amountStr) })
-  }, [])
+    if (user && amountStr && !loaded) {
+      changeUser({ ...user, deposit: user.deposit + parseInt(amountStr) })
+      setLoaded(true)
+    }
+  }, [user])
   return (
     <div className='bg-white p-6  md:mx-auto min-h-screen flex items-center justify-center flex-col'>
       <CheckCircle className='text-green-600 w-20 h-20 mx-auto my-6' />
