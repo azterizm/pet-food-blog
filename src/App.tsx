@@ -5,10 +5,13 @@ import { Header } from './components/header'
 import { Loader } from './components/Loader'
 import { useAuth } from './hooks/api'
 import { useFade, useHeaderFooter } from './hooks/state'
-import { Deposit } from './screens/Deposit'
-import Home from './screens/Home'
 import { lazyImport } from './util/ui'
 
+const { Home } = lazyImport(() => import('./screens/Home'), 'Home')
+const { PastDeposits } = lazyImport(
+  () => import('./screens/PastDeposits'),
+  'PastDeposits'
+)
 const { AuthorList } = lazyImport(
   () => import('./screens/author/List'),
   'AuthorList'
@@ -79,7 +82,7 @@ function App() {
           {user ? (
             <>
               <Route path='profile' element={<Profile />} />
-              <Route path='deposit' element={<Deposit />} />
+              <Route path='deposit' element={<PastDeposits />} />
               <Route path='free' element={<FreeStuff />} />
               <Route path='saved' element={<Saved />} />
               <Route path='purchases' element={<Purchases />} />

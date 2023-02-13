@@ -8,6 +8,8 @@ import { RenderIconByName } from './icons/RenderIconByName'
 
 export interface AuthorListItemProps {
   data: IAuthor & { socialMedia: ISocialMedia[] }
+  subscribed?: Boolean
+  subscribeDate?: Date | string
 }
 
 export function AuthorListItem(props: AuthorListItemProps): ReactElement {
@@ -31,13 +33,16 @@ export function AuthorListItem(props: AuthorListItemProps): ReactElement {
               ))
             : null}
         </div>
-        <span className='mb-10 block'>
-          {!props.data.bio
-            ? null
-            : props.data.bio.length > 150
-            ? props.data.bio.slice(0, 147) + '...'
-            : props.data.bio}
-        </span>
+        <span className='mb-10 block truncate'>{props.data.bio}</span>
+        {props.subscribed ? (
+          <span>
+            Subscribed{' '}
+            {props.subscribeDate
+              ? 'at ' + new Date(props.subscribeDate).toLocaleDateString()
+              : ''}{' '}
+            for ${props.data.subscribeCost}/month
+          </span>
+        ) : null}
       </div>
     </div>
   )

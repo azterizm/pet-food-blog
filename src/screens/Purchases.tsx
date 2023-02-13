@@ -1,4 +1,5 @@
 import { IAuthor } from '@backend/models/author'
+import { IPurchase } from '@backend/models/purchase'
 import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
 import type { ReactElement } from 'react'
@@ -13,7 +14,9 @@ export function Purchases(): ReactElement {
   const navigate = useNavigate()
   const [user] = useAuth()
   const { data, error, loading } =
-    useApi<(IRecipe & { author: IAuthor; likes: ILike[] })[]>('/user/purchases')
+    useApi<
+      (IPurchase & { author: IAuthor; recipe: IRecipe & { likes: ILike[] } })[]
+    >('/user/purchases')
   return (
     <div className='my-5'>
       <span className='uppercase c-primary text-xl font-bold'>Purchases</span>
@@ -25,11 +28,11 @@ export function Purchases(): ReactElement {
         </p>
       ) : (
         <div className='flex flex-wrap gap-10 justify-start items-center'>
-          {data.map((recipe) => (
+          {data.map(({ recipe, author, createdAt }) => (
             <Recipe
               key={recipe.id}
               title={recipe.title}
-              author={recipe.author}
+              author={author}
               postedOn={recipe.createdAt!}
               reviews={recipe.likes.length}
               image={API_ENDPOINT + recipe.mainImage}
@@ -38,6 +41,8 @@ export function Purchases(): ReactElement {
               categories={recipe.categories}
               price={recipe.price}
               priceType={recipe.priceType}
+              purchased
+              purchaseDate={createdAt}
               id={recipe.id!}
               onSave={() =>
                 onSave({

@@ -7,7 +7,13 @@ import { useApi } from '../hooks/api'
 
 export function Subscribed(): ReactElement {
   const { data, error, loading } =
-    useApi<(IAuthor & { socialMedia: ISocialMedia[] })[]>('/user/subscribed')
+    useApi<
+      (IAuthor & {
+        socialMedia: ISocialMedia[]
+        subscribeDate?: string | Date
+      })[]
+    >('/user/subscribed')
+  console.log('data:', data)
   return (
     <div className='my-5'>
       <span className='uppercase c-primary text-xl font-bold'>
@@ -23,7 +29,12 @@ export function Subscribed(): ReactElement {
         ) : (
           <div className='flex flex-wrap gap-5 justify-start'>
             {data.map((r) => (
-              <AuthorListItem data={r} key={r.id} />
+              <AuthorListItem
+                subscribed
+                subscribeDate={r.subscribeDate}
+                data={r}
+                key={r.id}
+              />
             ))}
           </div>
         )}

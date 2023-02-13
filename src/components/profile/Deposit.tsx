@@ -1,5 +1,6 @@
 import { ReactElement, useEffect, useState } from 'react'
 import { Portal } from 'react-portal'
+import { useNavigate } from 'react-router-dom'
 import { API_ENDPOINT } from '../../constants/api'
 import { useAuth } from '../../hooks/api'
 import { useFade } from '../../hooks/state'
@@ -8,6 +9,7 @@ export function Deposit(): ReactElement {
   const [user] = useAuth()
   const [showPrices, setShowPrices] = useState(false)
   const fade = useFade()
+  const navigate = useNavigate()
   useEffect(() => {
     if (showPrices) fade.show()
     else fade.hide()
@@ -23,6 +25,12 @@ export function Deposit(): ReactElement {
         className='fill-btn'
       >
         Add deposit
+      </button>
+      <button
+        onClick={() => navigate('/deposit')}
+        className='c-primary bg-white border-0 text-lg mt-2'
+      >
+        View past deposits
       </button>
       {showPrices ? (
         <Portal>

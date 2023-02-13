@@ -12,8 +12,6 @@ import { Subscribed } from './Subscribed'
 
 export interface ProfileProps {}
 
-//deposit, purchases, subed authors
-
 export function Profile({}: ProfileProps): ReactElement {
   const [user] = useAuth()
 

@@ -1,7 +1,7 @@
 import { Hero } from '../components/home/Hero'
 import { Recipes } from '../components/home/Recipes'
 
-function Home() {
+export function Home() {
   return (
     <div className='relative'>
       <Hero
@@ -19,5 +19,3 @@ function Home() {
     </div>
   )
 }
-
-export default Home

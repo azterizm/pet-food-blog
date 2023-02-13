@@ -25,10 +25,14 @@ interface Props {
   id: number
   saved?: boolean
   onSave?: () => void
+  purchased?: boolean
+  purchaseDate?: string | Date
 }
 
 export function Recipe({
   onSave,
+  purchased,
+  purchaseDate,
   priceType,
   price,
   duration,
@@ -139,7 +143,19 @@ export function Recipe({
           {priceType === 'free'
             ? 'Free'
             : priceType === 'paid'
-            ? `Unlock \$${price || 0}`
+            ? purchased
+              ? `Purchased for \$${price || 0} ${
+                  purchaseDate
+                    ? 'at ' + new Date(purchaseDate).toLocaleDateString()
+                    : ''
+                }`
+              : `Unlock \$${price || 0}`
+            : purchased
+            ? `Subscribed channel ${
+                purchaseDate
+                  ? 'at ' + new Date(purchaseDate).toLocaleDateString()
+                  : ''
+              }`
             : `Subscribe Channel \$${author?.subscribeCost || 0}`}
         </span>
       </div>
