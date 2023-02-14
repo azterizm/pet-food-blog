@@ -5,6 +5,7 @@ import { Header } from './components/header'
 import { Loader } from './components/Loader'
 import { useAuth } from './hooks/api'
 import { useFade, useHeaderFooter } from './hooks/state'
+
 import { lazyImport } from './util/ui'
 
 const { Home } = lazyImport(() => import('./screens/Home'), 'Home')
@@ -63,6 +64,15 @@ const { CanceledPayment } = lazyImport(
   () => import('./screens/payment/Canceled'),
   'CanceledPayment'
 )
+const { FailedBank } = lazyImport(
+  () => import('./screens/bank/Failed'),
+  'FailedBank'
+)
+
+const { SuccessBank } = lazyImport(
+  () => import('./screens/bank/Success'),
+  'SuccessBank'
+)
 
 function App() {
   const headFoot = useHeaderFooter()
@@ -104,6 +114,10 @@ function App() {
           <Route path='payment'>
             <Route path='success' element={<SuccessPayment />} />
             <Route path='cancel' element={<CanceledPayment />} />
+          </Route>
+          <Route path='bank'>
+            <Route path='success' element={<SuccessBank />} />
+            <Route path='fail' element={<FailedBank />} />
           </Route>
           <Route path='search' element={<Search />} />
           <Route path='*' element={<NotFound />} />
