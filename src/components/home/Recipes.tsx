@@ -1,17 +1,17 @@
-import { ILike } from '@backend/models/like'
 import { IAuthor } from '@backend/models/author'
+import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
-import type { ReactElement } from 'react'
+import { ISave } from '@backend/models/save'
+import { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { animated as a, config, useSpring } from 'react-spring'
 import { API_ENDPOINT } from '../../constants/api'
+import { isSaved, onSave } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import { AuthorTotalRecipe } from '../../types/api'
 import { Loader } from '../Loader'
 import { MainButton } from '../MainButton'
 import { Recipe } from './Recipe'
-import { ISave } from '@backend/models/save'
-import { isSaved, onSave } from '../../features/save'
 
 export function Recipes(): ReactElement {
   const { data, error, loading } = useApi<{

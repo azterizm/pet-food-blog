@@ -41,6 +41,7 @@ export function ReadContent({
   const navigate = useNavigate()
 
   const containerRef = useRef<HTMLDivElement>(null)
+  const [doneSteps, setDoneSteps] = useState<number[]>([])
 
   useEffect(() => {
     if (props.data) setLikes(props.data.likes.length)
@@ -63,7 +64,7 @@ export function ReadContent({
     props.changeLiked(!liked)
   }
 
-  async function donate(amount: number) {
+  async function onDonate(amount: number) {
     if (!amount) return
     setDonateStatus(DonateStatus.Process)
     const data: ApiProcess = await donateAuthor({
@@ -92,7 +93,7 @@ export function ReadContent({
               <div key={itemIndex} className='flex items-center gap-2'>
                 <span
                   className={
-                    'cursor-pointer border-2 border-element border-r-0 w-10 h-10 flex items-center justify-center ' +
+                    'cursor-pointer border-0 border-element border-r-0 w-10 h-10 flex items-center justify-center ' +
                     (itemIndex + 1 === ingredient.items.length
                       ? ''
                       : 'border-b-0')
@@ -114,7 +115,16 @@ export function ReadContent({
                   )}
                 </span>
                 <span
-                  className={`border-2 border-element ml--2 w-full border-r-0 pl-5 h-10 flex items-center justify-start ${
+                  onClick={() =>
+                    setCheckedIng((e) =>
+                      e.includes([ingredientIndex, itemIndex].join(':'))
+                        ? e.filter(
+                            (r) => r !== [ingredientIndex, itemIndex].join(':')
+                          )
+                        : [...e, [ingredientIndex, itemIndex].join(':')]
+                    )
+                  }
+                  className={`border-0 border-element ml--2 w-full border-r-0 pl-5 h-10 flex items-center justify-start cursor-pointer ${
                     itemIndex + 1 === ingredient.items.length
                       ? ''
                       : 'border-b-0'
@@ -143,15 +153,54 @@ export function ReadContent({
                 <span className='z-5 bg-secondary c-white min-w-12.5 min-h-12.5 flex-center rounded-full font-bold text-2xl translate-x--1'>
                   {i + 1}.
                 </span>
-                <div
-                  id={
-                    i === props.data.instructions.length - 1
-                      ? ''
-                      : 'instruction'
-                  }
-                  className='translate-y--2'
-                  dangerouslySetInnerHTML={{ __html: content }}
-                />
+                <div>
+                  <div
+                    id={
+                      i === props.data.instructions.length - 1
+                        ? ''
+                        : 'instruction'
+                    }
+                    className='translate-y--2'
+                    dangerouslySetInnerHTML={{ __html: content }}
+                  />
+
+                  <div
+                    className='flex items-start gap-2 text-sm font-medium cursor-pointer'
+                    onClick={() =>
+                      setDoneSteps((r) =>
+                        !r.includes(i) ? [...r, i] : r.filter((e) => e !== i)
+                      )
+                    }
+                  >
+                    <label
+                      className='checkbox_container'
+                      onClick={() =>
+                        setDoneSteps((r) =>
+                          !r.includes(i) ? [...r, i] : r.filter((e) => e !== i)
+                        )
+                      }
+                    >
+                      <input
+                        type='checkbox'
+                        name='mark'
+                        id='mark'
+                        className='checkbox'
+                        checked={doneSteps.includes(i)}
+                        onChange={(e) =>
+                          setDoneSteps((r) =>
+                            e.target.checked
+                              ? [...r, i]
+                              : r.filter((e) => e !== i)
+                          )
+                        }
+                      />
+                      <span className='checkmark'></span>
+                    </label>
+                    <span className='block translate-y-1'>
+                      {!doneSteps.includes(i) ? 'Mark as complete' : 'Done!'}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
@@ -179,7 +228,7 @@ export function ReadContent({
       <HelpSection author={props.data.author} recipeId={props.data.id!} />
       <Donate
         status={donateStatus}
-        onDonate={donate}
+        onDonate={onDonate}
         name={props.data.author.name}
         onReset={() => setDonateStatus(DonateStatus.Idle)}
       />

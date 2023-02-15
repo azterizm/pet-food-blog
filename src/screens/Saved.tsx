@@ -2,7 +2,8 @@ import { IAuthor } from '@backend/models/author'
 import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
 import { ISave } from '@backend/models/save'
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { GoBack } from '../components/GoBack'
 import { Recipe } from '../components/home/Recipe'
 import { Loader } from '../components/Loader'
@@ -15,6 +16,16 @@ export function Saved(): ReactElement {
   const { data, error, loading } = useApi<
     (ISave & { recipe: IRecipe & { author: IAuthor; likes: ILike[] } })[]
   >('/recipe/saved', undefined, [user])
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!user)
+      navigate('/login', {
+        state: {
+          redirect: '/saved',
+        },
+      })
+  }, [])
 
   return (
     <div className='min-h-100vh w-full'>

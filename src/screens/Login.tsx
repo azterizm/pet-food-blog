@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { AuthTypeSelector } from '../components/AuthTypeSelector'
 import { Loader } from '../components/Loader'
 import { TwoColumnLayout } from '../components/TwoColumnLayout'
@@ -11,6 +11,8 @@ export function Login(): ReactElement {
   const [type, setType] = useState<AuthType>('user')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [query] = useSearchParams()
+  const { state } = useLocation()
 
   useEffect(() => {
     window.localStorage.removeItem('user')
@@ -28,7 +30,8 @@ export function Login(): ReactElement {
     }).then((r) => r.json())
     setLoading(false)
     if (data.error) return setError(data.info)
-    window.location.href = '/'
+    const redirect = state?.redirect || query.get('redirect')
+    window.location.href = redirect || '/'
   }
 
   return (

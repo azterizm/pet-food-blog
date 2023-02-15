@@ -52,17 +52,14 @@ export function Header({ user }: Props) {
         <Link className='no-underline c-black' to='/blog'>
           Blog
         </Link>
-        {user ? (
-          <>
-            <div className='w-0.5 h-5 bg-black'></div>
-            <Link className='no-underline c-black' to='/free'>
-              Free Stuff
-            </Link>
-            <Link className='no-underline c-black' to='/saved'>
-              Saved
-            </Link>
-          </>
-        ) : null}
+
+        <div className='w-0.5 h-5 bg-black'></div>
+        <Link className='no-underline c-black' to='/free'>
+          Free Stuff
+        </Link>
+        <Link className='no-underline c-black' to='/saved'>
+          Saved
+        </Link>
       </div>
       <div className='items-center gap-6 hidden lg:flex font-bold'>
         {!user || user.type === 'author' ? (
@@ -70,7 +67,7 @@ export function Header({ user }: Props) {
             <button
               onClick={() =>
                 !user
-                  ? navigate('/login')
+                  ? navigate('/register')
                   : (window.location.href = CREATOR_ENDPOINT)
               }
               className='bg-#2821fc c-white rounded-full c-black border-none font-bold px-7 py-2 hover:brightness-75 '

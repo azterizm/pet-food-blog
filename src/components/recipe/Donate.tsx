@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { redirect, useNavigate, useParams } from 'react-router-dom'
+import { useAuth } from '../../hooks/api'
 import { DonateStatus } from '../../types/ui'
 import { Loader } from '../Loader'
 
@@ -13,9 +15,18 @@ export const Donate = (props: Props) => {
   const [selectedAmount, setSelectedAmount] = useState<null | number>(null)
   const [showNoteInput, setShowNoteInput] = useState(false)
   const [note, setNote] = useState('')
+  const [user] = useAuth()
+  const navigate = useNavigate()
+  const params = useParams()
 
   function onConfirm() {
     if (!selectedAmount) return
+    if (!user)
+      return navigate('/login', {
+        state: {
+          redirect: params?.id ? '/recipes/read/' + params?.id : '',
+        },
+      })
     props.onDonate(selectedAmount)
   }
   function onAddNote() {

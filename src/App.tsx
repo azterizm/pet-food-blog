@@ -89,12 +89,12 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='login' element={<Login />} />
           <Route path='register' element={<Register />} />
+          <Route path='free' element={<FreeStuff />} />
+          <Route path='saved' element={<Saved />} />
           {user ? (
             <>
               <Route path='profile' element={<Profile />} />
               <Route path='deposit' element={<PastDeposits />} />
-              <Route path='free' element={<FreeStuff />} />
-              <Route path='saved' element={<Saved />} />
               <Route path='purchases' element={<Purchases />} />
               <Route path='subscribed' element={<Subscribed />} />
             </>

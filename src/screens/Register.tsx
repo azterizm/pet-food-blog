@@ -1,7 +1,7 @@
 import { generateUsername } from 'friendly-username-generator'
 import { CaretLeft, MagicWand, X } from 'phosphor-react'
 import { ChangeEvent, ReactElement, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { AuthTypeSelector } from '../components/AuthTypeSelector'
 import { Loader } from '../components/Loader'
 import { TwoColumnLayout } from '../components/TwoColumnLayout'
@@ -20,8 +20,9 @@ export function Register(): ReactElement {
   const [error, setError] = useState('')
   const [logging, setLogging] = useState(false)
   const [loading, setLoading] = useState(false)
-
   const [type, setType] = useState<AuthType>('user')
+  const [query] = useSearchParams()
+  const { state } = useLocation()
 
   useEffect(() => {
     setUsername(generateUsername({ useHyphen: false }))
@@ -57,7 +58,8 @@ export function Register(): ReactElement {
     if (data.error) return setError(data.info)
     setLogging(true)
     setTimeout(() => {
-      window.location.href = '/'
+      const redirect = state?.redirect || query.get('redirect') || '/'
+      window.location.href = redirect || '/'
     }, 1000)
   }
 

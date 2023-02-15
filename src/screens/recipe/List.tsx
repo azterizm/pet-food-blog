@@ -1,10 +1,16 @@
+import { IAuthor } from '@backend/models/author'
+import { ILike } from '@backend/models/like'
+import { IRecipe } from '@backend/models/recipe'
+import { ISave } from '@backend/models/save'
+import { AuthorSort } from '@backend/zod/api'
 import { CaretDown, CaretUp } from 'phosphor-react'
+import { ReactElement, useEffect, useState } from 'react'
 import Paginate from 'react-paginate'
-import { ReactElement, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Recipe } from '../../components/home/Recipe'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT, PAGE_OFFSET } from '../../constants/api'
+import { isSaved, onSave } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import {
   AuthorTotalRecipe,
@@ -13,12 +19,6 @@ import {
   categoryLabel,
   sortLabel,
 } from '../../types/api'
-import { AuthorSort } from '@backend/zod/api'
-import { IRecipe } from '@backend/models/recipe'
-import { IAuthor } from '@backend/models/author'
-import { ILike } from '@backend/models/like'
-import { isSaved, onSave } from '../../features/save'
-import { ISave } from '@backend/models/save'
 
 export function RecipeList(): ReactElement {
   const navigate = useNavigate()
@@ -36,6 +36,13 @@ export function RecipeList(): ReactElement {
     { debounce: 800 },
     [sort, category]
   )
+
+  const { state } = useLocation()
+
+  useEffect(() => {
+    const category = state.category as Category
+    if (category) setCategory(category)
+  }, [])
 
   return (
     <div className='min-h-100vh'>

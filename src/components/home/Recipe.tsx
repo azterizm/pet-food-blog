@@ -9,6 +9,7 @@ import { categoryLabel } from '../../types/api'
 import { PriceType } from '../../types/ui'
 import { showDuration, showPluralS } from '../../util/ui'
 import { categoryRenders } from '../icons/RecipeCategory'
+import { Sharing } from '../recipe/Sharing'
 
 interface Props {
   title: string
@@ -30,6 +31,7 @@ interface Props {
 }
 
 export function Recipe({
+  id,
   onSave,
   purchased,
   purchaseDate,
@@ -48,6 +50,7 @@ export function Recipe({
 }: Props) {
   const navigate = useNavigate()
   const [newSave, setNewSave] = useState(saved)
+  const [showShare, setShowShare] = useState(false)
 
   return (
     <div className='m-0 p-0 shadow-lg rounded-lg max-w-80'>
@@ -89,9 +92,16 @@ export function Recipe({
         </div>
 
         <div className='mt-8 flex items-center flex-col gap-2 w-full'>
-          <button className='w-full bg-secondary c-white border-none py-2 text-lg font-medium rounded-full'>
-            Share
-          </button>
+          {showShare ? (
+            <Sharing disableSharing id={id} />
+          ) : (
+            <button
+              onClick={() => setShowShare(true)}
+              className='w-full bg-secondary c-white border-none py-2 text-lg font-medium rounded-full'
+            >
+              Share
+            </button>
+          )}
           {onSave ? (
             <>
               {newSave ? (

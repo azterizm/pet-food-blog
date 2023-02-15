@@ -109,10 +109,6 @@ export function RecipeRead(): ReactElement {
           </div>
           <div className='block mt-10'>
             <div className='relative'>
-              <div
-                id='content'
-                dangerouslySetInnerHTML={{ __html: data.intro }}
-              ></div>
               {errorUnpaid ? (
                 <div className='absolute top-0 left-0 bg-gradient-to-b from-white/30 to-white w-full h-full'></div>
               ) : null}
@@ -127,8 +123,14 @@ export function RecipeRead(): ReactElement {
                 subscribeCost={data.author.subscribeCost}
               />
             ) : (
-              <div className='w-full flex items-start'>
+              <div className='w-full flex items-start max-w-5xl mx-auto'>
                 <div className='flex-1'>
+                  <div
+                    id='content'
+                    className='max-w-5xl mx-auto'
+                    dangerouslySetInnerHTML={{ __html: data.intro }}
+                  ></div>
+
                   <ReadContent
                     changeLiked={setLiked}
                     liked={liked}

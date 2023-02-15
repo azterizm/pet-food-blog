@@ -45,8 +45,11 @@ export function Hero(props: Props) {
           {props.categories && props.categories.length
             ? props.categories.map((r, i) => (
                 <span
-                  className='uppercase font-bold text-sm mr-2 bg-white c-primary px-3 py-1 rounded-full tracking-widest lg:border-2'
+                  className='uppercase font-bold text-sm mr-2 bg-white c-primary px-3 py-1 rounded-full tracking-widest lg:border-2 cursor-pointer'
                   key={r + '_' + i}
+                  onClick={() =>
+                    navigate('/recipes', { state: { category: r } })
+                  }
                 >
                   {categoryLabel[r]}
                 </span>
