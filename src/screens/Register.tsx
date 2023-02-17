@@ -1,43 +1,62 @@
 import { generateUsername } from 'friendly-username-generator'
+import { isObject } from 'lodash'
 import { CaretLeft, MagicWand, X } from 'phosphor-react'
-import { ChangeEvent, ReactElement, useEffect, useState } from 'react'
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  ReactElement,
+  useEffect,
+  useState,
+} from 'react'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { AuthTypeSelector } from '../components/AuthTypeSelector'
 import { Loader } from '../components/Loader'
 import { TwoColumnLayout } from '../components/TwoColumnLayout'
+import { VerificationCodeInput } from '../components/VerificationCodeInput'
 import { API_ENDPOINT } from '../constants/api'
-import { emailRegex, usernameRegex } from '../constants/regex'
+import { emailRegex } from '../constants/regex'
+import { ApiProcess } from '../types/api'
 import { AuthType } from '../types/auth'
 
 const MAX_PHONE = 13
+enum Stage {
+  Info,
+  Phone,
+  Verify,
+  LoggingIn,
+}
 
 export function Register(): ReactElement {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [username, setUsername] = useState('')
-  const [stage, setStage] = useState(false)
+  const [stage, setStage] = useState<Stage>(Stage.Info)
   const [error, setError] = useState('')
-  const [logging, setLogging] = useState(false)
   const [loading, setLoading] = useState(false)
   const [type, setType] = useState<AuthType>('user')
+  const [code, setCode] = useState('')
+
+  const state = useLocation().state
   const [query] = useSearchParams()
-  const { state } = useLocation()
 
   useEffect(() => {
     setUsername(generateUsername({ useHyphen: false }))
-
     window.localStorage.removeItem('user')
+    return () => {
+      setStage(Stage.Info)
+      setError('')
+      setLoading(false)
+      setType('user')
+      setUsername('')
+      setPhone('')
+      setEmail('')
+      setName('')
+    }
   }, [])
 
-  async function handleSubmit() {
+  async function handlePhone() {
     setError('')
-    const okEmail = emailRegex.test(email)
-    if (!okEmail)
-      return setError(
-        'Please enter correct email address. It does not seem valid.'
-      )
-
     setLoading(true)
     const data = await fetch(`${API_ENDPOINT}/auth/register/${type}`, {
       body: JSON.stringify({
@@ -46,45 +65,104 @@ export function Register(): ReactElement {
         phone,
         username,
         type,
-        input: username,
+        input: username || email,
         password: 'placeholder',
       }),
       headers: { 'content-type': 'application/json' },
       method: 'post',
       credentials: 'include',
     }).then((r) => r.json())
-    console.log('data:', data)
     setLoading(false)
     if (data.error) return setError(data.info)
-    setLogging(true)
-    setTimeout(() => {
-      const redirect = state?.redirect || query.get('redirect') || '/'
-      window.location.href = redirect || '/'
-    }, 1000)
+    setStage(Stage.Verify)
   }
 
-  function handleStart() {
+  async function handleResend() {
+    setError('')
+    setLoading(true)
+    const data = await fetch(`${API_ENDPOINT}/auth/send_code`, {
+      body: JSON.stringify({
+        type,
+        input: username || email,
+      }),
+      headers: { 'content-type': 'application/json' },
+      method: 'post',
+      credentials: 'include',
+    }).then((r) => r.json())
+    setLoading(false)
+    if (data.error) return setError(data.info)
+    setStage(Stage.Verify)
+  }
+
+  async function handleInfo() {
     setError('')
     const okEmail = emailRegex.test(email)
     if (!okEmail)
       return setError(
         'Please enter correct email address. It does not seem valid.'
       )
-    setStage(true)
+    setLoading(true)
+    const emailVerifyData: ApiProcess = await fetch(
+      `${API_ENDPOINT}/auth/check_email`,
+      {
+        body: JSON.stringify({
+          email,
+          type,
+        }),
+        headers: { 'content-type': 'application/json' },
+        method: 'post',
+        credentials: 'include',
+      }
+    ).then((r) => r.json())
+    setLoading(false)
+    if (emailVerifyData.error) return setError(emailVerifyData.info)
+    setStage(Stage.Phone)
   }
 
-  function handleSubmitClick() {
-    if (!stage) handleStart()
-    else handleSubmit()
+  async function handleVerify() {
+    setLoading(true)
+
+    const data: ApiProcess = await fetch(`${API_ENDPOINT}/auth/login`, {
+      body: JSON.stringify({
+        code,
+        type,
+        input: email || username,
+        password: 'placeholder',
+      }),
+      headers: { 'content-type': 'application/json' },
+      method: 'post',
+      credentials: 'include',
+    }).then((r) => r.json())
+    setLoading(false)
+    if (data.error)
+      return setError(
+        isObject(data.info) ? (data as any).info.message : data.info
+      )
+    setStage(Stage.LoggingIn)
+
+    setTimeout(() => {
+      const redirect = state?.redirect || query.get('redirect') || '/'
+      window.location.href = redirect || '/'
+    }, 1000)
+  }
+
+  async function handleSubmitClick() {
+    if (stage === Stage.Info) await handleInfo()
+    else if (stage === Stage.Phone) await handlePhone()
+    else if (stage === Stage.Verify) await handleVerify()
   }
 
   function handlePhoneChange(e: ChangeEvent<HTMLInputElement>) {
     const input = e.target.value
-    if (phone.length > MAX_PHONE) return
+    if (phone.length > MAX_PHONE || isNaN(input as any)) return
 
     if (!phone) {
       setPhone('+' + input)
     } else setPhone(input)
+  }
+
+  function handlePhoneKeyPress(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key.toLowerCase() === 'backspace') setPhone((e) => e.slice(0, -1))
   }
 
   return (
@@ -92,10 +170,11 @@ export function Register(): ReactElement {
       image='/images/menu.avif'
       subTitle={['Thoughts', 'Stories', 'Thoughts, stories and ideas']}
       title='Sign Up'
+      hideHeadings={stage !== Stage.Info}
     >
-      {logging ? (
+      {stage === Stage.LoggingIn ? (
         <h1>Logging in...</h1>
-      ) : !stage ? (
+      ) : stage === Stage.Info ? (
         <>
           <input
             type='text'
@@ -118,11 +197,11 @@ export function Register(): ReactElement {
             onChange={(e) => setEmail(e.target.value)}
           />
         </>
-      ) : (
+      ) : stage === Stage.Phone ? (
         <>
           <div
             className='flex items-center gap-2 mt-10 cursor-pointer'
-            onClick={() => setStage(false)}
+            onClick={() => setStage(Stage.Info)}
           >
             <CaretLeft size={16} />
             <span>Go back</span>
@@ -136,6 +215,7 @@ export function Register(): ReactElement {
               className='focus:outline-none p-5 pb-3 font-black c-primary text-xl border-t-0 border-l-0 border-r-0 border-b-4 border-element min-w-15rem text-center focus:border-primary'
               value={phone}
               onChange={handlePhoneChange}
+              onKeyDown={handlePhoneKeyPress}
             />
             {phone.length > MAX_PHONE ? (
               <div
@@ -168,32 +248,53 @@ export function Register(): ReactElement {
               <MagicWand size={24} weight='bold' />
             </div>
           </div>
-          <AuthTypeSelector
-            type={type}
-            onChange={setType}
-            containerClass='gap-5 mb-10'
-          />
         </>
-      )}
+      ) : stage === Stage.Verify ? (
+        <VerificationCodeInput value={code} onChange={setCode} />
+      ) : null}
+      {stage === Stage.Info ? (
+        <AuthTypeSelector
+          type={type}
+          onChange={setType}
+          containerClass='gap-5 mb-10'
+        />
+      ) : null}
       {error ? (
         <p className='c-red-500 text-center mt--5 mb-10 text-lg font-medium'>
           {error}
         </p>
       ) : null}
-      {!logging ? (
+      {stage !== Stage.LoggingIn ? (
         <button
           onClick={handleSubmitClick}
           className='mb-10 font-bold c-primary px-5 py-3 rounded-full text-md border-none'
         >
-          {!stage ? 'Continue' : 'Send link'}
+          {stage === Stage.Info
+            ? 'Continue'
+            : stage === Stage.Phone
+            ? 'Send code'
+            : stage === Stage.Verify
+            ? 'Check code'
+            : 'Continue'}
         </button>
       ) : null}
-      {!stage && !logging ? (
+      {stage === Stage.Info ? (
         <p>
           Already have account yet?{' '}
           <Link className='c-primary decoration-none font-bold' to='/login'>
             Login
           </Link>
+        </p>
+      ) : null}
+      {stage === Stage.Verify ? (
+        <p className='flex-center gap-0'>
+          <span>Didn't recieve code?</span>
+          <button
+            onClick={handleResend}
+            className='c-primary font-bold bg-white border-none underline'
+          >
+            Resend
+          </button>
         </p>
       ) : null}
       {loading ? (
