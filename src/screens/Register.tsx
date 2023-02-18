@@ -1,13 +1,7 @@
 import { generateUsername } from 'friendly-username-generator'
 import { isObject } from 'lodash'
 import { CaretLeft, MagicWand, X } from 'phosphor-react'
-import {
-  ChangeEvent,
-  KeyboardEvent,
-  ReactElement,
-  useEffect,
-  useState,
-} from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { AuthTypeSelector } from '../components/AuthTypeSelector'
 import { Loader } from '../components/Loader'
@@ -17,8 +11,8 @@ import { API_ENDPOINT } from '../constants/api'
 import { emailRegex } from '../constants/regex'
 import { ApiProcess } from '../types/api'
 import { AuthType } from '../types/auth'
+import { MAX_PHONE, PhoneNumberInput } from '../components/PhoneNumberInput'
 
-const MAX_PHONE = 13
 enum Stage {
   Info,
   Phone,
@@ -152,19 +146,6 @@ export function Register(): ReactElement {
     else if (stage === Stage.Verify) await handleVerify()
   }
 
-  function handlePhoneChange(e: ChangeEvent<HTMLInputElement>) {
-    const input = e.target.value
-    if (phone.length > MAX_PHONE || isNaN(input as any)) return
-
-    if (!phone) {
-      setPhone('+' + input)
-    } else setPhone(input)
-  }
-
-  function handlePhoneKeyPress(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key.toLowerCase() === 'backspace') setPhone((e) => e.slice(0, -1))
-  }
-
   return (
     <TwoColumnLayout
       image='/images/menu.avif'
@@ -207,16 +188,7 @@ export function Register(): ReactElement {
             <span>Go back</span>
           </div>
           <div className='flex items-center mt-5 mb-5'>
-            <input
-              type='text'
-              name='phone'
-              id='phone'
-              placeholder='Your phone number'
-              className='focus:outline-none p-5 pb-3 font-black c-primary text-xl border-t-0 border-l-0 border-r-0 border-b-4 border-element min-w-15rem text-center focus:border-primary'
-              value={phone}
-              onChange={handlePhoneChange}
-              onKeyDown={handlePhoneKeyPress}
-            />
+            <PhoneNumberInput onChange={setPhone} value={phone} />
             {phone.length > MAX_PHONE ? (
               <div
                 className='bg-element p-2 rounded-lg ml-2 flex items-center focus:brightness-75 cursor-pointer'
