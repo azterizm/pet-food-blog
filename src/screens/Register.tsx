@@ -31,7 +31,7 @@ export function Register(): ReactElement {
   const [type, setType] = useState<AuthType>('user')
   const [code, setCode] = useState('')
 
-  const state = useLocation().state
+  const state = useLocation()?.state
   const [query] = useSearchParams()
 
   useEffect(() => {

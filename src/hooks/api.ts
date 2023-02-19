@@ -59,6 +59,7 @@ export function useApi<T>(
       .then((r) => {
         setLoading(false)
         setData(r)
+        console.log('r:', r)
         if (r.error) {
           console.error(
             'Fetch request failed on',

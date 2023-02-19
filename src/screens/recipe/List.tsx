@@ -40,7 +40,7 @@ export function RecipeList(): ReactElement {
   const { state } = useLocation()
 
   useEffect(() => {
-    const category = state.category as Category
+    const category = state?.category as Category
     if (category) setCategory(category)
   }, [])
 
