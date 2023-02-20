@@ -50,10 +50,7 @@ export const Donate = (props: Props) => {
         Do you want to support {props.name}?
       </h3>
 
-      <p>
-        {props.name} is supported by generiosity of her <b>So Pawlicious</b>{' '}
-        followers like you.
-      </p>
+      <p>{props.name} is supported by generiosity of followers like you.</p>
       {props.status === DonateStatus.Idle ? (
         <div className='flex-center gap-2'>
           {[2, 5, 20].map((r, i) => (
@@ -100,7 +97,6 @@ export const Donate = (props: Props) => {
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
               />
-
               <button
                 onClick={onCancelNote}
                 className='c-secondary bg-white border-0 text-lg mx-auto block px-5 py-3 rounded-full'

@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/header'
@@ -76,8 +76,11 @@ const { SuccessBank } = lazyImport(
 
 function App() {
   const headFoot = useHeaderFooter()
-  const [user] = useAuth()
+  const [user, _, refetch] = useAuth()
   const fade = useFade()
+  useEffect(() => {
+    refetch()
+  }, [])
   return (
     <div
       id='route_container'

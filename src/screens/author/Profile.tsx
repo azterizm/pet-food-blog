@@ -39,7 +39,7 @@ export function AuthorProfile(): ReactElement {
     return () => fade.hide()
   }, [showSubscribeDialog, showUnsubscribeDialog])
 
-  async function subscribe(proceed: boolean) {
+  async function onSubscribe(proceed: boolean) {
     if (!user) return navigate('/login')
     const data = await fetch(
       `${API_ENDPOINT}/user/${proceed ? 'subscribe' : 'unsubscribe'}/${id}`,
@@ -129,7 +129,7 @@ export function AuthorProfile(): ReactElement {
                 Cancel
               </button>
               <button
-                onClick={() => subscribe(false)}
+                onClick={() => onSubscribe(false)}
                 className='bg-transparent c-red px-5 py-3 rounded-lg border-none font-bold'
               >
                 Proceed
@@ -154,7 +154,7 @@ export function AuthorProfile(): ReactElement {
                 Cancel
               </button>
               <button
-                onClick={() => subscribe(true)}
+                onClick={() => onSubscribe(true)}
                 className='bg-transparent c-primary px-5 py-3 rounded-lg border-none font-bold'
               >
                 Proceed
