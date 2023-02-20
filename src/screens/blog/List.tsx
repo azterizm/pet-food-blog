@@ -43,7 +43,7 @@ export function List(): ReactElement {
                     {post.title}
                   </h2>
                   <p
-                    className='hover:underline cursor-pointer'
+                    className='hover:underline cursor-pointer max-w-60'
                     onClick={() => navigate('/authors/' + post.author.id)}
                   >
                     by <b>{post.author.name}</b>{' '}
@@ -63,7 +63,7 @@ export function List(): ReactElement {
               <img
                 src={API_ENDPOINT + post.mainImage}
                 alt=''
-                className='absolute top-0 left-0 w-full h-full object-cover rounded-lg brightness-70 cursor-pointer'
+                className='absolute top-0 left-0 w-full h-full object-cover rounded-lg brightness-50 cursor-pointer'
                 onClick={() => navigate(String(post.id!))}
               />
             </div>

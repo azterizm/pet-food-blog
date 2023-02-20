@@ -41,7 +41,7 @@ export function Login(): ReactElement {
         </a>
       </div>
       <p className='m-0 p-0 text-neutral-600 text-center max-w-md'>
-        If you don't have account then your account will automatically be
+        If you don't have an account then your account will automatically be
         created once you login.
       </p>
     </TwoColumnLayout>

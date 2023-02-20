@@ -55,7 +55,7 @@ export function RecipeRead(): ReactElement {
     if (!id) window.location.href = '/'
   }, [])
 
-  async function purchase() {
+  async function onPurchase() {
     if (!errorUnpaid || !user || !data) return
     const payResponse: ApiProcess = await fetch(
       API_ENDPOINT + '/recipe/pay/' + id,
@@ -152,7 +152,7 @@ export function RecipeRead(): ReactElement {
                 <div className='flex gap-5 justify-center'>
                   <button
                     onClick={() => (
-                      purchase(), fade.hide(), setConfirmPurchase(false)
+                      onPurchase(), fade.hide(), setConfirmPurchase(false)
                     )}
                     className='rounded-lg font-bold px-5 py-3 c-white bg-secondary border-none'
                   >

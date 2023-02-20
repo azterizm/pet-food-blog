@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Camera, Warning, WarningCircle } from 'phosphor-react'
+import { Camera, WarningCircle } from 'phosphor-react'
 import type { ReactElement } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -16,6 +16,7 @@ const inputs = ['name']
 
 export function EditProfile(): ReactElement {
   const [user] = useAuth()
+  console.log('user:', user)
   const profileImage = useRef<HTMLInputElement>(null)
   const [newProfile, setNewProfile] = useState('')
   const [newProfileDialog, setNewProfileDialog] = useState('')
@@ -158,7 +159,7 @@ export function EditProfile(): ReactElement {
             Change profile picture
           </span>
           <img
-            className='max-h-80% object-contain ml--5'
+            className='max-h-80% object-contain max-w-80% aspect-video block mx-auto my-0'
             src={newProfileDialog}
             style={{ width: 'calc(100% + 2.5rem)' }}
           />

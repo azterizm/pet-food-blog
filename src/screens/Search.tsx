@@ -26,7 +26,7 @@ export function Search(): ReactElement {
   const navigate = useNavigate()
 
   return (
-    <TwoColumnLayout image='/images/auth.avif'>
+    <TwoColumnLayout image='/images/auth.jpg'>
       <div className='relative'>
         <input
           type='text'
@@ -38,7 +38,7 @@ export function Search(): ReactElement {
           onChange={(e) => setSearch(e.target.value)}
         />
         {searchData && !searchLoading ? (
-          <div className='absolute bottom--50 left-0 flex flex-col gap-2'>
+          <div className='absolute bottom--50 left-0 flex flex-col gap-2 top-30'>
             {searchData.authors.map((r) => (
               <div
                 key={r.id}
@@ -80,25 +80,6 @@ export function Search(): ReactElement {
         {searchLoading ? 'Loading...' : 'Please enter atleast 3 characters'}
       </span>
       <div className='flex gap-10 items-start mt-20 flex-col justify-between'>
-        {tagsLoading ? (
-          <span>Loading...</span>
-        ) : !tags || !tags.length ? null : (
-          <div className='max-w-150'>
-            <span className='text-xl font-bold mb-5 block'>
-              May we suggest a tag?
-            </span>
-            <div className='flex items-center gap-2 flex-wrap'>
-              {tags.map((r, i) => (
-                <span
-                  key={i}
-                  className='bg-gray-300 px-3 py-1 rounded-full uppercase text-xs font-bold'
-                >
-                  {r}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
         {authorsLoading ? (
           <span>Loading...</span>
         ) : !authors || !authors.data.length ? null : (
@@ -110,7 +91,8 @@ export function Search(): ReactElement {
               {authors.data.map((r, i) => (
                 <span
                   key={i}
-                  className='bg-gray-300 px-3 py-1 rounded-full uppercase text-xs font-bold'
+                  className='bg-gray-300 px-3 py-1 rounded-full uppercase text-xs font-bold cursor-pointer'
+                  onClick={() => navigate('/authors/' + r.id)}
                 >
                   {r.name}
                 </span>
