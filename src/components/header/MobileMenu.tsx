@@ -68,20 +68,12 @@ export function MobileMenu({
       </div>
       <div className='mt-10 translate-y--10' onClick={() => onChange(false)}>
         {!user ? (
-          <>
-            <button
-              onClick={() => navigate('/login')}
-              className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'
-            >
-              Login
-            </button>
-            <button
-              onClick={() => navigate('/register')}
-              className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'
-            >
-              Sign Up
-            </button>
-          </>
+          <button
+            onClick={() => navigate('/login')}
+            className='block mb-5 px-8 py-1 bg-element c-black border-2 border-white text-lg rounded-full font-bold'
+          >
+            Login
+          </button>
         ) : (
           <div className='flex items-start gap-5 flex-col ml--5'>
             <div

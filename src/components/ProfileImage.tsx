@@ -11,9 +11,7 @@ export function ProfileImage(
   return (
     <img
       src={
-        !user || (user && !user.profile)
-          ? './images/avatar.webp'
-          : API_ENDPOINT + '/auth/user_profile/'
+        !user || (user && !user.profile) ? './images/avatar.webp' : user.profile
       }
       alt=''
       {...props}

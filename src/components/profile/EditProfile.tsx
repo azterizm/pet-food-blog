@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Camera } from 'phosphor-react'
+import { Camera, Warning, WarningCircle } from 'phosphor-react'
 import type { ReactElement } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -9,15 +9,10 @@ import { useFade } from '../../hooks/state'
 import { ProfileImage } from '../ProfileImage'
 
 interface Inputs {
-  email: string
   name: string
-  username: string
-  phone: string
 }
 
-const inputs = ['email', 'name', 'username', 'phone']
-const emailReg =
-  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+const inputs = ['name']
 
 export function EditProfile(): ReactElement {
   const [user] = useAuth()
@@ -112,26 +107,36 @@ export function EditProfile(): ReactElement {
           ref={profileImage}
         />
       </div>
-      {[
-        ['Name', 'name'],
-        ['Username', 'username'],
-        ['Email address', 'email'],
-        ['Phone', 'phone'],
-      ].map(([label, value], i) => (
-        <div className='flex items-start flex-col gap-1' key={i}>
-          <span className='uppercase c-primary text-sm font-bold'>{label}</span>
+      <div className='flex items-start flex-col gap-1'>
+        <span className='uppercase c-primary text-sm font-bold'>Name</span>
+        {editMode ? (
           <input
             className='p-2 rounded-lg border-neutral-300 border-1'
-            type={value === 'email' ? 'email' : 'text'}
-            {...register(value as any, {
-              minLength: value === 'phone' ? 11 : 3,
+            type='text'
+            {...register('name', {
+              minLength: 3,
               required: false,
-              pattern: value === 'email' ? emailReg : undefined,
               disabled: !editMode,
             })}
           />
-        </div>
-      ))}
+        ) : (
+          <span className='text-sm'>{user?.name}</span>
+        )}
+      </div>
+      <div className='flex items-start flex-col gap-1 mt-2'>
+        <span className='uppercase c-primary text-sm font-bold'>Email</span>
+        <span className='text-sm'>{user?.email}</span>
+        {editMode ? (
+          <div className='flex items-center gap-2'>
+            <WarningCircle />
+            <span className='text-neutral-600 text-sm max-w-80'>
+              Email is taken from your connected account (Google, Apple) so it
+              cannot be changed.
+            </span>
+          </div>
+        ) : null}
+      </div>
+
       {editMode ? (
         <button
           disabled={loading}

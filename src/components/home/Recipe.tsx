@@ -132,11 +132,7 @@ export function Recipe({
             onClick={() => navigate('/authors/' + author?.id)}
           >
             <img
-              src={
-                !author?.profile
-                  ? './images/avatar.webp'
-                  : API_ENDPOINT + '/auth/profile/' + author.id
-              }
+              src={!author?.profile ? './images/avatar.webp' : author.profile}
               alt='author image'
               className='w-15 h-15 rounded-full object-cover'
             />

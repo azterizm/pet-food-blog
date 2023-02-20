@@ -19,7 +19,7 @@ export function Search(): ReactElement {
   const [search, setSearch] = useState('')
   const { data: searchData, loading: searchLoading } = useApi<{
     recipes: Pick<IRecipe, 'id' | 'title' | 'mainImage'>[]
-    authors: Pick<IAuthor, 'id' | 'name'>[]
+    authors: Pick<IAuthor, 'id' | 'name' | 'profile' | 'email'>[]
   }>('/search/input/' + (search || 'null'), { method: 'get', debounce: 800 }, [
     search,
   ])
@@ -46,7 +46,7 @@ export function Search(): ReactElement {
                 onClick={() => navigate('/authors/' + r.id)}
               >
                 <img
-                  src={API_ENDPOINT + '/auth/profile/' + r.id}
+                  src={r.profile}
                   alt={r.name + "'s profile"}
                   className='w-20 h-20 object-cover rounded-lg'
                 />

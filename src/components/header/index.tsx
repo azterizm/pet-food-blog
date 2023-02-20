@@ -103,20 +103,12 @@ export function Header({ user }: Props) {
             <User size={24} weight='bold' />
           </div>
         ) : (
-          <>
-            <button
-              onClick={() => navigate('login')}
-              className='bg-element border-none rounded-full c-black font-bold p-3 py-2 hover:brightness-75'
-            >
-              Sign in
-            </button>
-            <button
-              onClick={() => navigate('register')}
-              className='bg-#2821fc c-white rounded-full c-black border-none font-bold p-3 py-2 hover:brightness-75'
-            >
-              Sign up
-            </button>
-          </>
+          <button
+            onClick={() => navigate('login')}
+            className='bg-element border-none rounded-full c-black font-bold p-3 py-2 hover:brightness-75'
+          >
+            Login
+          </button>
         )}
         <Link className='no-underline c-black' to='/search'>
           <MagnifyingGlass weight='bold' size={24} />
