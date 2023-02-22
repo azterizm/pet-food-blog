@@ -28,7 +28,7 @@ export function AuthTypeSelector({
           <span className='uppercase text-sm font-bold'>selected</span>
         ) : null}
         <Dog size={36} />
-        <span className='font-medium text-sm'>Pet Parents</span>
+        <span className='font-medium text-sm'>Pet Parent</span>
       </div>
       <div
         onClick={() => onChange('author')}
