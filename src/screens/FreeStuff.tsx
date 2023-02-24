@@ -1,12 +1,17 @@
-import type { ReactElement } from 'react'
-import { useApi } from '../hooks/api'
+import { ReactElement, useEffect } from 'react'
+import { useApi, useAuth } from '../hooks/api'
 import { IFreeItem } from '@backend/models/freeItem'
 import { Loader } from '../components/Loader'
 import { API_ENDPOINT } from '../constants/api'
+import { useNavigate } from 'react-router-dom'
 
 export function FreeStuff(): ReactElement {
   const { data, loading } = useApi<IFreeItem[]>('/free_items/all')
-  console.log('data:', data)
+  const [user] = useAuth()
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (!user) navigate('/login')
+  }, [])
   if (loading) return <Loader />
   return (
     <div>
