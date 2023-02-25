@@ -67,7 +67,7 @@ export function Header({ user }: Props) {
             <button
               onClick={() =>
                 !user
-                  ? navigate('/register')
+                  ? navigate('/login')
                   : (window.location.href = CREATOR_ENDPOINT)
               }
               className='bg-#2821fc c-white rounded-full c-black border-none font-bold px-7 py-2 hover:brightness-75 '
