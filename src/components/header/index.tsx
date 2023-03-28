@@ -43,7 +43,7 @@ export function Header({ user }: Props) {
   return (
     <div className='flex justify-between items-center px-20 xl:px-50 py-5 mx--10'>
       <Link to='/'>
-        <img className='w-50 invert' src='/logo.svg' alt='logo' />
+        <img className='w-50' src='/logo.svg' alt='logo' />
       </Link>
       <div className='items-center gap-6 font-bold hidden lg:flex'>
         <Link className='no-underline c-black' to='/recipes'>

@@ -12,6 +12,7 @@ export default defineConfig({
           primary: '#161b3d',
           secondary: '#2821fc',
           element: '#f0f0f0',
+          button: '#3a9691',
         },
       },
       shortcuts: {

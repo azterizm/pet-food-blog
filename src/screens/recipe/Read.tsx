@@ -18,6 +18,8 @@ import { useApi, useAuth } from '../../hooks/api'
 import { useFade } from '../../hooks/state'
 import { ApiProcess } from '../../types/api'
 import { showDuration, showPluralS } from '../../util/ui'
+import { AuthorProfileImage } from '../../components/AuthorProfileImage'
+import { Heart } from 'phosphor-react'
 
 // data: IRecipe & { author: IAuthor; userLiked: boolean; likes: ILike[] }
 
@@ -85,29 +87,87 @@ export function RecipeRead(): ReactElement {
         <ErrorDialog text={error || 'Recipe not found'} />
       ) : (
         <div id='recipe_read'>
-          <div className='mb-5'>
-            <GoBack />
+          <div className='max-w-5xl mx-auto grid grid-cols-2'>
+            <img
+              src={API_ENDPOINT + data.mainImage}
+              alt='recipe image'
+              className='w-full h-full rounded-lg'
+            />
+            <div className='ml-8'>
+              <div className='flex justify-start items-center gap-4'>
+                <AuthorProfileImage
+                  className='rounded-full w-25 h-25 object-cover'
+                  author={data.author}
+                />
+                <div>
+                  <p className='m-0 mb-2'>{data.author.name}</p>
+                  <button className='bg-button font-bold text-center text-white rounded-full block w-full border-0 py-2'>
+                    Follow
+                  </button>
+                </div>
+              </div>
+              <div className='w-full h-0.5 my-8 bg-gray-200' />
+              <h1 className='m-0'>{data.title}</h1>
+              <p className='m-0 mt-2'>by {data.author.name}</p>
+              <div className='flex items-center my-4'>
+                <div className='flex items-center gap-2'>
+                  <Heart size={24} weight='fill' color='#FEA2AD' />
+                  <span className='font-medium text-[#FEA2AD]'>
+                    {data.likes.length}
+                  </span>
+                </div>
+                <div className='w-0.5 h-5 bg-gray-200 mx-5' />
+                <span className='text-gray-400 font-bold'>Viewed 22343</span>
+              </div>
+              <div dangerouslySetInnerHTML={{ __html: data.intro }} />
+              <div className='flex items-center gap-2 flex-wrap mt-8'>
+                {data.categories.map((category, i) => (
+                  <p
+                    key={i}
+                    className='capitalize cursor-pointer hover:contrast-75 m-0 px-5 py-2 rounded-full bg-white text-[#98d4cb] border-4 border-[#98d4cb]'
+                    onClick={() =>
+                      navigate('/recipes', { state: { category } })
+                    }
+                  >
+                    {category}
+                  </p>
+                ))}
+              </div>
+              <div className='flex items-center gap-2 mt-4'>
+                <div className='flex justify-center items-center flex-col text-gray-400'>
+                  <span className='text-4xl font-light'>{data.duration}</span>
+                  <span className='text-sm'>Minutes</span>
+                </div>
+                <div className='w-0.5 h-10 bg-gray-200 mx-5' />
+                <div className='flex justify-center items-center flex-col text-gray-400'>
+                  <span className='text-4xl font-light'>{data.servings}</span>
+                  <span className='text-sm'>Servings</span>
+                </div>
+                <div className='w-0.5 h-10 bg-gray-200 mx-5' />
+                <div className='flex justify-center items-center flex-col text-gray-400'>
+                  <span className='text-4xl font-light uppercase'>
+                    {data.lang}
+                  </span>
+                  <span className='text-sm'>Language</span>
+                </div>
+              </div>
+            </div>
+
+            <div className='flex justify-start items-center gap-2 uppercase font-medium text-primary text-xs mt-4'>
+              <button className='gap-2 flex items-center text-white bg-[#FEA2AD] rounded-full border-none py-2 px-5'>
+                <Heart size={20} weight='fill' color='#fff' />
+                <span className='font-bold text-md'>Like it</span>
+              </button>
+              <button className='font-bold text-md gap-2 flex items-center text-white bg-[#98d4cb] rounded-full border-none py-2 px-5'>
+                Print
+              </button>
+              <button className='font-bold text-md gap-2 flex items-center text-white bg-[#98d4cb] rounded-full border-none py-2 px-5'>
+                Save
+              </button>
+            </div>
           </div>
-          <Hero
-            author={data.author}
-            title={data.title}
-            image={API_ENDPOINT + data.mainImage}
-            categories={data.categories}
-            publishedOn={data.createdAt || new Date()}
-            vetApprover={data.vetinfo}
-          />
-          <div className='flex justify-center items-center gap-2 uppercase font-medium text-primary text-xs mt-5'>
-            <span>{showDuration(data.duration)}</span>
-            <span>•</span>
-            <span>
-              {data.servings}
-              {' serve'}
-              {showPluralS(data.servings)}
-            </span>
-            <span>•</span>
-            <span>{data.lang}</span>
-          </div>
-          <div className='block mt-10'>
+
+          <div className='block'>
             <div className='relative'>
               {errorUnpaid ? (
                 <div className='absolute top-0 left-0 bg-gradient-to-b from-white/30 to-white w-full h-full'></div>
@@ -125,12 +185,6 @@ export function RecipeRead(): ReactElement {
             ) : (
               <div className='w-full flex items-start max-w-5xl mx-auto'>
                 <div className='flex-1'>
-                  <div
-                    id='content'
-                    className='max-w-5xl mx-auto'
-                    dangerouslySetInnerHTML={{ __html: data.intro }}
-                  ></div>
-
                   <ReadContent
                     changeLiked={setLiked}
                     liked={liked}
