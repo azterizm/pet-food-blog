@@ -29,6 +29,7 @@
     "react-share": "^4.4.1",
     "react-spring": "^9.5.5",
     "react-type-animation": "^2.1.1",
+    "swiper": "^9.1.1",
     "unocss": "^0.45.29",
     "zustand": "^4.1.3"
   },

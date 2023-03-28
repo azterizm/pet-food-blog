@@ -5,7 +5,7 @@ import { IVetInfo } from '@backend/models/vetInfo'
 import { Heart } from 'phosphor-react'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Portal } from 'react-portal'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { AuthorProfileImage } from '../../components/AuthorProfileImage'
 import { ErrorDialog } from '../../components/ErrorDialog'
 import { Loader } from '../../components/Loader'
@@ -14,11 +14,13 @@ import { LikeSection } from '../../components/recipe/LikeSection'
 import { ReadContent } from '../../components/recipe/ReadContent'
 import { Recommendation } from '../../components/recipe/Recommendation'
 import { API_ENDPOINT } from '../../constants/api'
-import '../../css/recipe_read.css'
 import { onSave } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import { useFade } from '../../hooks/state'
 import { ApiProcess } from '../../types/api'
+
+import '../../css/recipe_read.css'
+import 'swiper/css'
 
 interface ReadData extends IRecipe {
   author: IAuthor & { recipes: IRecipe[] }
@@ -74,6 +76,8 @@ export function RecipeRead(): ReactElement {
     return Boolean(error && error.includes('paid'))
   }, [error])
 
+  console.log('errorUnpaid:', errorUnpaid)
+
   return (
     <div className='min-h-100vh'>
       {loading ? (
@@ -86,7 +90,7 @@ export function RecipeRead(): ReactElement {
             <img
               src={API_ENDPOINT + data.mainImage}
               alt='recipe image'
-              className='w-full h-full rounded-lg'
+              className='w-full h-full rounded-lg object-cover'
             />
             <div className='ml-8 flex justify-center flex-col items-start'>
               <div className='flex justify-start items-center gap-4'>
@@ -172,27 +176,24 @@ export function RecipeRead(): ReactElement {
                 subscribeCost={data.author.subscribeCost}
               />
             ) : (
-              <div className='w-full flex items-start max-w-5xl mx-auto'>
-                <div className='flex-1'>
-                  <ReadContent
-                    changeLiked={setLiked}
-                    liked={liked}
-                    id={id}
-                    data={data}
-                  />
-
-                  <div className='flex items-start flex-col w-full gap-10 relative'>
-                    <Recommendation
-                      title='latest'
-                      items={data.author.recipes}
-                    />
-                    <Recommendation title='popular' items={data.popular} />
-                    <div className='bg-neutral-100 w-screen h-120 absolute top-50 left--10 z--1' />
-                  </div>
-                </div>
+              <div className='flex-col w-full flex items-start max-w-5xl mx-auto'>
+                <ReadContent
+                  changeLiked={setLiked}
+                  liked={liked}
+                  id={id}
+                  data={data}
+                />
               </div>
             )}
           </div>
+          {errorUnpaid ? null : (
+            <div className='max-w-5xl mx-auto relative'>
+              <Recommendation title='latest' items={data.author.recipes} />
+              <Recommendation title='popular' items={data.popular} />
+              <div className='absolute top-60 left-0 w-screen ml-[-20%] h-120 bg-gray-100 z--1' />
+            </div>
+          )}
+
           {confirmPurchase ? (
             <Portal>
               <div className='shadow-lg fixed-center bg-white p-8 rounded-lg text-center c-primary max-w-100'>

@@ -1,38 +1,64 @@
 import { Copyright, TiktokLogo, TwitterLogo, YoutubeLogo } from 'phosphor-react'
 import type { ReactElement } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { CREATOR_ENDPOINT } from '../constants/api'
 
 export function Footer(): ReactElement {
   return (
-    <footer className='mt-10 py-5 border-t-2 border-gray-200'>
-      <div className='flex justify-between items-center flex-col sm:flex-row gap-10 sm:gap-0'>
-        <Link to='/'>
-          <img className='w-50 invert' src='/logo.svg' alt='logo' />
+    <footer className='flex items-center justify-center flex-col my-16'>
+      <button
+        onClick={() => (window.location.href = CREATOR_ENDPOINT)}
+        className='bg-[#98d4cb] px-5 py-2 rounded-full border-none text-white font-bold'
+        type='button'
+      >
+        Post your recipe
+      </button>
+
+      <Link to='/' className='my-8'>
+        <img className='w-50' src='/logo.svg' alt='logo' />
+      </Link>
+
+      <div className='flex items-center gap-4'>
+        <Link className='no-underline text-sm c-black' to='/recipes'>
+          Recipes
         </Link>
-        <div className='flex items-center gap-5 flex-col md:flex-row ml-5'>
-          <Link className='font-bold c-primary decoration-none' to='/contact'>
-            Contact
-          </Link>
-          <Link className='font-bold c-primary decoration-none' to='/about'>
-            About
-          </Link>
-          <Link className='font-bold c-primary decoration-none' to='/terms'>
-            Terms and Conditions
-          </Link>
-          <Link className='font-bold c-primary decoration-none' to='/pp'>
-            Privacy Policy
-          </Link>
-        </div>
-        <div className='flex items-center gap-5'>
-          <TwitterLogo size={24} />
-          <YoutubeLogo size={24} />
-          <TiktokLogo size={24} />
-        </div>
+        <Link className='no-underline text-sm c-black' to='/blog'>
+          Topics
+        </Link>
+        <Link className='no-underline text-sm c-black' to='/free'>
+          Free Stuff
+        </Link>
+        <Link className='no-underline text-sm c-black' to='/saved'>
+          Saved
+        </Link>
       </div>
-      <p className='gap-2 font-light text-center text-sm flex justify-center items-center font-bold c-neutral-400 mt-10 md:mt-5'>
-        <Copyright />
-        <span>2022 We Cook for Dogs. All rights reserved.</span>
-      </p>
+
+      <div className='flex items-center gap-4 mt-2'>
+        <Link
+          className='text-black text-sm no-underline decoration-none'
+          to='/contact'
+        >
+          Contact
+        </Link>
+        <Link
+          className='text-black text-sm no-underline decoration-none'
+          to='/about'
+        >
+          About
+        </Link>
+        <Link
+          className='text-black text-sm no-underline decoration-none'
+          to='/terms'
+        >
+          Terms and Conditions
+        </Link>
+        <Link
+          className='text-black text-sm no-underline decoration-none'
+          to='/pp'
+        >
+          Privacy Policy
+        </Link>
+      </div>
     </footer>
   )
 }
