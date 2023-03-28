@@ -1,8 +1,22 @@
+#ingredient_checkbox::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background-color: #e5e5e5;
+  width: 22px;
+  height: 22px;
+  border-radius: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
 #instruction::after {
   content: '';
   display: inline-block;
   width: 2px;
-  background-color: #2821fc;
+  background-color: #c1e5e0;
   position: absolute;
   left: -3rem;
   top: 10px;

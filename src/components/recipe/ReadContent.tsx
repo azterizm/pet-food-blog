@@ -76,12 +76,8 @@ export function ReadContent({
     setDonateStatus(DonateStatus.Done)
   }
 
-  function onPrint() {
-    window.print()
-  }
-
   return (
-    <div className='flex flex-col gap-5 mt-10' id='content' ref={containerRef}>
+    <div className='flex flex-col gap-5' id='content' ref={containerRef}>
       <div>
         <span className='text-3xl font-bold my-5 block'>Ingredients</span>
         {props.data.ingredients.map((ingredient, ingredientIndex) => (
@@ -92,8 +88,9 @@ export function ReadContent({
             {ingredient.items.map((item, itemIndex) => (
               <div key={itemIndex} className='flex items-center gap-2'>
                 <span
+                  id='ingredient_checkbox'
                   className={
-                    'cursor-pointer border-0 border-element border-r-0 w-10 h-10 flex items-center justify-center ' +
+                    'cursor-pointer relative z-1 rounded-full border-element w-10 h-10 flex items-center justify-center ' +
                     (itemIndex + 1 === ingredient.items.length
                       ? ''
                       : 'border-b-0')
@@ -109,9 +106,9 @@ export function ReadContent({
                   }
                 >
                   {checkedIng.includes(ingredientIndex + ':' + itemIndex) ? (
-                    <Check size={16} />
+                    <Check weight='bold' color='#fff' size={16} />
                   ) : (
-                    <Circle size={16} />
+                    <Circle color='#fff' weight='fill' size={16} />
                   )}
                 </span>
                 <span
@@ -150,7 +147,7 @@ export function ReadContent({
           {props.data.instructions.map((content, i) => (
             <div key={i}>
               <div className='flex items-start gap-5'>
-                <span className='z-5 bg-secondary c-white min-w-12.5 min-h-12.5 flex-center rounded-full font-bold text-2xl translate-x--1'>
+                <span className='z-5 bg-[#c1e5e0] c-white min-w-12.5 min-h-12.5 flex-center rounded-full font-regular text-xl translate-x--1'>
                   {i + 1}.
                 </span>
                 <div>
@@ -217,14 +214,7 @@ export function ReadContent({
           ))}
         </div>
       </div>
-      <LikeSection
-        saved={props.data.userSaved}
-        onSave={() => onSave({ id, user })}
-        liked={liked}
-        likes={likes}
-        onLike={onLike}
-        onPrint={onPrint}
-      />
+
       <HelpSection author={props.data.author} recipeId={props.data.id!} />
       <Donate
         status={donateStatus}

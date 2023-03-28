@@ -1,27 +1,24 @@
 import { IAuthor } from '@backend/models/author'
-import { IVetInfo } from '@backend/models/vetInfo'
 import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
+import { IVetInfo } from '@backend/models/vetInfo'
+import { Heart } from 'phosphor-react'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Portal } from 'react-portal'
 import { useNavigate, useParams } from 'react-router-dom'
+import { AuthorProfileImage } from '../../components/AuthorProfileImage'
 import { ErrorDialog } from '../../components/ErrorDialog'
-import { GoBack } from '../../components/GoBack'
-import { Hero } from '../../components/home/Hero'
 import { Loader } from '../../components/Loader'
 import { NotPaidDialog } from '../../components/NotPaidDialog'
+import { LikeSection } from '../../components/recipe/LikeSection'
 import { ReadContent } from '../../components/recipe/ReadContent'
 import { Recommendation } from '../../components/recipe/Recommendation'
 import { API_ENDPOINT } from '../../constants/api'
 import '../../css/recipe_read.css'
+import { onSave } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import { useFade } from '../../hooks/state'
 import { ApiProcess } from '../../types/api'
-import { showDuration, showPluralS } from '../../util/ui'
-import { AuthorProfileImage } from '../../components/AuthorProfileImage'
-import { Heart } from 'phosphor-react'
-
-// data: IRecipe & { author: IAuthor; userLiked: boolean; likes: ILike[] }
 
 interface ReadData extends IRecipe {
   author: IAuthor & { recipes: IRecipe[] }
@@ -44,8 +41,6 @@ export function RecipeRead(): ReactElement {
     },
     [id]
   )
-
-  console.log('data:', data)
 
   const navigate = useNavigate()
   const [liked, setLiked] = useState(false)
@@ -153,18 +148,12 @@ export function RecipeRead(): ReactElement {
               </div>
             </div>
 
-            <div className='flex justify-start items-center gap-2 uppercase font-medium text-primary text-xs mt-4'>
-              <button className='gap-2 flex items-center text-white bg-[#FEA2AD] rounded-full border-none py-2 px-5'>
-                <Heart size={20} weight='fill' color='#fff' />
-                <span className='font-bold text-md'>Like it</span>
-              </button>
-              <button className='font-bold text-md gap-2 flex items-center text-white bg-[#98d4cb] rounded-full border-none py-2 px-5'>
-                Print
-              </button>
-              <button className='font-bold text-md gap-2 flex items-center text-white bg-[#98d4cb] rounded-full border-none py-2 px-5'>
-                Save
-              </button>
-            </div>
+            <LikeSection
+              liked={data.userLiked}
+              onPrint={() => window.print()}
+              onSave={() => onSave({ user, id })}
+              saved={data.userSaved}
+            />
           </div>
 
           <div className='block'>
@@ -191,10 +180,14 @@ export function RecipeRead(): ReactElement {
                     id={id}
                     data={data}
                   />
-                </div>
-                <div className='ml-10 hidden md:flex flex-col items-center gap-20'>
-                  <Recommendation title='latest' items={data.author.recipes} />
-                  <Recommendation title='popular' items={data.popular} />
+
+                  <div className='ml-10 hidden md:flex flex-col items-center gap-20'>
+                    <Recommendation
+                      title='latest'
+                      items={data.author.recipes}
+                    />
+                    <Recommendation title='popular' items={data.popular} />
+                  </div>
                 </div>
               </div>
             )}
