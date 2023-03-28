@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { redirect, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../hooks/api'
 import { DonateStatus } from '../../types/ui'
+import { AuthorProfileImage } from '../AuthorProfileImage'
 import { Loader } from '../Loader'
+import { ProfileImage } from '../ProfileImage'
 
 interface Props {
   name: string
@@ -46,11 +48,15 @@ export const Donate = (props: Props) => {
 
   return (
     <div>
-      <h3 className='text-xl font-bold bg-neutral-200 ml--10 pl-10 py-3 w-full'>
+      <h3 className='text-xl font-bold text-button bg-white border-y-1 border-gray-200 py-3 w-full'>
         Do you want to support {props.name}?
       </h3>
 
-      <p>{props.name} is supported by generiosity of followers like you.</p>
+      <ProfileImage className='w-30 h-30 rounded-full mx-auto block' />
+
+      <p className='text-center'>
+        {props.name} is supported by generiosity of followers like you.
+      </p>
       {props.status === DonateStatus.Idle ? (
         <div className='flex-center gap-2'>
           {[2, 5, 20].map((r, i) => (
@@ -58,9 +64,10 @@ export const Donate = (props: Props) => {
               key={i}
               onClick={() => setSelectedAmount(r)}
               className={
-                'c-secondary px-5 py-3 rounded-lg bg-neutral-200 border-0 text-xl font-bold ' +
+                'text-white px-5 py-3 rounded-full bg-neutral-200 border-0 text-xl font-bold ' +
                 (selectedAmount === r ? 'opacity-100' : 'opacity-50')
               }
+              style={{ backgroundColor: ['#72c9c3', '#45b2ab', '#3a9691'][i] }}
             >
               {r - 0.01}$
             </button>

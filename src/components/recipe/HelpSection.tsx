@@ -1,28 +1,30 @@
 import { IAuthor } from '@backend/models/author'
+import { IRecipe } from '@backend/models/recipe'
+import { API_ENDPOINT } from '../../constants/api'
 import { AuthorProfileImage } from '../AuthorProfileImage'
 import { Sharing } from './Sharing'
 
 interface Props {
   author: IAuthor
   recipeId: number | string
+  recipe: IRecipe
 }
 
 export const HelpSection = (props: Props) => (
   <div>
-    <h3 className='text-xl font-bold bg-neutral-200 ml--10 pl-10 py-3 w-full'>
-      You can help dogs by sharing
+    <h3 className='text-xl font-bold text-button bg-white border-y-1 border-gray-200 py-3 w-full'>
+      Please, share the recipe to help other dogs
     </h3>
-    <div className='flex items-center flex-col lg:flex-row lg:justify-between'>
+    <div className='flex items-start flex-col lg:flex-row lg:justify-between'>
       <div className='flex items-center gap-2 justify-center'>
-        <AuthorProfileImage
-          author={props.author}
+        <img
           className='w-20 h-20 rounded-full object-cover'
+          src={API_ENDPOINT + props.recipe.mainImage}
+          alt='recipe main image'
         />
+
         <div className='flex items-start flex-col ml-5'>
-          <span className='text-lg font-bold'>{props.author.name}</span>
-          <span>
-            Chef since {new Date(props.author.createdAt!).getFullYear()}
-          </span>
+          <span className='text-lg font-bold'>{props.recipe.title}</span>
         </div>
       </div>
       <Sharing id={props.recipeId} />

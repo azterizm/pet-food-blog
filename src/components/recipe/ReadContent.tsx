@@ -77,7 +77,11 @@ export function ReadContent({
   }
 
   return (
-    <div className='flex flex-col gap-5' id='content' ref={containerRef}>
+    <div
+      className='max-w-xl flex flex-col gap-5'
+      id='content'
+      ref={containerRef}
+    >
       <div>
         <span className='text-3xl font-bold my-5 block'>Ingredients</span>
         {props.data.ingredients.map((ingredient, ingredientIndex) => (
@@ -215,7 +219,11 @@ export function ReadContent({
         </div>
       </div>
 
-      <HelpSection author={props.data.author} recipeId={props.data.id!} />
+      <HelpSection
+        recipe={props.data}
+        author={props.data.author}
+        recipeId={props.data.id!}
+      />
       <Donate
         status={donateStatus}
         onDonate={onDonate}

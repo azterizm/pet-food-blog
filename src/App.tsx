@@ -5,7 +5,6 @@ import { Header } from './components/header'
 import { Loader } from './components/Loader'
 import { useAuth } from './hooks/api'
 import { useFade, useHeaderFooter } from './hooks/state'
-
 import { lazyImport } from './util/ui'
 
 const { Home } = lazyImport(() => import('./screens/Home'), 'Home')
@@ -37,7 +36,6 @@ const { RecipeRead } = lazyImport(
 )
 const { Register } = lazyImport(() => import('./screens/Register'), 'Register')
 const { Search } = lazyImport(() => import('./screens/Search'), 'Search')
-
 const { Login } = lazyImport(() => import('./screens/Login'), 'Login')
 const { Subscribed } = lazyImport(
   () => import('./screens/Subscribed'),
@@ -68,7 +66,6 @@ const { FailedBank } = lazyImport(
   () => import('./screens/bank/Failed'),
   'FailedBank'
 )
-
 const { SuccessBank } = lazyImport(
   () => import('./screens/bank/Success'),
   'SuccessBank'

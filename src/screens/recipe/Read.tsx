@@ -88,7 +88,7 @@ export function RecipeRead(): ReactElement {
               alt='recipe image'
               className='w-full h-full rounded-lg'
             />
-            <div className='ml-8'>
+            <div className='ml-8 flex justify-center flex-col items-start'>
               <div className='flex justify-start items-center gap-4'>
                 <AuthorProfileImage
                   className='rounded-full w-25 h-25 object-cover'
@@ -181,12 +181,13 @@ export function RecipeRead(): ReactElement {
                     data={data}
                   />
 
-                  <div className='ml-10 hidden md:flex flex-col items-center gap-20'>
+                  <div className='flex items-start flex-col w-full gap-10 relative'>
                     <Recommendation
                       title='latest'
                       items={data.author.recipes}
                     />
                     <Recommendation title='popular' items={data.popular} />
+                    <div className='bg-neutral-100 w-screen h-120 absolute top-50 left--10 z--1' />
                   </div>
                 </div>
               </div>
