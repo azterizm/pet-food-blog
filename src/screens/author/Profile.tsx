@@ -31,6 +31,7 @@ export function AuthorProfile(): ReactElement {
   >('/author/one/' + id)
   const [showUnsubscribeDialog, setShowUnsubscribeDialog] = useState(false)
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false)
+
   useUndefinedParam(id)
 
   useEffect(() => {

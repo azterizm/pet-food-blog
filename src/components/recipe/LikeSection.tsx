@@ -31,7 +31,7 @@ export const LikeSection = (props: Props) => {
   }
 
   return (
-    <div className='flex justify-start items-center gap-2 uppercase font-medium text-primary text-xs mt-4'>
+    <div className='flex justify-center md:justify-start items-center gap-2 uppercase font-medium text-primary text-xs mt-8 md:mt-4'>
       <button
         type='button'
         onClick={onLike}

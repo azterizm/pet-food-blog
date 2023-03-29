@@ -1,5 +1,6 @@
 import { IRecipe } from '@backend/models/recipe'
 import moment from 'moment'
+import { Heart } from 'phosphor-react'
 import type { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -7,7 +8,7 @@ import { API_ENDPOINT } from '../../constants/api'
 
 export interface RecommendationProps {
   title: string
-  items: IRecipe[]
+  items: (IRecipe | (IRecipe & { likes: number }))[]
 }
 
 export function Recommendation(props: RecommendationProps): ReactElement {
@@ -26,11 +27,21 @@ export function Recommendation(props: RecommendationProps): ReactElement {
           Nothing to recommend yet.
         </p>
       ) : (
-        <Swiper spaceBetween={50} slidesPerView={3} className='mt-4'>
+        <Swiper
+          spaceBetween={40}
+          slidesPerView={2}
+          keyboard
+          className='mt-4 !pr-4'
+          breakpoints={{
+            768: { slidesPerView: 3 },
+            1200: { slidesPerView: 4 },
+          }}
+        >
           {props.items.map((r, i) => (
             <SwiperSlide
               key={i}
               className='border-2 border-gray-200 rounded-xl'
+              onClick={() => (window.location.href = '/#/recipes/read/' + r.id)}
             >
               <img
                 className='object-cover rounded-t-xl'
@@ -39,9 +50,15 @@ export function Recommendation(props: RecommendationProps): ReactElement {
               />
               <div className='flex flex-col items-start px-2 py-4 bg-white rounded-b-xl'>
                 <span className='font-bold text-lg'>{r.title}</span>
-                <span className='font-medium'>
+                <span className='font-medium text-gray-400'>
                   {moment(r.createdAt).fromNow()}
                 </span>
+                {'likes' in r ? (
+                  <div className='mt-2 flex items-center gap-2 text-[#FEA2AD]'>
+                    <Heart size={24} weight='fill' color='#FEA2AD' />
+                    <span>{r.likes}</span>
+                  </div>
+                ) : null}
               </div>
             </SwiperSlide>
           ))}

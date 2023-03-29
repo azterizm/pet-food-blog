@@ -6,6 +6,7 @@ import { Loader } from './components/Loader'
 import { useAuth } from './hooks/api'
 import { useFade, useHeaderFooter } from './hooks/state'
 import { lazyImport } from './util/ui'
+import 'swiper/css'
 
 const { Home } = lazyImport(() => import('./screens/Home'), 'Home')
 const { PastDeposits } = lazyImport(

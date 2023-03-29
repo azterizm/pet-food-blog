@@ -1,24 +1,18 @@
 import { IAuthor } from '@backend/models/author'
-import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
 import { Check, Circle } from 'phosphor-react'
-import { ReactElement, useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { API_ENDPOINT } from '../../constants/api'
+import { ReactElement, useRef, useState } from 'react'
 import { donateAuthor } from '../../features/author'
-import { onSave } from '../../features/save'
-import { useAuth } from '../../hooks/api'
 import { ApiProcess } from '../../types/api'
 import { DonateStatus } from '../../types/ui'
 import { Donate } from './Donate'
 import { HelpSection } from './HelpSection'
-import { LikeSection } from './LikeSection'
 
 export interface ReadContentProps {
   data: IRecipe & {
     author: IAuthor
     userLiked: boolean
-    likes: ILike[]
+    likes: number
     userSaved: boolean
   }
   id: string
@@ -31,38 +25,13 @@ export function ReadContent({
   id,
   ...props
 }: ReadContentProps): ReactElement {
-  const [user] = useAuth()
   const [checkedIng, setCheckedIng] = useState<string[]>([])
-  const [likes, setLikes] = useState(0)
   const [donateStatus, setDonateStatus] = useState<DonateStatus>(
     DonateStatus.Idle
   )
 
-  const navigate = useNavigate()
-
   const containerRef = useRef<HTMLDivElement>(null)
   const [doneSteps, setDoneSteps] = useState<number[]>([])
-
-  useEffect(() => {
-    if (props.data) setLikes(props.data.likes.length)
-  }, [props.data])
-
-  async function onLike() {
-    if (!id) return navigate('/login')
-    const data: ApiProcess = await fetch(API_ENDPOINT + '/recipe/like/' + id, {
-      method: 'post',
-      credentials: 'include',
-    }).then((r) => r.json())
-    if (data.error) {
-      props.changeLiked(!liked)
-      alert(data.info)
-      return
-    }
-    if (!liked) setLikes((e) => e + 1)
-    else setLikes((e) => e - 1)
-
-    props.changeLiked(!liked)
-  }
 
   async function onDonate(amount: number) {
     if (!amount) return

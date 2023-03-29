@@ -1,11 +1,10 @@
 import { IAuthor } from '@backend/models/author'
-import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
 import { IVetInfo } from '@backend/models/vetInfo'
 import { Heart } from 'phosphor-react'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Portal } from 'react-portal'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AuthorProfileImage } from '../../components/AuthorProfileImage'
 import { ErrorDialog } from '../../components/ErrorDialog'
 import { Loader } from '../../components/Loader'
@@ -20,15 +19,19 @@ import { useFade } from '../../hooks/state'
 import { ApiProcess } from '../../types/api'
 
 import '../../css/recipe_read.css'
-import 'swiper/css'
+
+//update navbar
+//handle on swiper slide click
+//show recommendation except shown recipe
 
 interface ReadData extends IRecipe {
   author: IAuthor & { recipes: IRecipe[] }
   userLiked: boolean
   userSaved: boolean
-  popular: IRecipe[]
-  likes: ILike[]
+  popular: (IRecipe & { likes: number })[]
+  likes: number
   vetinfo?: IVetInfo
+  subscribed: boolean
 }
 
 export function RecipeRead(): ReactElement {
@@ -86,33 +89,42 @@ export function RecipeRead(): ReactElement {
         <ErrorDialog text={error || 'Recipe not found'} />
       ) : (
         <div id='recipe_read'>
-          <div className='max-w-5xl mx-auto grid grid-cols-2'>
+          <div className='max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2'>
             <img
               src={API_ENDPOINT + data.mainImage}
               alt='recipe image'
-              className='w-full h-full rounded-lg object-cover'
+              className='max-w-unset! w-screen md:w-full md:rounded-lg mx--10 h-full object-cover'
             />
             <div className='ml-8 flex justify-center flex-col items-start'>
-              <div className='flex justify-start items-center gap-4'>
+              <div className='flex justify-start items-center gap-4 mt-8 lg:mt-0'>
                 <AuthorProfileImage
                   className='rounded-full w-25 h-25 object-cover'
                   author={data.author}
                 />
-                <div>
+                <div onClick={() => navigate('/authors/' + data.author.id)}>
                   <p className='m-0 mb-2'>{data.author.name}</p>
-                  <button className='bg-button font-bold text-center text-white rounded-full block w-full border-0 py-2'>
-                    Follow
+                  <button
+                    className={
+                      'font-bold text-center rounded-full block w-full border-0 py-2 ' +
+                      (data.subscribed
+                        ? 'bg-white border-2 border-button text-button'
+                        : 'bg-button text-white')
+                    }
+                  >
+                    {data.subscribed ? 'Following' : 'Follow'}
                   </button>
                 </div>
               </div>
               <div className='w-full h-0.5 my-8 bg-gray-200' />
               <h1 className='m-0'>{data.title}</h1>
-              <p className='m-0 mt-2'>by {data.author.name}</p>
+              <p className='m-0 mt-2 text-gray-500 font-medium'>
+                by {data.author.name}
+              </p>
               <div className='flex items-center my-4'>
                 <div className='flex items-center gap-2'>
                   <Heart size={24} weight='fill' color='#FEA2AD' />
                   <span className='font-medium text-[#FEA2AD]'>
-                    {data.likes.length}
+                    {data.likes}
                   </span>
                 </div>
                 <div className='w-0.5 h-5 bg-gray-200 mx-5' />
@@ -188,8 +200,11 @@ export function RecipeRead(): ReactElement {
           </div>
           {errorUnpaid ? null : (
             <div className='max-w-5xl mx-auto relative'>
-              <Recommendation title='latest' items={data.author.recipes} />
-              <Recommendation title='popular' items={data.popular} />
+              <Recommendation
+                title={'more by ' + data.author.name}
+                items={data.author.recipes}
+              />
+              <Recommendation title='by others' items={data.popular} />
               <div className='absolute top-60 left-0 w-screen ml-[-20%] h-120 bg-gray-100 z--1' />
             </div>
           )}
