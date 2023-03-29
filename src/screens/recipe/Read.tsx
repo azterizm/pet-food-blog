@@ -20,10 +20,6 @@ import { ApiProcess } from '../../types/api'
 
 import '../../css/recipe_read.css'
 
-//update navbar
-//handle on swiper slide click
-//show recommendation except shown recipe
-
 interface ReadData extends IRecipe {
   author: IAuthor & { recipes: IRecipe[] }
   userLiked: boolean

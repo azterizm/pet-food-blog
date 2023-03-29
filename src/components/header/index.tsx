@@ -22,14 +22,6 @@ export function Header({ user }: Props) {
   })
 
   useEffect(() => {
-    if (menuOpen) document.body.style.overflowY = 'hidden'
-    else document.body.style.overflowY = 'unset'
-    return () => {
-      document.body.style.overflowY = 'unset'
-    }
-  }, [menuOpen])
-
-  useEffect(() => {
     const hintShown = window.localStorage.getItem('hintShown')
     if (!hintShown && !user) hintOpacity.start(1)
     else setRemoveHint(true), hintOpacity.start(0)
@@ -124,7 +116,66 @@ export function Header({ user }: Props) {
           <div className='w-5 h-0.8 bg-button rounded-full' />
         </div>
         <MobileMenu />
-        {/* SIDE MENU */}
+        <div
+          className={`transition transition-duration-500 fixed top-0 left-0 lg:invisible border-r-2 border-gray-400 w-[60vw] h-screen bg-white z-1 p-16 flex items-start flex-col gap-10 translate-x-[-${
+            menuOpen ? 0 : 100
+          }%]`}
+        >
+          <Link to='/'>
+            <img className='w-50' src='/logo.svg' alt='logo' />
+          </Link>
+
+          {user ? (
+            <Link
+              className='bg-lightCyan text-white px-5 py-2 rounded-full border-none no-underline'
+              to='/profile'
+            >
+              My Account
+            </Link>
+          ) : (
+            <Link
+              className='bg-lightCyan text-white px-5 py-2 rounded-full border-none no-underline'
+              to='/login'
+            >
+              Login
+            </Link>
+          )}
+
+          <button
+            onClick={() => (window.location.href = CREATOR_ENDPOINT)}
+            className='text-lg bg-lightCyan text-white px-5 py-2 rounded-full border-none no-underline'
+          >
+            Post your recipe
+          </button>
+
+          <div>
+            <h1 className='text-button' style={{ fontFamily: 'GTSuperText' }}>
+              Become a chef and <b>earn money</b>.
+            </h1>
+
+            <p className='font-medium'>
+              Each time you create and share a recipe,{' '}
+              <span className='text-button'>you are helping dogs</span> with
+              better nutrition and a better life. Animal parents depend on
+              people like you.
+            </p>
+
+            <p className='font-medium'>
+              You can even{' '}
+              <span className='text-button'>
+                share your life experience and knowledge
+              </span>{' '}
+              about yourself and your lovely animal by creating topics. That is
+              going to help all those in need.
+            </p>
+          </div>
+
+          <X
+            className='absolute top-5 right-5 bg-gray-400 p-2 rounded-full flex items-center'
+            color='#fff'
+            onClick={() => setMenuOpen(false)}
+          />
+        </div>
       </div>
     </>
   )

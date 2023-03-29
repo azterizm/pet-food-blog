@@ -13,6 +13,7 @@ export default defineConfig({
           secondary: '#2821fc',
           element: '#f0f0f0',
           button: '#3a9691',
+          lightCyan: '#98d4cb',
         },
       },
       shortcuts: {

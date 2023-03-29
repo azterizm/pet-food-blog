@@ -159,3 +159,8 @@
   font-style: normal;
   font-display: swap;
 }
+
+@font-face {
+  font-family: GTSuperText;
+  src: url('GTSuperText-Book.otf');
+}

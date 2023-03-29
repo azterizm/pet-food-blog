@@ -68,7 +68,7 @@
 
 /* When the checkbox is checked, add a blue background */
 .checkbox_container input:checked ~ .checkmark {
-  background-color: #2821fc;
+  background-color: #c1e5e0;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
