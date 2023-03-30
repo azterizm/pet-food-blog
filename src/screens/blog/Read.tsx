@@ -97,13 +97,7 @@ export function Read(): ReactElement {
       <article className='mt-20'>
         <p>{data.intro}</p>
         <div dangerouslySetInnerHTML={{ __html: data.content }} />
-        <LikeSection
-          liked={liked}
-          likes={likes}
-          onLike={onLike}
-          readType='post'
-        />
-        <HelpSection author={data.author} recipeId={data.id!} />
+
         <Donate
           name={data.author.name}
           status={donateStatus}

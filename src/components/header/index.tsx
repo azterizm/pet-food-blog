@@ -117,9 +117,10 @@ export function Header({ user }: Props) {
         </div>
         <MobileMenu />
         <div
-          className={`transition transition-duration-500 fixed top-0 left-0 lg:invisible border-r-2 border-gray-400 w-[60vw] h-screen bg-white z-1 p-16 flex items-start flex-col gap-10 translate-x-[-${
-            menuOpen ? 0 : 100
-          }%]`}
+          style={{
+            transform: `translateX(-${menuOpen ? 0 : 100}%)`,
+          }}
+          className={`transition transition-duration-500 fixed top-0 left-0 lg:invisible border-r-2 border-gray-400 w-[60vw] h-screen bg-white z-1 p-16 flex items-start flex-col gap-10`}
         >
           <Link to='/'>
             <img className='w-50' src='/logo.svg' alt='logo' />

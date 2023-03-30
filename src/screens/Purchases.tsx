@@ -1,6 +1,5 @@
 import { IAuthor } from '@backend/models/author'
 import { IPurchase } from '@backend/models/purchase'
-import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
 import type { ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -14,9 +13,9 @@ export function Purchases(): ReactElement {
   const navigate = useNavigate()
   const [user] = useAuth()
   const { data, error, loading } =
-    useApi<
-      (IPurchase & { author: IAuthor; recipe: IRecipe & { likes: ILike[] } })[]
-    >('/user/purchases')
+    useApi<(IPurchase & { author: IAuthor; recipe: IRecipe })[]>(
+      '/user/purchases'
+    )
   return (
     <div className='my-5'>
       <span className='uppercase c-primary text-xl font-bold'>Purchases</span>
@@ -34,7 +33,7 @@ export function Purchases(): ReactElement {
               title={recipe.title}
               author={author}
               postedOn={recipe.createdAt!}
-              reviews={recipe.likes.length}
+              reviews={recipe.likesDisplay}
               image={API_ENDPOINT + recipe.mainImage}
               duration={recipe.duration}
               onClick={() => navigate('/recipes/read/' + recipe.id)}

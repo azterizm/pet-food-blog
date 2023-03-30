@@ -1,5 +1,4 @@
 import { IAuthor } from '@backend/models/author'
-import { ILike } from '@backend/models/like'
 import { IRecipe } from '@backend/models/recipe'
 import { ISave } from '@backend/models/save'
 import { AuthorSort } from '@backend/zod/api'
@@ -28,7 +27,7 @@ export function RecipeList(): ReactElement {
   const [showSort, setShowSort] = useState(false)
   const [page, setPage] = useState(0)
   const { data, error, loading } = useApi<{
-    recipes: (IRecipe & { author: IAuthor; likes: ILike[]; saves: ISave[] })[]
+    recipes: (IRecipe & { author: IAuthor; saves: ISave[] })[]
     authorTotalRecipes: AuthorTotalRecipe[]
     total: number
   }>(
@@ -111,7 +110,7 @@ export function RecipeList(): ReactElement {
                 duration={r.duration}
                 image={API_ENDPOINT + r.mainImage}
                 postedOn={r.createdAt!}
-                reviews={r.likes.length}
+                reviews={r.likesDisplay}
                 title={r.title}
                 onClick={() => navigate('/recipes/read/' + r.id)}
                 priceType={r.priceType}

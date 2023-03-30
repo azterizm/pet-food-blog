@@ -124,7 +124,9 @@ export function RecipeRead(): ReactElement {
                   </span>
                 </div>
                 <div className='w-0.5 h-5 bg-gray-200 mx-5' />
-                <span className='text-gray-400 font-bold'>Viewed 22343</span>
+                <span className='text-gray-400 font-bold'>
+                  Viewed {data.views}
+                </span>
               </div>
               <div dangerouslySetInnerHTML={{ __html: data.intro }} />
               <div className='flex items-center gap-2 flex-wrap mt-8'>

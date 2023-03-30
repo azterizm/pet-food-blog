@@ -9,6 +9,7 @@ interface Props {
   onPrint: () => void
   onSave: () => void
   liked: boolean
+  blog?: boolean
 }
 
 export const LikeSection = (props: Props) => {
@@ -17,10 +18,13 @@ export const LikeSection = (props: Props) => {
   const [liked, setLiked] = useState(props.liked)
 
   async function onLike() {
-    const data: ApiProcess = await fetch(API_ENDPOINT + '/recipe/like/' + id, {
-      method: 'post',
-      credentials: 'include',
-    }).then((r) => r.json())
+    const data: ApiProcess = await fetch(
+      API_ENDPOINT + `/${props.blog ? 'blog' : 'recipe'}/like/` + id,
+      {
+        method: 'post',
+        credentials: 'include',
+      }
+    ).then((r) => r.json())
 
     if (data.error) {
       alert(data.info)
