@@ -41,7 +41,7 @@ export const Sharing = ({
         },
   }
   return (
-    <div className='flex items-center gap-5 text-3xl mt-5'>
+    <div className='flex items-center gap-5 flex-wrap text-3xl ml-5 my-auto justify-center'>
       <FacebookShareButton {...attr}>
         <FacebookLogo />
       </FacebookShareButton>

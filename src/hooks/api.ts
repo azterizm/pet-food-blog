@@ -85,6 +85,8 @@ export function useApi<T>(
 
 export function useAuth() {
   const [user, setUser] = useState<null | AuthUser>(null)
+  const [loading, setLoading] = useState(true)
+
   useLayoutEffect(() => {
     fetch()
   }, [])
@@ -95,9 +97,11 @@ export function useAuth() {
   }
 
   function fetch(force: boolean = false) {
+    setLoading(true)
     getUser(force).then((r) => {
       if (!r) return
       setUser(r)
+      setLoading(false)
     })
   }
 
@@ -105,9 +109,10 @@ export function useAuth() {
     fetch(true)
   }
 
-  return [user, changeUser, refetch] as [
+  return [user, changeUser, refetch, loading] as [
     null | AuthUser,
     (arg: AuthUser) => void,
-    () => void
+    () => void,
+    boolean
   ]
 }

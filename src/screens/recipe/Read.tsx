@@ -19,6 +19,7 @@ import { useFade } from '../../hooks/state'
 import { ApiProcess } from '../../types/api'
 
 import '../../css/recipe_read.css'
+import { handleLike } from '../../features/like'
 
 interface ReadData extends IRecipe {
   author: IAuthor & { recipes: IRecipe[] }
@@ -45,6 +46,7 @@ export function RecipeRead(): ReactElement {
 
   const navigate = useNavigate()
   const [liked, setLiked] = useState(false)
+  console.log('liked:', liked)
   const [user, changeUser] = useAuth()
   const [confirmPurchase, setConfirmPurchase] = useState(false)
   const fade = useFade()
@@ -75,7 +77,14 @@ export function RecipeRead(): ReactElement {
     return Boolean(error && error.includes('paid'))
   }, [error])
 
-  console.log('errorUnpaid:', errorUnpaid)
+  async function onLike() {
+    const { error, info } = await handleLike(id, 'recipe')
+    if (error) {
+      alert(info)
+      return
+    }
+    setLiked((e) => !e)
+  }
 
   return (
     <div className='min-h-100vh'>
@@ -117,10 +126,13 @@ export function RecipeRead(): ReactElement {
                 by {data.author.name}
               </p>
               <div className='flex items-center my-4'>
-                <div className='flex items-center gap-2'>
+                <div
+                  className='flex items-center gap-2 cursor-pointer'
+                  onClick={onLike}
+                >
                   <Heart size={24} weight='fill' color='#FEA2AD' />
                   <span className='font-medium text-[#FEA2AD]'>
-                    {data.likes}
+                    {data.likes + (liked ? 1 : 0)}
                   </span>
                 </div>
                 <div className='w-0.5 h-5 bg-gray-200 mx-5' />
@@ -163,7 +175,8 @@ export function RecipeRead(): ReactElement {
             </div>
 
             <LikeSection
-              liked={data.userLiked}
+              liked={liked}
+              onLike={setLiked}
               onPrint={() => window.print()}
               onSave={() => onSave({ user, id })}
               saved={data.userSaved}

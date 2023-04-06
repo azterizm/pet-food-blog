@@ -1,8 +1,7 @@
 import { Heart } from 'phosphor-react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { API_ENDPOINT } from '../../constants/api'
-import { ApiProcess } from '../../types/api'
+import { handleLike } from '../../features/like'
 
 interface Props {
   saved: boolean
@@ -10,28 +9,22 @@ interface Props {
   onSave: () => void
   liked: boolean
   blog?: boolean
+  onLike: (arg: boolean) => void
 }
 
 export const LikeSection = (props: Props) => {
   const { id } = useParams() as { id: string }
   const [saved, setSaved] = useState(props.saved)
-  const [liked, setLiked] = useState(props.liked)
 
   async function onLike() {
-    const data: ApiProcess = await fetch(
-      API_ENDPOINT + `/${props.blog ? 'blog' : 'recipe'}/like/` + id,
-      {
-        method: 'post',
-        credentials: 'include',
-      }
-    ).then((r) => r.json())
+    const { error, info } = await handleLike(id, props.blog ? 'blog' : 'recipe')
 
-    if (data.error) {
-      alert(data.info)
+    if (error) {
+      alert(info)
       return
     }
 
-    setLiked((e) => !e)
+    props.onLike(!props.liked)
   }
 
   return (
@@ -43,7 +36,7 @@ export const LikeSection = (props: Props) => {
       >
         <Heart size={20} weight='fill' color='#fff' />
         <span className='font-bold text-md'>
-          {liked ? 'You liked it!' : 'Like it'}
+          {props.liked ? 'You liked it!' : 'Like it'}
         </span>
       </button>
       <button

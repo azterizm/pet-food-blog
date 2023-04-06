@@ -33,6 +33,8 @@ export function Footer(): ReactElement {
         </Link>
       </div>
 
+      {/*
+CONTACT INFORMATION
       <div className='flex items-center gap-4 mt-2'>
         <Link
           className='text-black text-sm no-underline decoration-none'
@@ -59,6 +61,7 @@ export function Footer(): ReactElement {
           Privacy Policy
         </Link>
       </div>
+*/}
     </footer>
   )
 }

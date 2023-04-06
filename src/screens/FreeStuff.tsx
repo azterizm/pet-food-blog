@@ -7,12 +7,12 @@ import { useNavigate } from 'react-router-dom'
 
 export function FreeStuff(): ReactElement {
   const { data, loading } = useApi<IFreeItem[]>('/free_items/all')
-  const [user] = useAuth()
+  const [user, _, __, userLoading] = useAuth()
   const navigate = useNavigate()
   useEffect(() => {
-    if (!user) navigate('/login')
-  }, [])
-  if (loading) return <Loader />
+    if (!userLoading && !user) navigate('/login')
+  }, [user])
+  if (loading || userLoading) return <Loader />
   return (
     <div>
       {!data || !data.length ? (

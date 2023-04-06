@@ -18,13 +18,15 @@ export const HelpSection = (props: Props) => (
     <div className='flex items-start flex-col lg:flex-row lg:justify-between'>
       <div className='flex items-center gap-2 justify-center'>
         <img
-          className='w-20 h-20 rounded-full object-cover'
+          className='w-25 h-25 rounded-full object-cover'
           src={API_ENDPOINT + props.recipe.mainImage}
           alt='recipe main image'
         />
 
         <div className='flex items-start flex-col ml-5'>
-          <span className='text-lg font-bold'>{props.recipe.title}</span>
+          <span className='text-lg font-medium truncate max-w-30'>
+            {props.recipe.title}
+          </span>
         </div>
       </div>
       <Sharing id={props.recipeId} />

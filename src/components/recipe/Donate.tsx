@@ -47,7 +47,7 @@ export const Donate = (props: Props) => {
   }
 
   return (
-    <div>
+    <div className='mb-16'>
       <h3 className='text-xl font-bold text-button bg-white border-y-1 border-gray-200 py-3 w-full'>
         Do you want to support {props.name}?
       </h3>
