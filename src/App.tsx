@@ -76,9 +76,11 @@ function App() {
   const headFoot = useHeaderFooter()
   const [user, _, refetch] = useAuth()
   const fade = useFade()
+
   useEffect(() => {
     refetch()
   }, [])
+
   return (
     <div
       id='route_container'

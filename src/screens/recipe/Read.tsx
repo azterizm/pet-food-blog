@@ -141,7 +141,7 @@ export function RecipeRead(): ReactElement {
                 </span>
               </div>
               <div dangerouslySetInnerHTML={{ __html: data.intro }} />
-              <div className='flex items-center gap-2 flex-wrap mt-8'>
+              <div className='flex items-center gap-2 flex-wrap mt-8 justify-center mx-auto'>
                 {data.categories.map((category, i) => (
                   <p
                     key={i}
@@ -209,6 +209,7 @@ export function RecipeRead(): ReactElement {
               </div>
             )}
           </div>
+
           {errorUnpaid ? null : (
             <div className='max-w-5xl mx-auto relative'>
               <Recommendation
@@ -221,7 +222,7 @@ export function RecipeRead(): ReactElement {
                 items={data.popular}
                 contentType='recipe'
               />
-              <div className='absolute top-60 left-0 w-screen ml-[-20%] h-120 bg-gray-100 z--1' />
+              <div className='absolute top-60 left-0 w-[200vw] ml-[-20%] h-120 bg-gray-100 z--1' />
             </div>
           )}
 
