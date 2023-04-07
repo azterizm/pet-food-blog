@@ -1,3 +1,6 @@
+import { IAuthor } from '@backend/models/author'
+import { IRecipe } from '@backend/models/recipe'
+import { IVetInfo } from '@backend/models/vetInfo'
 import { AuthorSort } from '@backend/zod/api'
 
 export interface Recipe {
@@ -19,7 +22,7 @@ export interface Author {
   name: string
 }
 
-export type Category = typeof categories[number]
+export type Category = (typeof categories)[number]
 
 export const categories = [
   'meal',
@@ -68,4 +71,14 @@ export interface ApiProcess {
 export interface AuthorTotalRecipe {
   id: number
   total: number
+}
+
+export interface RecipeReadData extends IRecipe {
+  author: IAuthor & { recipes: IRecipe[] }
+  userLiked: boolean
+  userSaved: boolean
+  popular: (IRecipe & { likes: number })[]
+  likes: number
+  vetinfo?: IVetInfo
+  subscribed: boolean
 }

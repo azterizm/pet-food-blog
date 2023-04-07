@@ -1,6 +1,3 @@
-import { IAuthor } from '@backend/models/author'
-import { IRecipe } from '@backend/models/recipe'
-import { IVetInfo } from '@backend/models/vetInfo'
 import { Heart } from 'phosphor-react'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Portal } from 'react-portal'
@@ -16,24 +13,13 @@ import { API_ENDPOINT } from '../../constants/api'
 import { onSave } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import { useFade } from '../../hooks/state'
-import { ApiProcess } from '../../types/api'
-
+import { ApiProcess, RecipeReadData } from '../../types/api'
 import '../../css/recipe_read.css'
 import { handleLike } from '../../features/like'
 
-interface ReadData extends IRecipe {
-  author: IAuthor & { recipes: IRecipe[] }
-  userLiked: boolean
-  userSaved: boolean
-  popular: (IRecipe & { likes: number })[]
-  likes: number
-  vetinfo?: IVetInfo
-  subscribed: boolean
-}
-
 export function RecipeRead(): ReactElement {
   const { id } = useParams() as { id: string }
-  const { data, error, loading, refetch } = useApi<ReadData>(
+  const { data, error, loading, refetch } = useApi<RecipeReadData>(
     '/recipe/read/' + id,
     {
       onSuccess: (r) => {
@@ -177,7 +163,7 @@ export function RecipeRead(): ReactElement {
             <LikeSection
               liked={liked}
               onLike={setLiked}
-              onPrint={() => window.print()}
+              onPrint={() => navigate('/recipes/read/print/' + id)}
               onSave={() => onSave({ user, id })}
               saved={data.userSaved}
             />

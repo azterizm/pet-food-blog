@@ -8,6 +8,10 @@ import { useFade, useHeaderFooter } from './hooks/state'
 import { lazyImport } from './util/ui'
 import 'swiper/css'
 
+const { PrintRecipe } = lazyImport(
+  () => import('./screens/recipe/Print'),
+  'PrintRecipe'
+)
 const { Home } = lazyImport(() => import('./screens/Home'), 'Home')
 const { PastDeposits } = lazyImport(
   () => import('./screens/PastDeposits'),
@@ -103,6 +107,7 @@ function App() {
             </>
           ) : null}
           <Route path='recipes'>
+            <Route path='read/print/:id' element={<PrintRecipe />} />
             <Route path='read/:id' element={<RecipeRead />} />
             <Route index element={<RecipeList />} />
           </Route>

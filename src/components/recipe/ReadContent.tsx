@@ -18,10 +18,16 @@ export interface ReadContentProps {
   id: string
   liked: boolean
   changeLiked: (arg: boolean) => void
+  showHelp?: boolean
+  showSupport?: boolean
+  showNotes?: boolean
 }
 
 export function ReadContent({
   liked,
+  showNotes = true,
+  showHelp = true,
+  showSupport = true,
   id,
   ...props
 }: ReadContentProps): ReactElement {
@@ -176,29 +182,35 @@ export function ReadContent({
           ))}
         </div>
       </div>
-      <div>
-        <div className='text-2xl font-bold mt-5 mb-2 block'>Notes</div>
-        <div className='flex flex-col gap-2'>
-          {props.data.notes.map((note, i) => (
-            <div key={i} className='flex items-center gap-2'>
-              <span className='font-black'>&bull;</span>
-              <span key={i}>{note}</span>
-            </div>
-          ))}
+      {showNotes ? (
+        <div>
+          <div className='text-2xl font-bold mt-5 mb-2 block'>Notes</div>
+          <div className='flex flex-col gap-2'>
+            {props.data.notes.map((note, i) => (
+              <div key={i} className='flex items-center gap-2'>
+                <span className='font-black'>&bull;</span>
+                <span key={i}>{note}</span>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
 
-      <HelpSection
-        recipe={props.data}
-        author={props.data.author}
-        recipeId={props.data.id!}
-      />
-      <Donate
-        status={donateStatus}
-        onDonate={onDonate}
-        name={props.data.author.name}
-        onReset={() => setDonateStatus(DonateStatus.Idle)}
-      />
+      {showHelp && (
+        <HelpSection
+          recipe={props.data}
+          author={props.data.author}
+          recipeId={props.data.id!}
+        />
+      )}
+      {showSupport && (
+        <Donate
+          status={donateStatus}
+          onDonate={onDonate}
+          name={props.data.author.name}
+          onReset={() => setDonateStatus(DonateStatus.Idle)}
+        />
+      )}
     </div>
   )
 }

@@ -1,17 +1,17 @@
 import {
-  IconProps,
-  FacebookLogo,
-  InstagramLogo,
-  LinkedinLogo,
-  MediumLogo,
-  PinterestLogo,
-  RedditLogo,
-  SnapchatLogo,
-  TiktokLogo,
-  TwitterLogo,
-  YoutubeLogo,
-} from 'phosphor-react'
+  FaFacebookF,
+  FaPinterestP,
+  FaInstagram,
+  FaLinkedinIn,
+  FaMediumM,
+  FaRedditAlien,
+  FaSnapchatGhost,
+  FaTiktok,
+  FaYoutube,
+  FaTwitter,
+} from 'react-icons/fa'
 import type { ReactElement, RefAttributes } from 'react'
+import { IconProps } from 'phosphor-react'
 
 export interface RenderIconByNameProps
   extends IconProps,
@@ -20,16 +20,16 @@ export interface RenderIconByNameProps
 }
 
 const Icons = {
-  FacebookLogo,
-  InstagramLogo,
-  LinkedinLogo,
-  MediumLogo,
-  PinterestLogo,
-  RedditLogo,
-  SnapchatLogo,
-  TiktokLogo,
-  TwitterLogo,
-  YoutubeLogo,
+  FacebookLogo: FaFacebookF,
+  InstagramLogo: FaInstagram,
+  LinkedinLogo: FaLinkedinIn,
+  MediumLogo: FaMediumM,
+  PinterestLogo: FaPinterestP,
+  RedditLogo: FaRedditAlien,
+  SnapchatLogo: FaSnapchatGhost,
+  TiktokLogo: FaTiktok,
+  TwitterLogo: FaTwitter,
+  YoutubeLogo: FaYoutube,
 }
 
 export function RenderIconByName(props: RenderIconByNameProps): ReactElement {

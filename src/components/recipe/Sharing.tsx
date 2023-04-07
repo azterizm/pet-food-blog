@@ -1,11 +1,11 @@
 import {
-  Envelope,
-  FacebookLogo,
-  LinkedinLogo,
-  RedditLogo,
-  TwitterLogo,
-  WhatsappLogo,
-} from 'phosphor-react'
+  FaEnvelope,
+  FaFacebookF,
+  FaLinkedinIn,
+  FaRedditAlien,
+  FaTwitter,
+  FaWhatsapp,
+} from 'react-icons/fa'
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -15,6 +15,7 @@ import {
   WhatsappShareButton,
 } from 'react-share'
 import { API_ENDPOINT } from '../../constants/api'
+
 export const Sharing = ({
   id,
   disableSharing,
@@ -43,22 +44,22 @@ export const Sharing = ({
   return (
     <div className='flex items-center gap-5 flex-wrap text-3xl ml-5 my-auto justify-center'>
       <FacebookShareButton {...attr}>
-        <FacebookLogo />
+        <FaFacebookF size={20} className='text-button' />
       </FacebookShareButton>
       <TwitterShareButton {...attr}>
-        <TwitterLogo />
+        <FaTwitter size={20} className='text-button' />
       </TwitterShareButton>
       <LinkedinShareButton {...attr}>
-        <LinkedinLogo />
+        <FaLinkedinIn size={20} className='text-button' />
       </LinkedinShareButton>
       <RedditShareButton {...attr}>
-        <RedditLogo />
+        <FaRedditAlien size={20} className='text-button' />
       </RedditShareButton>
       <WhatsappShareButton {...attr}>
-        <WhatsappLogo />
+        <FaWhatsapp size={20} className='text-button' />
       </WhatsappShareButton>
       <EmailShareButton {...attr}>
-        <Envelope />
+        <FaEnvelope size={20} className='text-button' />
       </EmailShareButton>
     </div>
   )
