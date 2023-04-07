@@ -98,10 +98,10 @@ export function RecipeRead(): ReactElement {
             <img
               src={API_ENDPOINT + data.mainImage}
               alt='recipe image'
-              className='max-w-unset! w-screen md:w-full md:rounded-lg mx--10 h-full object-cover'
+              className='max-w-unset! w-screen md:w-full md:rounded-r-lg mx--10 h-full object-cover'
             />
-            <div className='ml-8 flex justify-center flex-col items-start'>
-              <div className='flex justify-start items-center gap-4 mt-8 lg:mt-0'>
+            <div className='flex justify-center flex-col items-start'>
+              <div className='flex justify-start items-center gap-4 mt-4 lg:mt-0'>
                 <AuthorProfileImage
                   className='rounded-full w-25 h-25 object-cover'
                   author={data.author}
@@ -154,7 +154,7 @@ export function RecipeRead(): ReactElement {
                   </p>
                 ))}
               </div>
-              <div className='flex items-center gap-2 mt-4'>
+              <div className='flex items-center gap-2 mt-4 mx-auto'>
                 <div className='flex justify-center items-center flex-col text-gray-400'>
                   <span className='text-4xl font-light'>{data.duration}</span>
                   <span className='text-sm'>Minutes</span>
@@ -212,10 +212,15 @@ export function RecipeRead(): ReactElement {
           {errorUnpaid ? null : (
             <div className='max-w-5xl mx-auto relative'>
               <Recommendation
+                contentType='recipe'
                 title={'more by ' + data.author.name}
                 items={data.author.recipes}
               />
-              <Recommendation title='by others' items={data.popular} />
+              <Recommendation
+                title='by others'
+                items={data.popular}
+                contentType='recipe'
+              />
               <div className='absolute top-60 left-0 w-screen ml-[-20%] h-120 bg-gray-100 z--1' />
             </div>
           )}

@@ -94,7 +94,7 @@ export function ReadContent({
                         : [...e, [ingredientIndex, itemIndex].join(':')]
                     )
                   }
-                  className={`border-0 border-element ml--2 w-full border-r-0 pl-5 h-10 flex items-center justify-start cursor-pointer ${
+                  className={`border-0 border-element ml--2 w-full border-r-0 pl-5 min-h-10 h-auto flex items-center justify-start cursor-pointer ${
                     itemIndex + 1 === ingredient.items.length
                       ? ''
                       : 'border-b-0'

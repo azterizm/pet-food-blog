@@ -35,7 +35,7 @@ export const LikeSection = (props: Props) => {
         className='gap-2 flex items-center text-white bg-[#FEA2AD] rounded-full border-none py-2 px-5'
       >
         <Heart size={20} weight='fill' color='#fff' />
-        <span className='font-bold text-md'>
+        <span className='font-bold text-md w-max'>
           {props.liked ? 'You liked it!' : 'Like it'}
         </span>
       </button>

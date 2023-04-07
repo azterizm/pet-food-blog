@@ -1,13 +1,18 @@
-import { Copyright, TiktokLogo, TwitterLogo, YoutubeLogo } from 'phosphor-react'
 import type { ReactElement } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CREATOR_ENDPOINT } from '../constants/api'
+import { useAuth } from '../hooks/api'
 
 export function Footer(): ReactElement {
+  const [user] = useAuth()
+  const navigate = useNavigate()
+
   return (
     <footer className='flex items-center justify-center flex-col my-16'>
       <button
-        onClick={() => (window.location.href = CREATOR_ENDPOINT)}
+        onClick={() =>
+          !user ? navigate('/login') : (window.location.href = CREATOR_ENDPOINT)
+        }
         className='bg-[#98d4cb] px-5 py-2 rounded-full border-none text-white font-bold'
         type='button'
       >

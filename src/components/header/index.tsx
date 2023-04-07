@@ -34,7 +34,7 @@ export function Header({ user }: Props) {
 
   return (
     <>
-      <div className='flex justify-between items-center lg:px-20 xl:px-50 py-5 mx--10'>
+      <div className='flex justify-unset lg:justify-between items-center lg:px-20 xl:px-50 py-5 mx--10'>
         <Link className='hidden lg:block' to='/'>
           <img className='w-50' src='/logo.svg' alt='logo' />
         </Link>

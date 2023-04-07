@@ -9,7 +9,7 @@ export async function onSave({
   user: IUser | null
   id?: number | string
 }) {
-  if (!user || !id) return (window.location.href = '/login')
+  if (!user || !id) return (window.location.href = '/#/login')
 
   const data = await fetch(API_ENDPOINT + '/recipe/save/' + id, {
     credentials: 'include',

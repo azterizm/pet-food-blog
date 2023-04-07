@@ -1,6 +1,5 @@
 import { ReactElement, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Swiper, SwiperSlide } from 'swiper/react'
 import { CREATOR_ENDPOINT } from '../../constants/api'
 import { useAuth } from '../../hooks/api'
 
@@ -23,18 +22,12 @@ export function MobileMenu(): ReactElement {
   )
 
   return (
-    <Swiper
-      className='translate-x-5 !pr-70 !lg:hidden'
-      spaceBetween={10}
-      slidesPerView={3}
-      keyboard
-    >
-      {(menuItems as any[]).filter(Boolean).map(([endpoint, label], i) => (
-        <SwiperSlide
-          key={i}
-          className={`py-2 rounded-full ${
-            label ? 'bg-button text-white px-5' : 'bg-white text-gray-400'
-          } border-0 no-underline flex items-center justify-center text-center`}
+    <div className='flex justify-start items-center ml-5 overflow-x-scroll overflow-y-hidden !lg:hidden'>
+      {(menuItems as any[]).filter(Boolean).map(([endpoint, label]) => (
+        <span
+          className={`block px-10 py-2 mr-5 ${
+            label ? 'bg-button text-white' : 'bg-white text-gray-200'
+          } rounded-full`}
           onClick={() =>
             endpoint
               ? endpoint.includes('http')
@@ -44,8 +37,8 @@ export function MobileMenu(): ReactElement {
           }
         >
           {label || '|'}
-        </SwiperSlide>
+        </span>
       ))}
-    </Swiper>
+    </div>
   )
 }
