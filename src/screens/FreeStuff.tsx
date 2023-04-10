@@ -3,10 +3,13 @@ import { useApi, useAuth } from '../hooks/api'
 import { IFreeItem } from '@backend/models/freeItem'
 import { Loader } from '../components/Loader'
 import { API_ENDPOINT } from '../constants/api'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export function FreeStuff(): ReactElement {
-  const { data, loading } = useApi<IFreeItem[]>('/free_items/all')
+  const { data, loading } =
+    useApi<(IFreeItem & { author?: { name: string; id: number } })[]>(
+      '/free_items/all'
+    )
   const [user, _, __, userLoading] = useAuth()
   const navigate = useNavigate()
   useEffect(() => {
@@ -29,7 +32,7 @@ export function FreeStuff(): ReactElement {
               <img
                 alt='Thumbnail'
                 src={API_ENDPOINT + '/free_items/thumbnail/' + item.id}
-                className='h-56 w-full object-cover'
+                className='h-56 w-56 object-cover object-center mx-auto block'
               />
               <div className='bg-white p-4 sm:p-6'>
                 <time
@@ -38,10 +41,21 @@ export function FreeStuff(): ReactElement {
                 >
                   {new Date(item.createdAt!).toDateString()}
                 </time>
-                <h3 className='mt-0.5 text-lg text-gray-900 no-underline'>
+                <h3 className='mt-0.5 m-0 text-lg text-gray-900 no-underline'>
                   {item.title}
                 </h3>
-                <p className='mt-2 text-sm leading-relaxed text-gray-500 line-clamp-3'>
+                {item.author ? (
+                  <p className='m-0 text-sm'>
+                    by{' '}
+                    <Link
+                      to={'/authors/' + item.author.id}
+                      className='no-underline'
+                    >
+                      {item.author?.name}
+                    </Link>
+                  </p>
+                ) : null}
+                <p className='mt-2 text-md leading-relaxed text-gray-500 line-clamp-3'>
                   {item.description}
                 </p>
                 <a

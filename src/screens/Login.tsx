@@ -1,13 +1,9 @@
-import { ReactElement, useEffect, useState } from 'react'
-import { AuthTypeSelector } from '../components/AuthTypeSelector'
+import { ReactElement, useEffect } from 'react'
 import { TwoColumnLayout } from '../components/TwoColumnLayout'
 import { API_ENDPOINT } from '../constants/api'
 import '../css/login.css'
-import { AuthType } from '../types/auth'
 
 export function Login(): ReactElement {
-  const [type, setType] = useState<AuthType>('user')
-
   useEffect(() => {
     window.localStorage.removeItem('user')
   }, [])
@@ -24,11 +20,10 @@ export function Login(): ReactElement {
     >
       <div className='my-5'>
         <p className='mt-5'>How should we describe you as?</p>
-        <AuthTypeSelector onChange={setType} type={type} />
 
         <a
           className='g-sign-in-button'
-          href={API_ENDPOINT + '/auth/google/' + type}
+          href={API_ENDPOINT + '/auth/google/' + 'author'}
         >
           <div className='content-wrapper'>
             <div className='logo-wrapper'>
@@ -41,8 +36,8 @@ export function Login(): ReactElement {
         </a>
       </div>
       <p className='m-0 p-0 text-neutral-600 text-center max-w-md'>
-        If you don't have an account then your account will automatically be
-        created once you login.
+        If you don't have an account then your account will be created
+        automatically once you login.
       </p>
     </TwoColumnLayout>
   )

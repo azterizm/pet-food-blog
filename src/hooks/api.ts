@@ -1,5 +1,4 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { API_ENDPOINT } from '../constants/api'
 import { getUser } from '../features/auth'
 import { AuthUser } from '../types/auth'
