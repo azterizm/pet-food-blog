@@ -16,6 +16,7 @@ export function Purchases(): ReactElement {
     useApi<(IPurchase & { author: IAuthor; recipe: IRecipe })[]>(
       '/user/purchases'
     )
+  console.log('data:', data)
   return (
     <div className='my-5'>
       <span className='uppercase c-primary text-xl font-bold'>Purchases</span>
@@ -27,31 +28,33 @@ export function Purchases(): ReactElement {
         </p>
       ) : (
         <div className='flex flex-wrap gap-10 justify-start items-center'>
-          {data.map(({ recipe, author, createdAt }) => (
-            <Recipe
-              key={recipe.id}
-              title={recipe.title}
-              author={author}
-              postedOn={recipe.createdAt!}
-              reviews={recipe.likesDisplay}
-              image={API_ENDPOINT + recipe.mainImage}
-              duration={recipe.duration}
-              onClick={() => navigate('/recipes/read/' + recipe.id)}
-              categories={recipe.categories}
-              price={recipe.price}
-              priceType={recipe.priceType}
-              purchased
-              purchaseDate={createdAt}
-              id={recipe.id!}
-              onSave={() =>
-                onSave({
-                  user,
-                  id: recipe.id,
-                })
-              }
-              saved={isSaved({ data: { saves: data }, user, id: recipe.id })}
-            />
-          ))}
+          {data
+            .filter((r) => r.recipeId)
+            .map(({ recipe, author, createdAt }) => (
+              <Recipe
+                key={recipe.id}
+                title={recipe.title}
+                author={author}
+                postedOn={recipe.createdAt!}
+                reviews={recipe.likesDisplay}
+                image={API_ENDPOINT + recipe.mainImage}
+                duration={recipe.duration}
+                onClick={() => navigate('/recipes/read/' + recipe.id)}
+                categories={recipe.categories}
+                price={recipe.price}
+                priceType={recipe.priceType}
+                purchased
+                purchaseDate={createdAt}
+                id={recipe.id!}
+                onSave={() =>
+                  onSave({
+                    user,
+                    id: recipe.id,
+                  })
+                }
+                saved={isSaved({ data: { saves: data }, user, id: recipe.id })}
+              />
+            ))}
         </div>
       )}
     </div>
