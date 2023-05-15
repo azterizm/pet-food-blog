@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { ReactElement, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CREATOR_ENDPOINT } from '../../constants/api'
@@ -25,9 +26,10 @@ export function MobileMenu(): ReactElement {
     <div className='flex justify-start items-center ml-5 overflow-x-scroll overflow-y-hidden !lg:hidden'>
       {(menuItems as any[]).filter(Boolean).map(([endpoint, label]) => (
         <span
-          className={`block py-2 mr-5 ${
+          className={classNames(
+            'block py-2 mr-5 rounded-full whitespace-nowrap mb-2',
             label ? 'bg-button text-white px-10' : 'bg-white text-gray-200'
-          } rounded-full`}
+          )}
           onClick={() =>
             endpoint
               ? endpoint.includes('http')

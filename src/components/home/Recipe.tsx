@@ -1,10 +1,10 @@
 import { IAuthor } from '@backend/models/author'
+import classNames from 'classnames'
 import { RecipeCategory } from '@backend/models/recipe'
 import moment from 'moment'
 import { Check, Heart } from 'phosphor-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { API_ENDPOINT } from '../../constants/api'
 import { categoryLabel } from '../../types/api'
 import { PriceType } from '../../types/ui'
 import { showDuration, showPluralS } from '../../util/ui'
@@ -15,6 +15,7 @@ interface Props {
   title: string
   author?: Pick<IAuthor, 'id' | 'name' | 'subscribeCost' | 'profile'>
   postedOn: Date
+  fullWidth?: boolean
   reviews?: number
   image: string
   duration: number
@@ -47,16 +48,25 @@ export function Recipe({
   categories,
   authorTotalRecipes,
   saved,
+  fullWidth,
 }: Props) {
   const navigate = useNavigate()
   const [newSave, setNewSave] = useState(saved)
   const [showShare, setShowShare] = useState(false)
 
   return (
-    <div className='m-0 p-0 shadow-lg rounded-lg max-w-80'>
+    <div
+      className={classNames(
+        'm-0 p-0 shadow-lg rounded-lg',
+        fullWidth ? 'w-full' : 'max-w-80'
+      )}
+    >
       <img
         onClick={onClick}
-        className='cursor-pointer max-w-80 rounded-t-lg'
+        className={classNames(
+          'cursor-pointer object-cover rounded-t-lg',
+          fullWidth ? 'w-full' : 'max-w-80'
+        )}
         src={image}
         alt='recipe image'
       />

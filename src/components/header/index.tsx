@@ -109,7 +109,7 @@ export function Header({ user }: Props) {
           </Link>
         </div>
         <div
-          className='translate-y-1 lg:hidden ml-5 bg-gray-100 rounded-full p-2 py-5 flex items-start justify-center flex-col'
+          className='-translate-y-3 lg:hidden ml-5 bg-gray-100 rounded-full p-2 py-5 flex items-start justify-center flex-col'
           onClick={() => setMenuOpen(true)}
         >
           <div className='w-10 h-0.8 bg-button mb-2 rounded-full' />

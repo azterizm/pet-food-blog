@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { Heart } from 'phosphor-react'
 import { showCompactNumber } from '../../util/ui'
 import { ILike } from '@backend/models/like'
+import Masonry from 'react-masonry-css'
 
 export function List(): ReactElement {
   const [pageNumber, setPageNumber] = useState(0)
@@ -19,8 +20,6 @@ export function List(): ReactElement {
     rows: (IPost & { author: IAuthor; likes: ILike[] })[]
   }>('/blog/get_posts/' + pageNumber * PAGE_OFFSET, {}, [pageNumber])
 
-  console.log('data:', data)
-
   return (
     <div>
       {loading ? (
@@ -28,11 +27,22 @@ export function List(): ReactElement {
       ) : !data || !data.rows.length || error ? (
         <span>Nothing...</span>
       ) : (
-        <div className='flex-wrap flex items-center justify-center gap-10'>
+        <Masonry
+          breakpointCols={{
+            default: 5,
+            1850: 4,
+            1550: 3,
+            1100: 2,
+            850: 1,
+          }}
+          className='flex w-auto'
+          id='list_masonry'
+          columnClassName='flex items-center flex-col gap-12 mx-6'
+        >
           {data.rows.map((post) => (
             <div
               key={post.id}
-              className='w-80 h-80 c-white relative rounded-lg shadow-lg'
+              className='w-full h-80 c-white relative rounded-lg shadow-lg'
             >
               <div className='absolute w-full h-full top-0 left-0 z-1 pl-10 pt-5 flex items-start flex-col justify-between'>
                 <div>
@@ -76,7 +86,7 @@ export function List(): ReactElement {
               onPageChange={(e) => setPageNumber(e.selected)}
             />
           ) : null}
-        </div>
+        </Masonry>
       )}
     </div>
   )
