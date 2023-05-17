@@ -24,8 +24,9 @@ export function MobileMenu(): ReactElement {
 
   return (
     <div className='flex justify-start items-center ml-5 overflow-x-scroll overflow-y-hidden !lg:hidden'>
-      {(menuItems as any[]).filter(Boolean).map(([endpoint, label]) => (
+      {(menuItems as any[]).filter(Boolean).map(([endpoint, label], i) => (
         <span
+          key={i}
           className={classNames(
             'block py-2 mr-5 rounded-full whitespace-nowrap mb-2',
             label ? 'bg-button text-white px-10' : 'bg-white text-gray-200'
