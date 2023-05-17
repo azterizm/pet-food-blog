@@ -35,31 +35,30 @@ export const Sharing = ({
             })
               .then((r) => r.text())
               .catch((_) => null)
-            console.log('data:', data)
           } catch (error) {
             console.error(error)
           }
         },
   }
   return (
-    <div className='flex items-center gap-5 flex-wrap text-3xl ml-5 my-auto justify-center'>
+    <div className="flex items-center gap-5 flex-wrap text-3xl ml-5 my-auto justify-center">
       <FacebookShareButton {...attr}>
-        <FaFacebookF size={20} className='text-button' />
+        <FaFacebookF size={20} className="text-button" />
       </FacebookShareButton>
       <TwitterShareButton {...attr}>
-        <FaTwitter size={20} className='text-button' />
+        <FaTwitter size={20} className="text-button" />
       </TwitterShareButton>
       <LinkedinShareButton {...attr}>
-        <FaLinkedinIn size={20} className='text-button' />
+        <FaLinkedinIn size={20} className="text-button" />
       </LinkedinShareButton>
       <RedditShareButton {...attr}>
-        <FaRedditAlien size={20} className='text-button' />
+        <FaRedditAlien size={20} className="text-button" />
       </RedditShareButton>
       <WhatsappShareButton {...attr}>
-        <FaWhatsapp size={20} className='text-button' />
+        <FaWhatsapp size={20} className="text-button" />
       </WhatsappShareButton>
       <EmailShareButton {...attr}>
-        <FaEnvelope size={20} className='text-button' />
+        <FaEnvelope size={20} className="text-button" />
       </EmailShareButton>
     </div>
   )

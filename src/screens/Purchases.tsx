@@ -16,18 +16,17 @@ export function Purchases(): ReactElement {
     useApi<(IPurchase & { author: IAuthor; recipe: IRecipe })[]>(
       '/user/purchases'
     )
-  console.log('data:', data)
   return (
-    <div className='my-5'>
-      <span className='uppercase c-primary text-xl font-bold'>Purchases</span>
+    <div className="my-5">
+      <span className="uppercase c-primary text-xl font-bold">Purchases</span>
       {loading ? (
         <Loader />
       ) : error || !data || !data.length ? (
-        <p className='text-start m-0'>
+        <p className="text-start m-0">
           {!data || !data.length ? 'No purchases' : error}
         </p>
       ) : (
-        <div className='flex flex-wrap gap-10 justify-start items-center'>
+        <div className="flex flex-wrap gap-10 justify-start items-center">
           {data
             .filter((r) => r.recipeId)
             .map(({ recipe, author, createdAt }) => (

@@ -6,14 +6,12 @@ import { Loader } from '../components/Loader'
 import { useApi } from '../hooks/api'
 
 export function Subscribed(): ReactElement {
-  const { data, error, loading } =
-    useApi<
-      (IAuthor & {
-        socialMedia: ISocialMedia[]
-        subscribeDate?: string | Date
-      })[]
-    >('/user/subscribed')
-  console.log('data:', data)
+  const { data, error, loading } = useApi<
+    (IAuthor & {
+      socialMedia: ISocialMedia[]
+      subscribeDate?: string | Date
+    })[]
+  >('/user/subscribed')
   return (
     <div className='my-5'>
       <span className='uppercase c-primary text-xl font-bold'>

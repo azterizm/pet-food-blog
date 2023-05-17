@@ -35,7 +35,6 @@ export function Read(): ReactElement {
     {
       onSuccess: (r) => {
         const d: FetchData = data || r
-        console.log('d:', d)
         if (d && !loaded) {
           setLiked(d.userLiked)
           setLikes(d.likes.length)
@@ -81,8 +80,8 @@ export function Read(): ReactElement {
   if (loading) return <Loader />
   else if (!data || error)
     return (
-      <div className='flex-center absolute-center'>
-        <span className='c-red'>{error}</span>
+      <div className="flex-center absolute-center">
+        <span className="c-red">{error}</span>
       </div>
     )
 
@@ -94,7 +93,7 @@ export function Read(): ReactElement {
         title={data.title}
         author={data.author}
       />
-      <article className='mt-20'>
+      <article className="mt-20">
         <p>{data.intro}</p>
         <div dangerouslySetInnerHTML={{ __html: data.content }} />
 

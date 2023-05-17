@@ -33,7 +33,6 @@ export function List(): ReactElement {
             1850: 4,
             1550: 3,
             1100: 2,
-            850: 1,
           }}
           className='flex w-auto'
           id='list_masonry'
