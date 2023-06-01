@@ -25,7 +25,7 @@ export const HelpSection = (props: Props) => (
 
         <div className='flex items-start flex-col ml-5'>
           <span className='text-lg font-medium truncate max-w-30'>
-            {props.recipe.title}
+            {decodeURIComponent(props.recipe.title)}
           </span>
         </div>
       </div>

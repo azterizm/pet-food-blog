@@ -62,45 +62,45 @@ export function FreeStuff(): ReactElement {
   return (
     <div>
       {!data || !data.length ? (
-        <div className="flex-center">
+        <div className='flex-center'>
           <span>No items are available yet.</span>
         </div>
       ) : (
-        <div className="flex flex-wrap justify-center items-center gap-5">
+        <div className='flex flex-wrap justify-center items-center gap-5'>
           {data.map((item) => {
             const canDownload = item.purchased || item.price <= 0
             return (
               <article
                 key={item.id}
-                className="overflow-hidden rounded-lg shadow transition hover:shadow-lg min-w-80"
+                className='overflow-hidden rounded-lg shadow transition hover:shadow-lg min-w-80'
               >
                 <img
-                  alt="Thumbnail"
+                  alt='Thumbnail'
                   src={API_ENDPOINT + '/free_items/thumbnail/' + item.id}
-                  className="h-56 w-56 object-cover object-center mx-auto block"
+                  className='h-56 w-56 object-cover object-center mx-auto block'
                 />
-                <div className="bg-white p-4 sm:p-6">
+                <div className='bg-white p-4 sm:p-6'>
                   <time
-                    dateTime="2022-10-10"
-                    className="block text-xs text-gray-500"
+                    dateTime='2022-10-10'
+                    className='block text-xs text-gray-500'
                   >
                     {new Date(item.createdAt!).toDateString()}
                   </time>
-                  <h3 className="mt-0.5 m-0 text-lg text-gray-900 no-underline">
-                    {item.title}
+                  <h3 className='mt-0.5 m-0 text-lg text-gray-900 no-underline'>
+                    {decodeURIComponent(item.title)}
                   </h3>
                   {item.author ? (
-                    <p className="m-0 text-sm">
+                    <p className='m-0 text-sm'>
                       by{' '}
                       <Link
                         to={'/authors/' + item.author.id}
-                        className="no-underline"
+                        className='no-underline'
                       >
                         {item.author?.name}
                       </Link>
                     </p>
                   ) : null}
-                  <p className="mt-2 text-md leading-relaxed text-gray-500 line-clamp-3">
+                  <p className='mt-2 text-md leading-relaxed text-gray-500 line-clamp-3'>
                     {item.description}
                   </p>
                   <button
@@ -122,22 +122,22 @@ export function FreeStuff(): ReactElement {
 
           {paying ? (
             <Portal>
-              <div className="fixed-center z-101 flex-center flex-col gap-5 bg-white border-2 border-primary px-10 py-5 rounded-lg z-101">
+              <div className='fixed-center z-101 flex-center flex-col gap-5 bg-white border-2 border-primary px-10 py-5 rounded-lg z-101'>
                 <p>Are you sure, you want to pay 2$ for this item?</p>
-                <div className="flex-center">
+                <div className='flex-center'>
                   {payLoading ? (
-                    <p className="text-center">Loading...</p>
+                    <p className='text-center'>Loading...</p>
                   ) : (
                     <>
                       <button
                         onClick={() => setPaying(0)}
-                        className="bg-white text-primary px-5 py-2 text-lg border-none"
+                        className='bg-white text-primary px-5 py-2 text-lg border-none'
                       >
                         Cancel
                       </button>
                       <button
                         onClick={onPayItem}
-                        className="bg-button text-white px-5 py-2 rounded-full text-lg border-none"
+                        className='bg-button text-white px-5 py-2 rounded-full text-lg border-none'
                       >
                         Continue
                       </button>

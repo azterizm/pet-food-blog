@@ -14,7 +14,7 @@ export function Search(): ReactElement {
     total: number
   }>('/author/main_list/new/0/' + OFFSET)
   const { data: tags, loading: tagsLoading } = useApi<string[]>(
-    '/recipe/search_tags'
+    '/recipe/search_tags',
   )
   const [search, setSearch] = useState('')
   const { data: searchData, loading: searchLoading } = useApi<{
@@ -67,7 +67,7 @@ export function Search(): ReactElement {
                   alt={r.title + ' main image'}
                   className='w-20 h-20 object-cover rounded-lg'
                 />
-                <span>{r.title}</span>
+                <span>{decodeURIComponent(r.title)}</span>
                 <span className='absolute top-2 right-2 c-gray-500 '>
                   Recipe
                 </span>

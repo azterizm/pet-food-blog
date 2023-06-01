@@ -31,7 +31,7 @@ export function RecipeRead(): ReactElement {
         if (d) setLiked(d.userLiked)
       },
     },
-    [id]
+    [id],
   )
 
   const navigate = useNavigate()
@@ -70,7 +70,7 @@ export function RecipeRead(): ReactElement {
       {
         method: 'post',
         credentials: 'include',
-      }
+      },
     ).then((r) => r.json())
     if (payResponse.error) {
       alert(payResponse.info)
@@ -98,12 +98,15 @@ export function RecipeRead(): ReactElement {
     <div
       className={classNames(
         'min-h-100vh',
-        data?.status === 'published' ? 'opacity-100' : 'opacity-50'
+        data?.status === 'published' ? 'opacity-100' : 'opacity-50',
       )}
     >
       <Helmet>
         <title>
-          {loading ? 'Loading...' : data?.title || 'Unknown'} | So Pawlicious
+          {loading
+            ? 'Loading...'
+            : decodeURIComponent(data?.title || 'Unknown') || 'Unknown'}{' '}
+          | So Pawlicious
         </title>
       </Helmet>
       {loading ? (
@@ -139,7 +142,7 @@ export function RecipeRead(): ReactElement {
                 </div>
               </div>
               <div className='w-full h-0.5 my-8 bg-gray-200' />
-              <h1 className='m-0'>{data.title}</h1>
+              <h1 className='m-0'>{decodeURIComponent(data.title)}</h1>
               <p className='m-0 mt-2 text-gray-500 font-medium'>
                 by {data.author.name}
               </p>

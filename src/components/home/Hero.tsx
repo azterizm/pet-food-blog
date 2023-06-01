@@ -57,7 +57,7 @@ export function Hero(props: Props) {
             : null}
         </div>
         <h1 className='max-w-80vw text-3xl mb-0 md:text-5xl md:leading-15'>
-          {props.title}
+          {decodeURIComponent(props.title)}
         </h1>
         <span>{moment(props.publishedOn).fromNow()}</span>
         {props.average ? (

@@ -25,7 +25,7 @@ export function Read(): ReactElement {
   const [liked, setLiked] = useState(false)
   const [likes, setLikes] = useState(0)
   const [donateStatus, setDonateStatus] = useState<DonateStatus>(
-    DonateStatus.Idle
+    DonateStatus.Idle,
   )
 
   const navigate = useNavigate()
@@ -42,7 +42,7 @@ export function Read(): ReactElement {
         }
       },
     },
-    [id]
+    [id],
   )
 
   async function onLike() {
@@ -80,8 +80,8 @@ export function Read(): ReactElement {
   if (loading) return <Loader />
   else if (!data || error)
     return (
-      <div className="flex-center absolute-center">
-        <span className="c-red">{error}</span>
+      <div className='flex-center absolute-center'>
+        <span className='c-red'>{error}</span>
       </div>
     )
 
@@ -90,10 +90,10 @@ export function Read(): ReactElement {
       <Hero
         image={API_ENDPOINT + data.mainImage}
         publishedOn={data.createdAt!}
-        title={data.title}
+        title={decodeURIComponent(data.title)}
         author={data.author}
       />
-      <article className="mt-20">
+      <article className='mt-20'>
         <p>{data.intro}</p>
         <div dangerouslySetInnerHTML={{ __html: data.content }} />
 

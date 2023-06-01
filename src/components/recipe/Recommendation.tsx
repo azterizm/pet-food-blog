@@ -22,7 +22,9 @@ export function Recommendation(props: RecommendationProps): ReactElement {
   }
   return (
     <div className='my-16'>
-      <span className='text-2xl font-bold capitalize'>{props.title}</span>
+      <span className='text-2xl font-bold capitalize'>
+        {decodeURIComponent(props.title)}
+      </span>
       {!props.items.length ? (
         <p className='text-xs uppercase text-center'>
           Nothing to recommend yet.
@@ -59,7 +61,7 @@ export function Recommendation(props: RecommendationProps): ReactElement {
                   className='border-x-2 border-gray-200 border-b-2 flex flex-col items-start px-2 py-4 bg-white rounded-b-xl translate-y--1'
                 >
                   <span className='truncate w-full font-bold text-lg'>
-                    {r.title}
+                    {decodeURIComponent(r.title)}
                   </span>
 
                   {'likes' in r ? (

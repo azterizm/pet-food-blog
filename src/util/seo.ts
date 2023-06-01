@@ -8,7 +8,7 @@ export function constructRecipeSchema(data: RecipeReadData) {
   return {
     '@context': 'https://schema.org/',
     '@type': 'Recipe',
-    name: data.title,
+    name: decodeURIComponent(data.title),
     image: [API_ENDPOINT + data.mainImage],
     author: {
       '@type': 'Person',

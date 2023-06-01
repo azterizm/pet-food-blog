@@ -33,7 +33,7 @@ export function ReadContent({
 }: ReadContentProps): ReactElement {
   const [checkedIng, setCheckedIng] = useState<string[]>([])
   const [donateStatus, setDonateStatus] = useState<DonateStatus>(
-    DonateStatus.Idle
+    DonateStatus.Idle,
   )
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -62,7 +62,7 @@ export function ReadContent({
         {props.data.ingredients.map((ingredient, ingredientIndex) => (
           <div key={ingredientIndex}>
             <span className='block text-lg font-bold mt-5'>
-              {ingredient.title}
+              {decodeURIComponent(ingredient.title)}
             </span>
             {ingredient.items.map((item, itemIndex) => (
               <div key={itemIndex} className='flex items-center gap-2'>
@@ -78,9 +78,9 @@ export function ReadContent({
                     setCheckedIng((e) =>
                       e.includes([ingredientIndex, itemIndex].join(':'))
                         ? e.filter(
-                            (r) => r !== [ingredientIndex, itemIndex].join(':')
+                            (r) => r !== [ingredientIndex, itemIndex].join(':'),
                           )
-                        : [...e, [ingredientIndex, itemIndex].join(':')]
+                        : [...e, [ingredientIndex, itemIndex].join(':')],
                     )
                   }
                 >
@@ -95,9 +95,9 @@ export function ReadContent({
                     setCheckedIng((e) =>
                       e.includes([ingredientIndex, itemIndex].join(':'))
                         ? e.filter(
-                            (r) => r !== [ingredientIndex, itemIndex].join(':')
+                            (r) => r !== [ingredientIndex, itemIndex].join(':'),
                           )
-                        : [...e, [ingredientIndex, itemIndex].join(':')]
+                        : [...e, [ingredientIndex, itemIndex].join(':')],
                     )
                   }
                   className={`border-0 border-element ml--2 w-full border-r-0 pl-5 min-h-10 h-auto flex items-center justify-start cursor-pointer ${
@@ -144,7 +144,7 @@ export function ReadContent({
                     className='flex items-start gap-2 text-sm font-medium cursor-pointer'
                     onClick={() =>
                       setDoneSteps((r) =>
-                        !r.includes(i) ? [...r, i] : r.filter((e) => e !== i)
+                        !r.includes(i) ? [...r, i] : r.filter((e) => e !== i),
                       )
                     }
                   >
@@ -152,7 +152,7 @@ export function ReadContent({
                       className='checkbox_container'
                       onClick={() =>
                         setDoneSteps((r) =>
-                          !r.includes(i) ? [...r, i] : r.filter((e) => e !== i)
+                          !r.includes(i) ? [...r, i] : r.filter((e) => e !== i),
                         )
                       }
                     >
@@ -166,7 +166,7 @@ export function ReadContent({
                           setDoneSteps((r) =>
                             e.target.checked
                               ? [...r, i]
-                              : r.filter((e) => e !== i)
+                              : r.filter((e) => e !== i),
                           )
                         }
                       />

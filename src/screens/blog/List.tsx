@@ -49,7 +49,7 @@ export function List(): ReactElement {
                     onClick={() => navigate(String(post.id!))}
                     className='cursor-pointer'
                   >
-                    {post.title}
+                    {decodeURIComponent(post.title)}
                   </h2>
                   <p
                     className='hover:underline cursor-pointer max-w-60'
