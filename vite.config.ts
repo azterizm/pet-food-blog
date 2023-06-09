@@ -31,5 +31,7 @@ export default defineConfig({
     }),
   ],
   server: { port: 5002 },
-  build: { assetsDir: 'client_assets', minify: true },
+  build: { assetsDir: 'client_assets', minify: true, outDir: '../public' },
+  base: '/',
+  publicDir: './public',
 })
