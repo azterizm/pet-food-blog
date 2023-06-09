@@ -8,7 +8,7 @@ export function Footer(): ReactElement {
   const navigate = useNavigate()
 
   return (
-    <footer className='flex items-center justify-center flex-col my-16'>
+    <footer className='flex items-center justify-center flex-col mb-16 mt-48'>
       <button
         onClick={() =>
           !user ? navigate('/login') : (window.location.href = CREATOR_ENDPOINT)
