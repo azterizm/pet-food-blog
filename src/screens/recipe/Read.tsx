@@ -108,6 +108,7 @@ export function RecipeRead(): ReactElement {
             : decodeURIComponent(data?.title || 'Unknown') || 'Unknown'}{' '}
           | So Pawlicious
         </title>
+        <meta name='keywords' content={data?.tags.join(', ')} />
       </Helmet>
       {loading ? (
         <Loader />
