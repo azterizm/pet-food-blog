@@ -53,7 +53,7 @@ export function Recipes(): ReactElement {
                   : r.mainImage
               }
               postedOn={r.createdAt!}
-              reviews={r.likesDisplay}
+              likesCount={r.likesDisplay}
               onClick={() => navigate('/recipes/read/' + r.id)}
               key={r.id}
               categories={r.categories}

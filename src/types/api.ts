@@ -40,7 +40,7 @@ export const categoryLabel = {
   meal: 'Meals',
   birthday: 'Birthday',
   cooked: 'Cooked',
-  desert: 'Desert',
+  desert: 'Dessert',
   health: 'Health condition',
   raw: 'Raw',
   season: 'Seasonal',

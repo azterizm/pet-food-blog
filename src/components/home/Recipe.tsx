@@ -13,10 +13,11 @@ import { Sharing } from '../recipe/Sharing'
 
 interface Props {
   title: string
+  onHeartClick?: () => void
   author?: Pick<IAuthor, 'id' | 'name' | 'subscribeCost' | 'profile'>
   postedOn: Date
   fullWidth?: boolean
-  reviews?: number
+  likesCount?: number
   image: string
   duration: number
   authorTotalRecipes?: number
@@ -28,10 +29,13 @@ interface Props {
   saved?: boolean
   onSave?: () => void
   purchased?: boolean
+  userLiked?: boolean
   purchaseDate?: string | Date
 }
 
 export function Recipe({
+  onHeartClick,
+  userLiked,
   id,
   onSave,
   purchased,
@@ -41,7 +45,7 @@ export function Recipe({
   duration,
   image,
   title,
-  reviews = 0,
+  likesCount: reviews = 0,
   postedOn,
   author,
   onClick,
@@ -58,14 +62,14 @@ export function Recipe({
     <div
       className={classNames(
         'm-0 p-0 shadow-lg rounded-lg',
-        fullWidth ? 'w-full' : 'max-w-80'
+        fullWidth ? 'w-full' : 'max-w-80',
       )}
     >
       <img
         onClick={onClick}
         className={classNames(
           'cursor-pointer object-cover rounded-t-lg',
-          fullWidth ? 'w-full' : 'max-w-80'
+          fullWidth ? 'w-full' : 'max-w-80',
         )}
         src={image}
         alt='recipe image'
@@ -90,7 +94,7 @@ export function Recipe({
                 color: categoryRenders.find((r) => r.value === category)
                   ?.color[0],
                 backgroundColor: categoryRenders.find(
-                  (r) => r.value === category
+                  (r) => r.value === category,
                 )?.color[1],
               }}
               className='px-5 py-3 rounded-full flex items-center gap-2'
@@ -134,7 +138,12 @@ export function Recipe({
           ) : null}
           <div className='flex items-center justify-around w-full bg-blue-100 c-secondary rounded-full py-2'>
             <span>Wow</span>
-            <Heart size={24} weight='fill' className='c-red translate-x--2.5' />
+            <Heart
+              size={24}
+              weight={userLiked ? 'fill' : 'thin'}
+              className='c-red translate-x--2.5 cursor-pointer'
+              onClick={onHeartClick}
+            />
             <span>{reviews}</span>
           </div>
           <div

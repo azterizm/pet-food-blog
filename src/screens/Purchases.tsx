@@ -35,7 +35,7 @@ export function Purchases(): ReactElement {
                 title={decodeURIComponent(recipe.title)}
                 author={author}
                 postedOn={recipe.createdAt!}
-                reviews={recipe.likesDisplay}
+                likesCount={recipe.likesDisplay}
                 image={API_ENDPOINT + recipe.mainImage}
                 duration={recipe.duration}
                 onClick={() => navigate('/recipes/read/' + recipe.id)}

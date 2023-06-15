@@ -3,14 +3,14 @@ import { ApiProcess } from '../types/api'
 
 export async function handleLike(
   id: string | number,
-  contentType: 'blog' | 'recipe'
+  contentType: 'blog' | 'recipe',
 ) {
   const data: ApiProcess = await fetch(
     API_ENDPOINT + `/${contentType}/like/` + id,
     {
       method: 'post',
       credentials: 'include',
-    }
+    },
   ).then((r) => r.json())
 
   if (data.error) return { error: true, info: data.info }

@@ -29,7 +29,7 @@ export const Sharing = ({
       ? undefined
       : async () => {
           try {
-            const data = await fetch(API_ENDPOINT + '/recipe/share/' + id, {
+            await fetch(API_ENDPOINT + '/recipe/share/' + id, {
               credentials: 'include',
               method: 'post',
             })
@@ -40,25 +40,43 @@ export const Sharing = ({
           }
         },
   }
+  async function onEmailShare() {
+    const url = window.location.href
+    const body = 'Hey! Check out this amazing website for dog recipes: ' + url
+    const subject = 'You got to see this website for dog recipes'
+    window.open(
+      `mailto:user@example.com?subject=${encodeURIComponent(
+        subject,
+      )}&body=${encodeURIComponent(body)}`,
+      '_blank',
+    )
+    if (!disableSharing)
+      await fetch(API_ENDPOINT + '/recipe/share/' + id, {
+        credentials: 'include',
+        method: 'post',
+      })
+        .then((r) => r.text())
+        .catch((_) => null)
+  }
   return (
-    <div className="flex items-center gap-5 flex-wrap text-3xl ml-5 my-auto justify-center">
+    <div className='flex items-center gap-5 flex-wrap text-3xl ml-5 my-auto justify-center'>
       <FacebookShareButton {...attr}>
-        <FaFacebookF size={20} className="text-button" />
+        <FaFacebookF size={20} className='text-button' />
       </FacebookShareButton>
       <TwitterShareButton {...attr}>
-        <FaTwitter size={20} className="text-button" />
+        <FaTwitter size={20} className='text-button' />
       </TwitterShareButton>
       <LinkedinShareButton {...attr}>
-        <FaLinkedinIn size={20} className="text-button" />
+        <FaLinkedinIn size={20} className='text-button' />
       </LinkedinShareButton>
       <RedditShareButton {...attr}>
-        <FaRedditAlien size={20} className="text-button" />
+        <FaRedditAlien size={20} className='text-button' />
       </RedditShareButton>
       <WhatsappShareButton {...attr}>
-        <FaWhatsapp size={20} className="text-button" />
+        <FaWhatsapp size={20} className='text-button' />
       </WhatsappShareButton>
-      <EmailShareButton {...attr}>
-        <FaEnvelope size={20} className="text-button" />
+      <EmailShareButton {...attr} onClick={onEmailShare}>
+        <FaEnvelope size={20} className='text-button' />
       </EmailShareButton>
     </div>
   )

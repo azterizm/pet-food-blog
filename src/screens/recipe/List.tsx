@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Recipe } from '../../components/home/Recipe'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT, PAGE_OFFSET } from '../../constants/api'
+import { handleLike } from '../../features/like'
 import { isSaved, onSave } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import {
@@ -22,18 +23,30 @@ import {
 export function RecipeList(): ReactElement {
   const navigate = useNavigate()
   const [user] = useAuth()
-  const [category, setCategory] = useState<Category>('meal')
+
+  const [category, setCategory] = useState<Category | null>(null)
   const [sort, setSort] = useState<AuthorSort>('new')
   const [showSort, setShowSort] = useState(false)
   const [page, setPage] = useState(0)
+  const [decrementLikeForRecipesId, setDecrementLikeForRecipesId] = useState<
+    number[]
+  >([])
+  const [incrementLikeForRecipesId, setIncrementLikeForRecipesId] = useState<
+    number[]
+  >([])
+
   const { data, error, loading } = useApi<{
-    recipes: (IRecipe & { author: IAuthor; saves: ISave[] })[]
+    recipes: (IRecipe & {
+      author: IAuthor
+      saves: ISave[]
+      userLiked: boolean
+    })[]
     authorTotalRecipes: AuthorTotalRecipe[]
     total: number
   }>(
     `/recipe/get_client_recipes/${category}/${sort}/${page * PAGE_OFFSET}`,
     { debounce: 800 },
-    [sort, category]
+    [sort, category],
   )
 
   const { state } = useLocation()
@@ -43,6 +56,21 @@ export function RecipeList(): ReactElement {
     if (category) setCategory(category)
   }, [])
 
+  async function onLike(id: number, userLiked: boolean) {
+    await handleLike(id, 'recipe')
+    if (decrementLikeForRecipesId.includes(id)) {
+      setDecrementLikeForRecipesId((e) => e.filter((r) => r !== id))
+      return
+    }
+    if (incrementLikeForRecipesId.includes(id)) {
+      setIncrementLikeForRecipesId((e) => e.filter((r) => r !== id))
+      return
+    }
+
+    if (userLiked) setDecrementLikeForRecipesId((e) => [...e, id])
+    else setIncrementLikeForRecipesId((e) => [...e, id])
+  }
+
   return (
     <div className='min-h-100vh'>
       <div className='text-center my-10'>
@@ -50,6 +78,15 @@ export function RecipeList(): ReactElement {
         <span>All the food your pet ever needs.</span>
       </div>
       <div className='justify-center mt-5 flex flex-wrap items-center gap-5'>
+        <div
+          className={
+            'block px-5 py-2 rounded-full cursor-pointer ' +
+            (!category ? 'bg-primary c-white' : 'bg-gray-300 c-black')
+          }
+          onClick={() => setCategory(null)}
+        >
+          All
+        </div>
         {categories.map((r, i) => (
           <div
             className={
@@ -105,13 +142,25 @@ export function RecipeList(): ReactElement {
           <div className='flex flex-wrap gap-10 items-start'>
             {data.recipes.map((r) => (
               <Recipe
+                onHeartClick={() => onLike(r.id!, r.userLiked)}
                 author={r.author}
+                userLiked={
+                  incrementLikeForRecipesId.includes(r.id!)
+                    ? true
+                    : decrementLikeForRecipesId.includes(r.id!)
+                    ? false
+                    : r.userLiked
+                }
                 id={r.id!}
                 duration={r.duration}
                 image={API_ENDPOINT + r.mainImage}
                 postedOn={r.createdAt!}
-                reviews={r.likesDisplay}
-                title={r.title}
+                likesCount={
+                  r.likesDisplay +
+                  (incrementLikeForRecipesId.includes(r.id!) ? 1 : 0) -
+                  (decrementLikeForRecipesId.includes(r.id!) ? 1 : 0)
+                }
+                title={decodeURIComponent(r.title)}
                 onClick={() => navigate('/recipes/read/' + r.id)}
                 priceType={r.priceType}
                 key={r.id}
