@@ -1,6 +1,7 @@
 import { IAuthor } from '@backend/models/author'
 import { IRecipe } from '@backend/models/recipe'
 import { ISocialMedia } from '@backend/models/socialMedia'
+import classNames from 'classnames'
 import { capitalize } from 'lodash'
 import { Check, UserMinus, UserPlus } from 'phosphor-react'
 import { ReactElement, useEffect, useState } from 'react'
@@ -27,10 +28,13 @@ export function AuthorProfile(): ReactElement {
       recipes: IRecipe[]
       socialMedia: ISocialMedia[]
       subscribed: boolean
+      following: boolean
     }
   >('/author/one/' + id)
   const [showUnsubscribeDialog, setShowUnsubscribeDialog] = useState(false)
   const [showSubscribeDialog, setShowSubscribeDialog] = useState(false)
+  const [following, setFollowing] = useState(false)
+  const [apiLoading, setApiLoading] = useState(false)
 
   useUndefinedParam(id)
 
@@ -39,19 +43,36 @@ export function AuthorProfile(): ReactElement {
     else fade.hide()
     return () => fade.hide()
   }, [showSubscribeDialog, showUnsubscribeDialog])
+  useEffect(() => {
+    if (data?.following) setFollowing(true)
+  }, [data])
 
   async function onSubscribe(proceed: boolean) {
     if (!user) return navigate('/login')
+    setApiLoading(true)
     const data = await fetch(
       `${API_ENDPOINT}/user/${proceed ? 'subscribe' : 'unsubscribe'}/${id}`,
       {
         credentials: 'include',
         method: 'post',
-      }
+      },
     ).then((r) => r.json())
+    setApiLoading(false)
     if (data.error) return alert(data.info)
     refetchUser()
     window.location.reload()
+  }
+
+  async function onFollow() {
+    if (!user) return navigate('/login')
+    setApiLoading(true)
+    const response = await fetch(`${API_ENDPOINT}/follow/${id}`, {
+      credentials: 'include',
+      method: 'post',
+    }).then((r) => r.json())
+    setApiLoading(false)
+    if (response.error) return alert(response.info)
+    setFollowing((e) => !e)
   }
 
   return (
@@ -79,26 +100,46 @@ export function AuthorProfile(): ReactElement {
             </div>
             <p className='text-center max-w-100'>{data.bio}</p>
 
-            {user?.type === 'author' &&
-            user.id == id ? null : data.subscribeCost > 0 &&
-              !data.subscribed ? (
-              <button
-                onClick={() => setShowSubscribeDialog(true)}
-                className='bg-primary c-white px-5 py-3 rounded-full text-lg font-bold border-none'
-              >
-                Subscribe for {data.subscribeCost}$/month
-              </button>
-            ) : null}
+            {apiLoading ? (
+              <p className='text-sm font-bold font-italic'>Loading...</p>
+            ) : (
+              <div>
+                {user?.type === 'author' && user.id === id ? null : (
+                  <button
+                    onClick={onFollow}
+                    className={classNames(
+                      'px-5 py-2 text-xl rounded-full font-bold',
+                      following
+                        ? 'bg-white border-1 border-secondary text-secondary'
+                        : 'bg-secondary text-white border-none',
+                    )}
+                  >
+                    {following ? 'Following' : 'Follow'}
+                  </button>
+                )}
 
-            {data.subscribed ? (
-              <div
-                className='cursor-pointer flex-center gap-2 border-2 border-primary px-5 py-3 rounded-full'
-                onClick={() => setShowUnsubscribeDialog((e) => !e)}
-              >
-                <span>Subscribed</span>
-                <Check />
+                {user?.type === 'author' &&
+                user.id == id ? null : data.subscribeCost > 0 &&
+                  !data.subscribed ? (
+                  <button
+                    onClick={() => setShowSubscribeDialog(true)}
+                    className='bg-primary c-white px-5 py-3 rounded-full text-lg font-bold border-none'
+                  >
+                    Subscribe for {data.subscribeCost}$/month
+                  </button>
+                ) : null}
+
+                {data.subscribed ? (
+                  <div
+                    className='cursor-pointer flex-center gap-2 border-2 border-primary px-5 py-3 rounded-full'
+                    onClick={() => setShowUnsubscribeDialog((e) => !e)}
+                  >
+                    <span>Subscribed</span>
+                    <Check />
+                  </div>
+                ) : null}
               </div>
-            ) : null}
+            )}
           </div>
 
           <div className='flex flex-wrap gap-10 items-center'>
@@ -111,6 +152,7 @@ export function AuthorProfile(): ReactElement {
                 author={data}
                 id={r.id!}
                 {...r}
+                title={decodeURIComponent(r.title)}
               />
             ))}
           </div>
