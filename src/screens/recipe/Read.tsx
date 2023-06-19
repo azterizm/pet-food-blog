@@ -219,6 +219,8 @@ export function RecipeRead(): ReactElement {
             </div>
 
             <LikeSection
+              originalId={data.originalId}
+              availableLanguages={data.availableLanguages}
               liked={liked}
               onLike={setLiked}
               onPrint={() => navigate('/recipes/read/print/' + id)}
