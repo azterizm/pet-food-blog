@@ -80,5 +80,5 @@ export interface RecipeReadData extends IRecipe {
   popular: (IRecipe & { likes: number })[]
   likes: number
   vetinfo?: IVetInfo
-  subscribed: boolean
+  following: boolean
 }

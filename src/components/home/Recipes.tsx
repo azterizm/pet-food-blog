@@ -14,7 +14,11 @@ import { Recipe } from './Recipe'
 
 export function Recipes(): ReactElement {
   const { data, error, loading } = useApi<{
-    recipes: (IRecipe & { author: IAuthor })[]
+    recipes: (IRecipe & {
+      author: IAuthor
+
+      userLiked: boolean
+    })[]
     authorTotalRecipes: AuthorTotalRecipe[]
     saves: ISave[]
   }>(`/recipe/get_client_feat`)
@@ -61,6 +65,7 @@ export function Recipes(): ReactElement {
               duration={r.duration}
               priceType={r.priceType}
               price={r.price}
+              userLiked={r.userLiked}
               authorTotalRecipes={
                 data.authorTotalRecipes.find((v) => v.id === r.author.id)
                   ?.total || 0

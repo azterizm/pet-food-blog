@@ -31,6 +31,7 @@ export function Purchases(): ReactElement {
             .filter((r) => r.recipeId)
             .map(({ recipe, author, createdAt }) => (
               <Recipe
+                hideLike
                 key={recipe.id}
                 title={decodeURIComponent(recipe.title)}
                 author={author}

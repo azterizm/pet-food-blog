@@ -19,12 +19,7 @@ export function Saved(): ReactElement {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!user)
-      navigate('/login', {
-        state: {
-          redirect: '/saved',
-        },
-      })
+    if (!user) navigate('/login', { state: { redirect: '/saved' } })
   }, [])
 
   return (
@@ -46,6 +41,8 @@ export function Saved(): ReactElement {
               {...r.recipe}
               saved={isSaved({ data: { saves: data }, user, id: r.recipe.id })}
               onSave={() => onSave({ user, id: r.recipe.id })}
+              likesCount={r.recipe.likesDisplay}
+              hideLike
             />
           ))}
         </div>

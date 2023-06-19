@@ -1,6 +1,8 @@
+import classNames from 'classnames'
 import { Heart } from 'phosphor-react'
-import HelmetExport, { Helmet } from 'react-helmet'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
+import { Helmet } from 'react-helmet'
+import { FaExclamationTriangle } from 'react-icons/fa'
 import { Portal } from 'react-portal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AuthorProfileImage } from '../../components/AuthorProfileImage'
@@ -11,15 +13,13 @@ import { LikeSection } from '../../components/recipe/LikeSection'
 import { ReadContent } from '../../components/recipe/ReadContent'
 import { Recommendation } from '../../components/recipe/Recommendation'
 import { API_ENDPOINT } from '../../constants/api'
+import '../../css/recipe_read.css'
+import { handleLike } from '../../features/like'
 import { onSave } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import { useFade } from '../../hooks/state'
 import { ApiProcess, RecipeReadData } from '../../types/api'
-import '../../css/recipe_read.css'
-import { handleLike } from '../../features/like'
 import { constructRecipeSchema } from '../../util/seo'
-import classNames from 'classnames'
-import { FaExclamationTriangle } from 'react-icons/fa'
 
 export function RecipeRead(): ReactElement {
   const { id } = useParams() as { id: string }
@@ -28,17 +28,20 @@ export function RecipeRead(): ReactElement {
     {
       onSuccess: (r) => {
         const d = data || r
-        if (d) setLiked(d.userLiked)
+        if (d) setLiked(d.userLiked), setFollowing(d.following)
       },
     },
     [id],
   )
 
   const navigate = useNavigate()
-  const [liked, setLiked] = useState(false)
   const [user, changeUser] = useAuth()
-  const [confirmPurchase, setConfirmPurchase] = useState(false)
   const fade = useFade()
+
+  const [liked, setLiked] = useState(false)
+  const [confirmPurchase, setConfirmPurchase] = useState(false)
+  const [apiLoading, setApiLoading] = useState(false)
+  const [following, setFollowing] = useState(false)
 
   useEffect(() => {
     if (!id) window.location.href = '/'
@@ -94,6 +97,18 @@ export function RecipeRead(): ReactElement {
     setLiked((e) => !e)
   }
 
+  async function onFollow() {
+    if (!user) return navigate('/login')
+    setApiLoading(true)
+    const response = await fetch(`${API_ENDPOINT}/follow/${data?.authorId}`, {
+      credentials: 'include',
+      method: 'post',
+    }).then((r) => r.json())
+    setApiLoading(false)
+    if (response.error) return alert(response.info)
+    setFollowing((e) => !e)
+  }
+
   return (
     <div
       className={classNames(
@@ -127,18 +142,25 @@ export function RecipeRead(): ReactElement {
                 <AuthorProfileImage
                   className='rounded-full w-25 h-25 object-cover'
                   author={data.author}
+                  onClick={() => navigate('/authors/' + data.authorId)}
                 />
-                <div onClick={() => navigate('/authors/' + data.author.id)}>
-                  <p className='m-0 mb-2'>{data.author.name}</p>
+                <div onClick={onFollow}>
+                  <p
+                    onClick={() => navigate('/authors/' + data.authorId)}
+                    className='m-0 mb-2'
+                  >
+                    {data.author.name}
+                  </p>
                   <button
+                    disabled={apiLoading}
                     className={
-                      'font-bold text-center rounded-full block w-full border-0 py-2 ' +
-                      (data.subscribed
+                      'font-bold text-center rounded-full block w-full border-0 py-2 disabled:opacity-50 ' +
+                      (following
                         ? 'bg-white border-2 border-button text-button'
                         : 'bg-button text-white')
                     }
                   >
-                    {data.subscribed ? 'Following' : 'Follow'}
+                    {following ? 'Following' : 'Follow'}
                   </button>
                 </div>
               </div>

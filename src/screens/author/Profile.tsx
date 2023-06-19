@@ -25,7 +25,7 @@ export function AuthorProfile(): ReactElement {
   const [user, _, refetchUser] = useAuth()
   const { data, loading, error } = useApi<
     IAuthor & {
-      recipes: IRecipe[]
+      recipes: (IRecipe & { userLiked: boolean })[]
       socialMedia: ISocialMedia[]
       subscribed: boolean
       following: boolean
@@ -153,6 +153,7 @@ export function AuthorProfile(): ReactElement {
                 id={r.id!}
                 {...r}
                 title={decodeURIComponent(r.title)}
+                likesCount={r.likesDisplay}
               />
             ))}
           </div>

@@ -56,21 +56,6 @@ export function RecipeList(): ReactElement {
     if (category) setCategory(category)
   }, [])
 
-  async function onLike(id: number, userLiked: boolean) {
-    await handleLike(id, 'recipe')
-    if (decrementLikeForRecipesId.includes(id)) {
-      setDecrementLikeForRecipesId((e) => e.filter((r) => r !== id))
-      return
-    }
-    if (incrementLikeForRecipesId.includes(id)) {
-      setIncrementLikeForRecipesId((e) => e.filter((r) => r !== id))
-      return
-    }
-
-    if (userLiked) setDecrementLikeForRecipesId((e) => [...e, id])
-    else setIncrementLikeForRecipesId((e) => [...e, id])
-  }
-
   return (
     <div className='min-h-100vh'>
       <div className='text-center my-10'>
@@ -142,7 +127,6 @@ export function RecipeList(): ReactElement {
           <div className='flex flex-wrap gap-10 items-start'>
             {data.recipes.map((r) => (
               <Recipe
-                onHeartClick={() => onLike(r.id!, r.userLiked)}
                 author={r.author}
                 userLiked={
                   incrementLikeForRecipesId.includes(r.id!)
