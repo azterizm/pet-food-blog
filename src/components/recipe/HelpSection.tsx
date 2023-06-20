@@ -29,7 +29,7 @@ export const HelpSection = (props: Props) => (
           </span>
         </div>
       </div>
-      <Sharing id={props.recipeId} />
+      <Sharing recipe={props.recipe} />
     </div>
   </div>
 )

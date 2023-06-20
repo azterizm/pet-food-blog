@@ -9,7 +9,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Recipe } from '../../components/home/Recipe'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT, PAGE_OFFSET } from '../../constants/api'
-import { handleLike } from '../../features/like'
 import { isSaved, onSave } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import {
@@ -28,12 +27,6 @@ export function RecipeList(): ReactElement {
   const [sort, setSort] = useState<AuthorSort>('new')
   const [showSort, setShowSort] = useState(false)
   const [page, setPage] = useState(0)
-  const [decrementLikeForRecipesId, setDecrementLikeForRecipesId] = useState<
-    number[]
-  >([])
-  const [incrementLikeForRecipesId, setIncrementLikeForRecipesId] = useState<
-    number[]
-  >([])
 
   const { data, error, loading } = useApi<{
     recipes: (IRecipe & {
@@ -127,23 +120,16 @@ export function RecipeList(): ReactElement {
           <div className='flex flex-wrap gap-10 items-start'>
             {data.recipes.map((r) => (
               <Recipe
+                intro={r.intro}
+                mainImage={r.mainImage}
+                tags={r.tags}
                 author={r.author}
-                userLiked={
-                  incrementLikeForRecipesId.includes(r.id!)
-                    ? true
-                    : decrementLikeForRecipesId.includes(r.id!)
-                    ? false
-                    : r.userLiked
-                }
+                userLiked={r.userLiked}
                 id={r.id!}
                 duration={r.duration}
                 image={API_ENDPOINT + r.mainImage}
                 postedOn={r.createdAt!}
-                likesCount={
-                  r.likesDisplay +
-                  (incrementLikeForRecipesId.includes(r.id!) ? 1 : 0) -
-                  (decrementLikeForRecipesId.includes(r.id!) ? 1 : 0)
-                }
+                likesCount={r.likesDisplay}
                 title={decodeURIComponent(r.title)}
                 onClick={() => navigate('/recipes/read/' + r.id)}
                 priceType={r.priceType}

@@ -48,6 +48,9 @@ export function Recipes(): ReactElement {
         >
           {data.recipes.map((r) => (
             <Recipe
+              intro={r.intro}
+              mainImage={r.mainImage}
+              tags={r.tags}
               fullWidth
               id={r.id!}
               author={r.author}

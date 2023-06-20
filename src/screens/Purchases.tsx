@@ -31,6 +31,9 @@ export function Purchases(): ReactElement {
             .filter((r) => r.recipeId)
             .map(({ recipe, author, createdAt }) => (
               <Recipe
+                intro={recipe.intro}
+                mainImage={recipe.mainImage}
+                tags={recipe.tags}
                 hideLike
                 key={recipe.id}
                 title={decodeURIComponent(recipe.title)}

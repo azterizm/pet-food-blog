@@ -33,11 +33,17 @@ interface Props {
   userLiked?: boolean
   purchaseDate?: string | Date
   hideLike?: boolean
+  mainImage: string
+  tags: string[]
+  intro: string
 }
 
 export function Recipe({
   onHeartClick,
   hideLike,
+  intro,
+  mainImage,
+  tags,
   userLiked,
   id,
   onSave,
@@ -126,7 +132,10 @@ export function Recipe({
 
         <div className='mt-8 flex items-center flex-col gap-2 w-full'>
           {showShare ? (
-            <Sharing disableSharing id={id} />
+            <Sharing
+              disableSharing
+              recipe={{ id, intro, title, mainImage, tags }}
+            />
           ) : (
             <button
               onClick={() => setShowShare(true)}
