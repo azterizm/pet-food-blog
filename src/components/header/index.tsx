@@ -1,10 +1,11 @@
 import { CaretUp, List, MagnifyingGlass, User, X } from 'phosphor-react'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { animated, useSpringValue } from '@react-spring/web'
 import { CREATOR_ENDPOINT } from '../../constants/api'
 import { AuthUser } from '../../types/auth'
 import { MobileMenu } from '../header/MobileMenu'
+import classNames from 'classnames'
 
 interface Props {
   user: AuthUser | null
@@ -13,6 +14,7 @@ interface Props {
 export function Header({ user }: Props) {
   const [menuOpen, setMenuOpen] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
   const [removeHint, setRemoveHint] = useState(false)
   const hintOpacity = useSpringValue(0, {
     onRest: (res) => {
@@ -39,18 +41,42 @@ export function Header({ user }: Props) {
           <img className='w-50' src='/logo.svg' alt='logo' />
         </Link>
         <div className='items-center gap-6 font-bold hidden lg:flex'>
-          <Link className='no-underline c-black' to='/recipes'>
+          <Link
+            className={classNames(
+              'no-underline',
+              location.pathname.includes('recipes') ? 'c-secondary' : 'c-black',
+            )}
+            to='/recipes'
+          >
             Recipes
           </Link>
-          <Link className='no-underline c-black' to='/blog'>
+          <Link
+            className={classNames(
+              'no-underline',
+              location.pathname.includes('blog') ? 'c-secondary' : 'c-black',
+            )}
+            to='/blog'
+          >
             Topics
           </Link>
 
           <div className='w-0.5 h-5 bg-black'></div>
-          <Link className='no-underline c-black' to='/free'>
+          <Link
+            className={classNames(
+              'no-underline',
+              location.pathname.includes('free') ? 'c-secondary' : 'c-black',
+            )}
+            to='/free'
+          >
             Free Stuff
           </Link>
-          <Link className='no-underline c-black' to='/saved'>
+          <Link
+            className={classNames(
+              'no-underline',
+              location.pathname.includes('saved') ? 'c-secondary' : 'c-black',
+            )}
+            to='/saved'
+          >
             Saved
           </Link>
         </div>

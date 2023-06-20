@@ -18,7 +18,7 @@ interface ApiReturn<T> {
 export function useApi<T>(
   path: string,
   options?: ApiOptions,
-  deps: any[] = []
+  deps: any[] = [],
 ): ApiReturn<T> {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<null | string>(null)
@@ -34,7 +34,7 @@ export function useApi<T>(
     url.pathname = path
     if (options && options.params)
       Object.keys(options.params).map((r) =>
-        url.searchParams.append(r, options.params![r])
+        url.searchParams.append(r, options.params![r]),
       )
 
     if (options && options.debounce) {
@@ -51,7 +51,7 @@ export function useApi<T>(
       url,
       !options
         ? { credentials: 'include' }
-        : Object.assign(options, { credentials: 'include' })
+        : Object.assign(options, { credentials: 'include' }),
     )
       .then((r) => r.json())
       .catch((r) => ({ error: true, info: r.message }))
@@ -63,7 +63,7 @@ export function useApi<T>(
             'Fetch request failed on',
             url.href,
             'with info',
-            r.info
+            r.info,
           )
 
           setError(r.info)
@@ -85,7 +85,7 @@ export function useAuth() {
   const [loading, setLoading] = useState(true)
 
   useLayoutEffect(() => {
-    fetch()
+    fetchUser()
   }, [])
 
   function changeUser(arg: AuthUser) {
@@ -93,7 +93,7 @@ export function useAuth() {
     localStorage.setItem('user', JSON.stringify(arg))
   }
 
-  function fetch(force: boolean = false) {
+  function fetchUser(force: boolean = false) {
     setLoading(true)
     getUser(force).then((r) => {
       if (!r) return
@@ -103,13 +103,13 @@ export function useAuth() {
   }
 
   function refetch() {
-    fetch(true)
+    fetchUser(true)
   }
 
   return [user, changeUser, refetch, loading] as [
     null | AuthUser,
     (arg: AuthUser) => void,
     () => void,
-    boolean
+    boolean,
   ]
 }

@@ -12,15 +12,16 @@ import { isSaved, onSave } from '../features/save'
 import { useApi, useAuth } from '../hooks/api'
 
 export function Saved(): ReactElement {
-  const [user] = useAuth()
+  const [user, _, __, loadingUser] = useAuth()
   const { data, error, loading } = useApi<
     (ISave & { recipe: IRecipe & { author: IAuthor; likes: ILike[] } })[]
   >('/recipe/saved', undefined, [user])
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!user) navigate('/login', { state: { redirect: '/saved' } })
-  }, [])
+    if (!user && !loadingUser)
+      navigate('/login', { state: { redirect: '/saved' } })
+  }, [user, loadingUser])
 
   return (
     <div className='min-h-100vh w-full'>

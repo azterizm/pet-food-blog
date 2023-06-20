@@ -2,16 +2,16 @@ import classNames from 'classnames'
 import { Heart } from 'phosphor-react'
 import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { FaExclamationTriangle } from 'react-icons/fa'
-import { Portal } from 'react-portal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AuthorProfileImage } from '../../components/AuthorProfileImage'
 import { ErrorDialog } from '../../components/ErrorDialog'
 import { Loader } from '../../components/Loader'
 import { NotPaidDialog } from '../../components/NotPaidDialog'
 import { LikeSection } from '../../components/recipe/LikeSection'
+import PurchaseDialog from '../../components/recipe/PurchaseDialog'
 import { ReadContent } from '../../components/recipe/ReadContent'
 import { Recommendation } from '../../components/recipe/Recommendation'
+import UnpublishedBanner from '../../components/recipe/UnpublishedBanner'
 import { API_ENDPOINT } from '../../constants/api'
 import '../../css/recipe_read.css'
 import { handleLike } from '../../features/like'
@@ -268,51 +268,20 @@ export function RecipeRead(): ReactElement {
                 items={data.popular}
                 contentType='recipe'
               />
-              <div className='absolute top-60 left-0 w-[200vw] ml-[-20%] h-120 bg-gray-100 z--1' />
+              <div className='absolute top-60 -left-5 lg:-left-10 xl:-left-30 w-[200vw] h-140 bg-gray-100 z--1' />
             </div>
           )}
 
           {confirmPurchase ? (
-            <Portal>
-              <div className='shadow-lg fixed-center bg-white p-8 rounded-lg text-center c-primary max-w-100'>
-                <h3>Are you sure that you want to purchase this recipe?</h3>
-                <div className='flex gap-5 justify-center'>
-                  <button
-                    onClick={() => (
-                      onPurchase(), fade.hide(), setConfirmPurchase(false)
-                    )}
-                    className='rounded-lg font-bold px-5 py-3 c-white bg-secondary border-none'
-                  >
-                    Purchase
-                  </button>
-                  <button
-                    onClick={() => (setConfirmPurchase(false), fade.hide())}
-                    className='bg-transparent c-primary font-bold border-none'
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </Portal>
+            <PurchaseDialog
+              onCancel={() => (setConfirmPurchase(false), fade.hide())}
+              onPurchase={() => (
+                onPurchase(), fade.hide(), setConfirmPurchase(false)
+              )}
+            />
           ) : null}
           {data.status !== 'published' ? (
-            <Portal>
-              <div className='fixed bottom-5 right-5 p-5 rounded-lg bg-blue-700 text-white max-w-[24rem]'>
-                <div className='flex items-center gap-4'>
-                  <FaExclamationTriangle size={24} />
-                  <p className='m-0 text-lg font-bold'>
-                    Recipe cannot be seen by public yet
-                  </p>
-                </div>
-                <p className='m-0 mt-4'>
-                  {data.status === 'pending'
-                    ? 'Your recipe is being reviewed by So Pawlicious Team. Please be patient.'
-                    : data.status === 'scheduled'
-                    ? 'The recipe is scheduled to be posted later.'
-                    : 'This recipe is not completed and saved temporarily.'}
-                </p>
-              </div>
-            </Portal>
+            <UnpublishedBanner status={data.status} />
           ) : null}
         </div>
       )}
