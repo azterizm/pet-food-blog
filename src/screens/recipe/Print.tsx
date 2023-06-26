@@ -1,8 +1,8 @@
 import { X } from 'phosphor-react'
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react'
-import { FaCog, FaPrint } from 'react-icons/fa'
+import { FaArrowLeft, FaCog, FaPrint } from 'react-icons/fa'
 import ReactToPrint from 'react-to-print'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Loader } from '../../components/Loader'
 import { ReadContent } from '../../components/recipe/ReadContent'
 import { API_ENDPOINT } from '../../constants/api'
@@ -21,6 +21,7 @@ export function PrintRecipe(): ReactElement {
     error,
     loading: apiLoading,
   } = useApi<RecipeReadData>('/recipe/read/' + id)
+  const navigate = useNavigate()
   const header = useHeaderFooter()
   const [showOptions, setShowOptions] = useState(false)
   const [options, setOptions] = useState<Option[]>(['image', 'notes'])
@@ -43,7 +44,7 @@ export function PrintRecipe(): ReactElement {
 
   function handleToggleOption(arg: Option) {
     setOptions((e) =>
-      e.includes(arg) ? e.filter((r) => r !== arg) : [...e, arg]
+      e.includes(arg) ? e.filter((r) => r !== arg) : [...e, arg],
     )
   }
 
@@ -51,10 +52,17 @@ export function PrintRecipe(): ReactElement {
     <div className='w-full'>
       <div className='border-b-2 border-gray-200'>
         <div className={`flex items-center p-5 ${showOptions ? 'pb-0' : ''}`}>
+          <button
+            onClick={() => navigate(-1)}
+            className='flex items-center bg-white border-button mr-4 border-2 rounded-lg px-5 py-2 hover:bg-gray-200'
+          >
+            <FaArrowLeft size={16} className='text-button mr-2' />
+            <span className='text-md font-medium text-button'>Go back</span>
+          </button>
           <ReactToPrint
             onPrintError={() =>
               alert(
-                'Error occurred when creating element for printing. Please try again.'
+                'Error occurred when creating element for printing. Please try again.',
               )
             }
             onBeforeGetContent={onBeforeGet}

@@ -130,12 +130,13 @@ export function RecipeRead(): ReactElement {
       ) : (error && !errorUnpaid) || !data ? (
         <ErrorDialog text={error || 'Recipe not found'} />
       ) : (
-        <div id='recipe_read'>
+        <div id='recipe_read' className='my-8'>
           <div className='max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2'>
             <img
               src={API_ENDPOINT + data.mainImage}
               alt='recipe image'
               className='max-w-unset! w-screen md:w-full md:rounded-r-lg mx--10 h-full object-cover'
+              id='recipe_image'
             />
             <div className='flex justify-center flex-col items-start'>
               <div className='flex justify-start items-center gap-4 mt-4 lg:mt-0'>

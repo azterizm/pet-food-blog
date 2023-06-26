@@ -1,8 +1,5 @@
 import { useState } from 'react'
-import { redirect, useNavigate, useParams } from 'react-router-dom'
-import { useAuth } from '../../hooks/api'
 import { DonateStatus } from '../../types/ui'
-import { AuthorProfileImage } from '../AuthorProfileImage'
 import { Loader } from '../Loader'
 import { ProfileImage } from '../ProfileImage'
 
@@ -13,23 +10,15 @@ interface Props {
   onReset?: () => void
 }
 
+const prices = [2, 5, 20].map((r) => r - 0.01)
 export const Donate = (props: Props) => {
-  const [selectedAmount, setSelectedAmount] = useState<null | number>(null)
+  const [selectedIndex, setSelectedIndex] = useState<null | number>(null)
   const [showNoteInput, setShowNoteInput] = useState(false)
   const [note, setNote] = useState('')
-  const [user] = useAuth()
-  const navigate = useNavigate()
-  const params = useParams()
 
   function onConfirm() {
-    if (!selectedAmount) return
-    if (!user)
-      return navigate('/login', {
-        state: {
-          redirect: params?.id ? '/recipes/read/' + params?.id : '',
-        },
-      })
-    props.onDonate(selectedAmount)
+    if (!selectedIndex) return
+    props.onDonate(selectedIndex)
   }
   function onAddNote() {
     setShowNoteInput(true)
@@ -37,13 +26,6 @@ export const Donate = (props: Props) => {
 
   function onCancelNote() {
     setShowNoteInput(false)
-  }
-
-  function onReset() {
-    setShowNoteInput(false)
-    setSelectedAmount(null)
-    setNote('')
-    if (props.onReset) props.onReset()
   }
 
   return (
@@ -55,21 +37,21 @@ export const Donate = (props: Props) => {
       <ProfileImage className='w-30 h-30 rounded-full mx-auto block' />
 
       <p className='text-center'>
-        {props.name} is supported by generiosity of followers like you.
+        {props.name} is supported by generosity of followers like you.
       </p>
       {props.status === DonateStatus.Idle ? (
         <div className='flex-center gap-2'>
-          {[2, 5, 20].map((r, i) => (
+          {prices.map((r, i) => (
             <button
               key={i}
-              onClick={() => setSelectedAmount(r)}
+              onClick={() => setSelectedIndex(i)}
               className={
                 'text-white px-5 py-3 rounded-full bg-neutral-200 border-0 text-xl font-bold ' +
-                (selectedAmount === r ? 'opacity-100' : 'opacity-50')
+                (selectedIndex === i ? 'opacity-100' : 'opacity-50')
               }
               style={{ backgroundColor: ['#72c9c3', '#45b2ab', '#3a9691'][i] }}
             >
-              {r - 0.01}$
+              {r}$
             </button>
           ))}
         </div>
@@ -78,17 +60,11 @@ export const Donate = (props: Props) => {
       ) : props.status === DonateStatus.Done ? (
         <div className='flex-center flex-col'>
           <p className='text-xl font-bold'>
-            Successfully Donated {selectedAmount || '0'}$!
+            Donating {prices[selectedIndex || 0] || '0'}$
           </p>
-          <button
-            onClick={onReset}
-            className='bg-white c-secondary font-bold border-0 text-lg'
-          >
-            Donate again
-          </button>
         </div>
       ) : null}
-      {selectedAmount && props.status === DonateStatus.Idle ? (
+      {selectedIndex !== null && props.status === DonateStatus.Idle ? (
         <>
           <button
             onClick={onConfirm}

@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Footer } from './components/Footer'
 import { Header } from './components/header'
@@ -8,72 +8,73 @@ import { useFade, useHeaderFooter } from './hooks/state'
 import { lazyImport } from './util/ui'
 import 'swiper/css'
 
+const Donate = lazy(() => import('./screens/recipe/Donate'))
 const { PrintRecipe } = lazyImport(
   () => import('./screens/recipe/Print'),
-  'PrintRecipe'
+  'PrintRecipe',
 )
 const { Home } = lazyImport(() => import('./screens/Home'), 'Home')
 const { PastDeposits } = lazyImport(
   () => import('./screens/PastDeposits'),
-  'PastDeposits'
+  'PastDeposits',
 )
 const { AuthorList } = lazyImport(
   () => import('./screens/author/List'),
-  'AuthorList'
+  'AuthorList',
 )
 const { AuthorProfile } = lazyImport(
   () => import('./screens/author/Profile'),
-  'AuthorProfile'
+  'AuthorProfile',
 )
 const { NotFound } = lazyImport(() => import('./screens/NotFound'), 'NotFound')
 const { Profile } = lazyImport(() => import('./screens/Profile'), 'Profile')
 const { Purchases } = lazyImport(
   () => import('./screens/Purchases'),
-  'Purchases'
+  'Purchases',
 )
 const { RecipeList } = lazyImport(
   () => import('./screens/recipe/List'),
-  'RecipeList'
+  'RecipeList',
 )
 const { RecipeRead } = lazyImport(
   () => import('./screens/recipe/Read'),
-  'RecipeRead'
+  'RecipeRead',
 )
 const { Register } = lazyImport(() => import('./screens/Register'), 'Register')
 const { Search } = lazyImport(() => import('./screens/Search'), 'Search')
 const { Login } = lazyImport(() => import('./screens/Login'), 'Login')
 const { Subscribed } = lazyImport(
   () => import('./screens/Subscribed'),
-  'Subscribed'
+  'Subscribed',
 )
 const { FreeStuff } = lazyImport(
   () => import('./screens/FreeStuff'),
-  'FreeStuff'
+  'FreeStuff',
 )
 const { Saved } = lazyImport(() => import('./screens/Saved'), 'Saved')
 const { List: BlogList } = lazyImport(
   () => import('./screens/blog/List'),
-  'List'
+  'List',
 )
 const { Read: BlogRead } = lazyImport(
   () => import('./screens/blog/Read'),
-  'Read'
+  'Read',
 )
 const { SuccessPayment } = lazyImport(
   () => import('./screens/payment/Success'),
-  'SuccessPayment'
+  'SuccessPayment',
 )
 const { CanceledPayment } = lazyImport(
   () => import('./screens/payment/Canceled'),
-  'CanceledPayment'
+  'CanceledPayment',
 )
 const { FailedBank } = lazyImport(
   () => import('./screens/bank/Failed'),
-  'FailedBank'
+  'FailedBank',
 )
 const { SuccessBank } = lazyImport(
   () => import('./screens/bank/Success'),
-  'SuccessBank'
+  'SuccessBank',
 )
 
 function App() {
@@ -107,8 +108,9 @@ function App() {
             </>
           ) : null}
           <Route path='recipes'>
+            <Route path='donate' element={<Donate />} />
             <Route path='read/print/:id' element={<PrintRecipe />} />
-            <Route path='read/:id' element={<RecipeRead />} />
+            <Route path='read/:id/:slug?' element={<RecipeRead />} />
             <Route index element={<RecipeList />} />
           </Route>
           <Route path='authors'>

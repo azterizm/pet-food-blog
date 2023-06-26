@@ -2,7 +2,7 @@ import { IAuthor } from '@backend/models/author'
 import { IRecipe } from '@backend/models/recipe'
 import { Check, Circle } from 'phosphor-react'
 import { ReactElement, useRef, useState } from 'react'
-import { donateAuthor } from '../../features/author'
+import { API_ENDPOINT } from '../../constants/api'
 import { ApiProcess } from '../../types/api'
 import { DonateStatus } from '../../types/ui'
 import { Donate } from './Donate'
@@ -39,15 +39,26 @@ export function ReadContent({
   const containerRef = useRef<HTMLDivElement>(null)
   const [doneSteps, setDoneSteps] = useState<number[]>([])
 
-  async function onDonate(amount: number) {
-    if (!amount) return
+  async function onDonate(index: number) {
+    if (!index) return
     setDonateStatus(DonateStatus.Process)
-    const data: ApiProcess = await donateAuthor({
-      id: props.data.author.id!,
-      amount,
-    })
+    const data: ApiProcess = await fetch(
+      API_ENDPOINT +
+        '/donate/create/' +
+        props.data.id +
+        '/' +
+        props.data.authorId +
+        '/' +
+        index,
+      {
+        method: 'post',
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+      },
+    ).then((r) => r.json())
     setDonateStatus(DonateStatus.Process)
     if (data.error) return alert(data.info)
+    window.location.href = (data as any).url
     setDonateStatus(DonateStatus.Done)
   }
 

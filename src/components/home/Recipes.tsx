@@ -61,7 +61,7 @@ export function Recipes(): ReactElement {
               }
               postedOn={r.createdAt!}
               likesCount={r.likesDisplay}
-              onClick={() => navigate('/recipes/read/' + r.id)}
+              onClick={() => navigate('/recipes/read/' + r.id + '/' + r.slug)}
               key={r.id}
               categories={r.categories}
               title={decodeURIComponent(r.title)}

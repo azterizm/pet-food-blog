@@ -95,3 +95,10 @@
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+@media (min-width: 1120px) {
+  #recipe_image {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+}
