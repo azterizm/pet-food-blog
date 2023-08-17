@@ -44,7 +44,7 @@ export function Header({ user }: Props) {
           <Link
             className={classNames(
               'no-underline',
-              location.pathname.includes('recipes') ? 'c-secondary' : 'c-black',
+              location.pathname.startsWith('/recipes') ? 'c-secondary' : 'c-black',
             )}
             to='/recipes'
           >
@@ -53,7 +53,7 @@ export function Header({ user }: Props) {
           <Link
             className={classNames(
               'no-underline',
-              location.pathname.includes('blog') ? 'c-secondary' : 'c-black',
+              location.pathname.startsWith('/blog') ? 'c-secondary' : 'c-black',
             )}
             to='/blog'
           >
@@ -64,7 +64,7 @@ export function Header({ user }: Props) {
           <Link
             className={classNames(
               'no-underline',
-              location.pathname.includes('free') ? 'c-secondary' : 'c-black',
+              location.pathname.startsWith('/free') ? 'c-secondary' : 'c-black',
             )}
             to='/free'
           >
@@ -73,7 +73,7 @@ export function Header({ user }: Props) {
           <Link
             className={classNames(
               'no-underline',
-              location.pathname.includes('saved') ? 'c-secondary' : 'c-black',
+              location.pathname.startsWith('/saved') ? 'c-secondary' : 'c-black',
             )}
             to='/saved'
           >

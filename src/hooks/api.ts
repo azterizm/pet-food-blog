@@ -100,6 +100,9 @@ export function useAuth() {
       setUser(r)
       setLoading(false)
     })
+    setTimeout(() => {
+      setLoading(false)
+    }, 5000);
   }
 
   function refetch() {
