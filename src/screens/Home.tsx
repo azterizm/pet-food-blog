@@ -5,7 +5,8 @@ export function Home() {
   return (
     <div className='relative'>
       <div id='list_title'>
-        <h1 className='text-center text-3xl'>Discover</h1>
+        <h1 className='m-0 text-center'>Discover</h1>
+        <p style={{fontSize:'1.25rem'}} className='m-0 text-button font-medium text-center'>Yummy Recipes</p>
       </div>
       <Recipes />
     </div>

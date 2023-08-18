@@ -25,4 +25,12 @@
 
 #list_title {
   margin-top: 4rem;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media screen and (max-width: 768px) {
+  #list_title {
+    font-size: 1.25rem;
+  }
 }

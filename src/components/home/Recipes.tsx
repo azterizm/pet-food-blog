@@ -48,6 +48,7 @@ export function Recipes(): ReactElement {
         >
           {data.recipes.map((r) => (
             <Recipe
+                  previewMode
               intro={r.intro}
               mainImage={r.mainImage}
               tags={r.tags}

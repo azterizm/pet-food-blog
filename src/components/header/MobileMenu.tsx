@@ -1,15 +1,20 @@
 import classNames from 'classnames'
-import { ReactElement, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { ReactElement, useMemo, useRef } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { CREATOR_ENDPOINT } from '../../constants/api'
 import { useAuth } from '../../hooks/api'
+import { makeMouseScrollable } from '../../hooks/ui'
 
 export function MobileMenu(): ReactElement {
   const navigate = useNavigate()
+  const location=useLocation()
   const [user] = useAuth()
+  const containerRef = useRef<HTMLDivElement>(null)
+  makeMouseScrollable(containerRef)
 
   const menuItems = useMemo(
     () => [
+      ['/', 'Discover'],
       ['/recipes', 'Recipes'],
       ['/blog', 'Topics'],
       ['/free', 'Free Stuff'],
@@ -23,14 +28,16 @@ export function MobileMenu(): ReactElement {
   )
 
   return (
-    <div className='flex justify-start items-center ml-5 overflow-x-scroll overflow-y-hidden !lg:hidden'>
+    <div ref={containerRef} className='flex justify-start items-center ml-5 overflow-x-auto overflow-y-hidden !lg:hidden hide-scrollbar'>
       {(menuItems as any[]).filter(Boolean).map(([endpoint, label], i) => (
         <span
           key={i}
           className={classNames(
             'block py-2 mr-5 rounded-full whitespace-nowrap mb-2',
-            label ? 'bg-button text-white px-10' : 'bg-white text-gray-200'
+            label ? 'text-white px-10' : 'bg-white text-gray-200',
+            location.pathname===endpoint ? 'bg-secondary pointer-events-none opacity-50' : 'bg-button',
           )}
+          draggable='false'
           onClick={() =>
             endpoint
               ? endpoint.includes('http')
