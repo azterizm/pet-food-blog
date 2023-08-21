@@ -9,7 +9,7 @@ export function Footer(): ReactElement {
   const navigate = useNavigate()
 
   return (
-    <footer className='flex items-center justify-between mt-16 mb-8 gap-6 c-neutral-600'>
+    <footer className='flex items-center justify-between mt-32 mb-4 gap-6 c-neutral-600'>
       <div className='flex items-center gap-4'>
         <button
           onClick={() =>

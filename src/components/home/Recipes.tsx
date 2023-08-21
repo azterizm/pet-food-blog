@@ -48,7 +48,7 @@ export function Recipes(props: Props): ReactElement {
             }}
             className='flex w-auto'
             id='list_masonry'
-            columnClassName='flex items-center flex-col gap-12 mx-6'
+            columnClassName='flex items-center flex-col gap-6 mx-6'
           >
             {props.data.recipes.map((r) => (
               <Recipe

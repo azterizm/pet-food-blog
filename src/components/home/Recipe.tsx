@@ -108,6 +108,7 @@ export function Recipe({
         ? (
           <div className='relative text-center'>
             <span className='text-2xl font-bold'>{title}</span>
+            <span className='block text-lg font-bold c-button'>with {author?.name.split(' ')[0]}</span>
             <div className='flex items-center justify-center mt-1'>
               <Heart
                 size={24}

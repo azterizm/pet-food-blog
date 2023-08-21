@@ -10,6 +10,9 @@
   #list > div > div:nth-child(4) {
     transform: translateY(-9rem);
   }
+  #page_indicator {
+    margin-bottom: 0 !important;
+  }
 }
 @media (min-width: 1550px) {
   #main_label {
@@ -28,6 +31,9 @@
   }
 }
 
+#page_indicator {
+  margin-bottom: 4rem;
+}
 #main_label {
   padding-top: 4rem;
 }
