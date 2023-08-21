@@ -38,9 +38,9 @@ export function Recipes(): ReactElement {
         <Masonry
           breakpointCols={{
             default: 5,
-            1850: 4,
-            1550: 3,
-            1100: 2,
+            1550: 4,
+            1100: 3,
+            768: 2,
           }}
           className='flex w-auto'
           id='list_masonry'

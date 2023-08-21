@@ -1,25 +1,35 @@
 @media (min-width: 1100px) {
-  #list > div > div:nth-child(2) {
-    transform: translateY(6rem);
-  }
-
   #list_title {
     transform: translateY(4rem);
   }
-}
-
-@media (min-width: 1550px) {
   #list > div > div:nth-child(2),
   #list > div > div:nth-child(3) {
     transform: translateY(6rem);
   }
-}
-@media (min-width: 1850px) {
-  #list > div > div:nth-child(2),
-  #list > div > div:nth-child(3),
+  #list > div > div:nth-child(1),
   #list > div > div:nth-child(4) {
-    transform: translateY(6rem);
+    transform: translateY(-9rem);
   }
+}
+@media (min-width: 1550px) {
+  #main_label {
+    padding-top: 0;
+  }
+  #list > div > div:nth-child(2),
+  #list > div > div:nth-child(4) {
+    transform: translateY(3rem);
+  }
+  #list > div > div:nth-child(3) {
+    transform: translateY(12rem);
+  }
+  #list > div > div:nth-child(1),
+  #list > div > div:nth-child(5) {
+    transform: translateY(-9rem);
+  }
+}
+
+#main_label {
+  padding-top: 4rem;
 }
 
 #list_title {

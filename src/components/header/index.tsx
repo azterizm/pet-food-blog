@@ -26,7 +26,7 @@ export function Header({ user }: Props) {
 
   useEffect(() => {
     const hintShown = window.localStorage.getItem('hintShown')
-    if (!hintShown && !user) hintOpacity.start(1)
+    if (!hintShown && user) hintOpacity.start(1)
     else setRemoveHint(true), hintOpacity.start(0)
   }, [user])
 
@@ -100,7 +100,7 @@ export function Header({ user }: Props) {
                 className='absolute right-0 bottom--45 bg-secondary c-white p-5 rounded-lg w-50 font-medium z-1'
                 style={{
                   opacity: hintOpacity,
-                  display: removeHint || user ? 'none' : 'block',
+                  display: removeHint || !user ? 'none' : 'block',
                 }}
               >
                 <span>
@@ -111,7 +111,7 @@ export function Header({ user }: Props) {
                   <X weight='bold' />
                   <span>Close</span>
                 </div>
-                <div className='absolute top--7.5 right-5 c-button'>
+                <div className='absolute top--7.5 right-5 c-secondary'>
                   <CaretUp size={56} weight='fill' />
                 </div>
               </animated.div>
