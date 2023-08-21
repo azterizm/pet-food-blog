@@ -1,3 +1,4 @@
+import { Copyright } from 'phosphor-react'
 import type { ReactElement } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CREATOR_ENDPOINT } from '../constants/api'
@@ -8,65 +9,53 @@ export function Footer(): ReactElement {
   const navigate = useNavigate()
 
   return (
-    <footer className='flex items-center justify-center flex-col mb-16 mt-48'>
-      <button
-        onClick={() =>
-          !user ? navigate('/login') : (window.location.href = CREATOR_ENDPOINT)
-        }
-        className='bg-[#98d4cb] px-5 py-2 rounded-full border-none text-white font-bold'
-        type='button'
-      >
-        Post your recipe
-      </button>
-
-      <Link to='/' className='my-8'>
-        <img className='w-50' src='/logo.svg' alt='logo' />
-      </Link>
-
+    <footer className='flex items-center justify-between mt-16 mb-8 gap-6 c-neutral-600'>
       <div className='flex items-center gap-4'>
-        <Link className='no-underline text-sm c-black' to='/recipes'>
-          Recipes
-        </Link>
-        <Link className='no-underline text-sm c-black' to='/blog'>
-          Topics
-        </Link>
-        <Link className='no-underline text-sm c-black' to='/free'>
-          Free Stuff
-        </Link>
-        <Link className='no-underline text-sm c-black' to='/saved'>
-          Saved
-        </Link>
+        <button
+          onClick={() =>
+            !user
+              ? navigate('/login')
+              : (window.location.href = CREATOR_ENDPOINT)}
+          className='bg-button px-9 py-3 rounded-full border-none text-white font-medium'
+          type='button'
+        >
+          Post your recipe
+        </button>
+        <span className='flex items-center gap-1 c-neutral-600'>
+          <Copyright /> 2023 So Pawlicious, Inc.
+        </span>
       </div>
 
-      {/*
-CONTACT INFORMATION
-      <div className='flex items-center gap-4 mt-2'>
+      <div className='flex items-center gap-4 [&>a]:c-neutral-600'>
         <Link
-          className='text-black text-sm no-underline decoration-none'
+          className='text-sm no-underline hover:underline decoration-none'
           to='/contact'
         >
           Contact
         </Link>
         <Link
-          className='text-black text-sm no-underline decoration-none'
+          className='text-sm no-underline hover:underline decoration-none'
           to='/about'
         >
           About
         </Link>
         <Link
-          className='text-black text-sm no-underline decoration-none'
+          className='text-sm no-underline hover:underline decoration-none'
           to='/terms'
         >
           Terms and Conditions
         </Link>
         <Link
-          className='text-black text-sm no-underline decoration-none'
-          to='/pp'
+          className='text-sm no-underline hover:underline decoration-none'
+          to='/privacy_policy'
         >
           Privacy Policy
         </Link>
       </div>
-*/}
+
+      <button className='bg-transparent border-none hover:bg-neutral-300 cursor-pointer font-bold p-2 rounded-lg'>
+        English
+      </button>
     </footer>
   )
 }

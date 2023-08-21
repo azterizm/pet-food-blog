@@ -81,7 +81,7 @@ export function Header({ user }: Props) {
         </div>
         <div className='items-center gap-6 hidden lg:flex font-bold'>
           {!user || user.type === 'author' ? (
-            <div className={'relative ' + (user ? 'translate-y--1' : '')}>
+            <div className={'z-100 relative ' + (user ? 'translate-y--1' : '')}>
               {user&&(
 
               <button
@@ -97,7 +97,7 @@ export function Header({ user }: Props) {
               )}
               <animated.div
                 onClick={closeHint}
-                className='absolute right-0 bottom--45 bg-secondary c-white p-5 rounded-lg w-50 font-medium z-1'
+                className='absolute right-0 bottom--45 bg-secondary c-white p-5 rounded-lg w-50 font-medium z-1 z-100'
                 style={{
                   opacity: hintOpacity,
                   display: removeHint || !user ? 'none' : 'block',

@@ -10,7 +10,7 @@ export default function Title(props:Props) {
   const [openSortMenu, setOpenSortMenu] = useState(false)
   return (
       <div className='relative' id='list_title'>
-        <h1 className='m-0 text-center [&>p]:m-0'>
+        <h1 className='m-0 text-center [&>p]:m-0 pointer-events-none'>
           <p id='main_label' className='select-none'>Discover</p>
           <p className='pt-8 md:pt-0 text-button select-none !-mt-[2rem]'>
             Yummy Recipes
