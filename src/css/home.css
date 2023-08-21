@@ -4,7 +4,6 @@
   }
 
   #list_title {
-    margin-top: 0;
     transform: translateY(4rem);
   }
 }
@@ -24,9 +23,8 @@
 }
 
 #list_title {
-  margin-top: 4rem;
   font-size: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 }
 
 @media screen and (max-width: 768px) {

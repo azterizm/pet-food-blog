@@ -6,6 +6,7 @@ import { CREATOR_ENDPOINT } from '../../constants/api'
 import { AuthUser } from '../../types/auth'
 import { MobileMenu } from '../header/MobileMenu'
 import classNames from 'classnames'
+import { useAuth } from '../../hooks/api'
 
 interface Props {
   user: AuthUser | null
@@ -44,27 +45,25 @@ export function Header({ user }: Props) {
           <Link
             className={classNames(
               'no-underline',
-              location.pathname.startsWith('/recipes') ? 'c-secondary' : 'c-black',
+              location.pathname===('/') ? 'c-button' : 'c-black',
             )}
-            to='/recipes'
+            to='/'
           >
             Recipes
           </Link>
           <Link
             className={classNames(
               'no-underline',
-              location.pathname.startsWith('/blog') ? 'c-secondary' : 'c-black',
+              location.pathname.startsWith('/blog') ? 'c-button' : 'c-black',
             )}
             to='/blog'
           >
-            Topics
+            Articles
           </Link>
-
-          <div className='w-0.5 h-5 bg-black'></div>
           <Link
             className={classNames(
               'no-underline',
-              location.pathname.startsWith('/free') ? 'c-secondary' : 'c-black',
+              location.pathname.startsWith('/free') ? 'c-button' : 'c-black',
             )}
             to='/free'
           >
@@ -73,7 +72,7 @@ export function Header({ user }: Props) {
           <Link
             className={classNames(
               'no-underline',
-              location.pathname.startsWith('/saved') ? 'c-secondary' : 'c-black',
+              location.pathname.startsWith('/saved') ? 'c-button' : 'c-black',
             )}
             to='/saved'
           >
@@ -83,6 +82,8 @@ export function Header({ user }: Props) {
         <div className='items-center gap-6 hidden lg:flex font-bold'>
           {!user || user.type === 'author' ? (
             <div className={'relative ' + (user ? 'translate-y--1' : '')}>
+              {user&&(
+
               <button
                 onClick={() =>
                   !user
@@ -93,6 +94,7 @@ export function Header({ user }: Props) {
               >
                 Create
               </button>
+              )}
               <animated.div
                 onClick={closeHint}
                 className='absolute right-0 bottom--45 bg-secondary c-white p-5 rounded-lg w-50 font-medium z-1'
@@ -109,7 +111,7 @@ export function Header({ user }: Props) {
                   <X weight='bold' />
                   <span>Close</span>
                 </div>
-                <div className='absolute top--7.5 right-5 c-secondary'>
+                <div className='absolute top--7.5 right-5 c-button'>
                   <CaretUp size={56} weight='fill' />
                 </div>
               </animated.div>
@@ -125,9 +127,9 @@ export function Header({ user }: Props) {
           ) : (
             <button
               onClick={() => navigate('login')}
-              className='bg-element border-none rounded-full c-black font-bold p-3 py-2 hover:brightness-75'
+              className='bg-black border-none rounded-full c-white font-bold px-6 py-3 hover:brightness-75'
             >
-              Login
+              Register / Log In
             </button>
           )}
           <Link className='no-underline c-black' to='/search'>

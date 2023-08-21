@@ -111,7 +111,6 @@ function App() {
             <Route path='donate' element={<Donate />} />
             <Route path='read/print/:id' element={<PrintRecipe />} />
             <Route path='read/:id/:slug?' element={<RecipeRead />} />
-            <Route index element={<RecipeList />} />
           </Route>
           <Route path='authors'>
             <Route path=':id' element={<AuthorProfile />} />

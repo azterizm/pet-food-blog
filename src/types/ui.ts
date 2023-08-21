@@ -4,3 +4,9 @@ export enum DonateStatus {
   Process,
   Done,
 }
+
+export enum SortBy {
+  Newest,
+  Popular,
+  Most_Liked,
+}
