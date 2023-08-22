@@ -37,7 +37,7 @@ export function Header({ user }: Props) {
 
   return (
     <>
-      <div className='lg:fixed top-0 left-0 lg:w-screen z-100 bg-white flex justify-unset lg:justify-between items-center lg:px-20 xl:px-50 py-5 mx--10'>
+      <div id='header' className='lg:fixed top-0 left-0 z-100 bg-white flex justify-unset lg:justify-between items-center pt-2rem pl-2rem lg:pl-1rem lg:pt-1rem -ml-14 lg:ml-0'>
         <Link className='hidden lg:block' to='/'>
           <img className='w-50' src='/logo.svg' alt='logo' />
         </Link>

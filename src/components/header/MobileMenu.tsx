@@ -29,7 +29,7 @@ export function MobileMenu(): ReactElement {
   return (
     <div
       ref={containerRef}
-      className='flex justify-start items-center ml-5 overflow-x-auto overflow-y-hidden !lg:hidden hide-scrollbar'
+      className='flex justify-start items-center ml-5 pr-10 overflow-x-auto overflow-y-hidden !lg:hidden hide-scrollbar -translate-y-2'
     >
       {(menuItems as any[]).filter(Boolean).map(([endpoint, label], i) => (
         <span
