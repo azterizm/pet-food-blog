@@ -72,7 +72,7 @@ export function Recipes(props: Props): ReactElement {
                 priceType={r.priceType}
                 price={r.price}
                 userLiked={r.userLiked}
-                authorTotalRecipes={props.data?.authorTotalRecipes.find((v) =>
+                authorTotalRecipes={!props.data?.authorTotalRecipes?.length ? 0 :  props.data?.authorTotalRecipes.find((v) =>
                   v.id === r.author.id
                 )
                   ?.total || 0}

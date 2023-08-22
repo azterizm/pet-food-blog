@@ -13,6 +13,9 @@
   #page_indicator {
     margin-bottom: 0 !important;
   }
+  #more_recipes_button {
+    margin-top: 8rem;
+  }
 }
 @media (min-width: 1550px) {
   #main_label {
@@ -28,6 +31,9 @@
   #list > div > div:nth-child(1),
   #list > div > div:nth-child(5) {
     transform: translateY(-9rem);
+  }
+  #more_recipes_button {
+    margin-top: 16rem;
   }
 }
 

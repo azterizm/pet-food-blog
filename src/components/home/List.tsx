@@ -3,15 +3,14 @@ import classNames from 'classnames'
 import { ArrowCircleLeft, ArrowCircleRight } from 'phosphor-react'
 import { useRef } from 'react'
 import { makeMouseScrollable } from '../../hooks/ui'
-import { Category, categoryLabel } from '../../types/api'
-import { categories } from '../../types/api'
 
-interface Props {
-  category: Category | null
-  onChangeCategory: (arg: Category | null) => void
+interface Props<T> {
+  value: T | null
+  onChange: (arg: T | null) => void
+  data: { key: T; value: string }[]
 }
 
-export default function List(props: Props) {
+export default function List<T,>(props: Props<T>) {
   const listRef = useRef<HTMLDivElement>(null)
   const arrowStats = useHookstate({ showLeft: false, showRight: true, x: 0 })
   makeMouseScrollable(listRef)
@@ -24,10 +23,11 @@ export default function List(props: Props) {
       x >= total
     ) arrowStats.showRight.set(false)
     else arrowStats.showRight.set(true)
-    if (x>=20) arrowStats.showLeft.set(true)
+    if (x >= 20) arrowStats.showLeft.set(true)
     else arrowStats.showLeft.set(false)
     arrowStats.x.set(x)
   }
+
   return (
     <div className='relative w-full sm:w-lg h-14 mt-5 mx-auto mb-8'>
       <div
@@ -37,23 +37,23 @@ export default function List(props: Props) {
       >
         <div
           className={'block px-5 py-2 rounded-full cursor-pointer select-none ' +
-            (!props.category ? 'bg-primary c-white' : 'bg-gray-300 c-black')}
-          onClick={() => props.onChangeCategory(null)}
+            (!props.value ? 'bg-primary c-white' : 'bg-gray-300 c-black')}
+          onClick={() => props.onChange(null)}
           draggable='false'
         >
           All
         </div>
-        {categories.map((r, i) => (
+        {props.data.map((r, i) => (
           <div
             draggable='false'
             className={'block px-5 py-2 rounded-full cursor-pointer whitespace-nowrap select-none ' +
-              (props.category === r
+              (props.value === r.key
                 ? 'bg-primary c-white'
                 : 'bg-neutral-300 c-black')}
             key={'category_' + i}
-            onClick={() => props.onChangeCategory(r)}
+            onClick={() => props.onChange(r.key)}
           >
-            {categoryLabel[r]}
+            {r.value}
           </div>
         ))}
       </div>
@@ -85,7 +85,7 @@ export default function List(props: Props) {
             : 'opacity-0 pointer-events-none',
         )}
       >
-        <ArrowCircleLeft size={36} className='text-black' />
+        <ArrowCircleLeft size={36} className='text-black translate-y-1' />
       </button>
       <button
         onClick={() =>
@@ -103,7 +103,7 @@ export default function List(props: Props) {
             : 'opacity-0 pointer-events-none',
         )}
       >
-        <ArrowCircleRight size={36} className='text-black' />
+        <ArrowCircleRight size={36} className='text-black translate-y-1' />
       </button>
     </div>
   )

@@ -32,10 +32,6 @@ const { Purchases } = lazyImport(
   () => import('./screens/Purchases'),
   'Purchases',
 )
-const { RecipeList } = lazyImport(
-  () => import('./screens/recipe/List'),
-  'RecipeList',
-)
 const { RecipeRead } = lazyImport(
   () => import('./screens/recipe/Read'),
   'RecipeRead',
@@ -99,14 +95,16 @@ function App() {
           <Route path='register' element={<Register />} />
           <Route path='free' element={<FreeStuff />} />
           <Route path='saved' element={<Saved />} />
-          {user ? (
-            <>
-              <Route path='profile' element={<Profile />} />
-              <Route path='deposit' element={<PastDeposits />} />
-              <Route path='purchases' element={<Purchases />} />
-              <Route path='subscribed' element={<Subscribed />} />
-            </>
-          ) : null}
+          {user
+            ? (
+              <>
+                <Route path='profile' element={<Profile />} />
+                <Route path='deposit' element={<PastDeposits />} />
+                <Route path='purchases' element={<Purchases />} />
+                <Route path='subscribed' element={<Subscribed />} />
+              </>
+            )
+            : null}
           <Route path='recipes'>
             <Route path='donate' element={<Donate />} />
             <Route path='read/print/:id' element={<PrintRecipe />} />
@@ -131,9 +129,12 @@ function App() {
           <Route path='search' element={<Search />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
-        {fade.visible ? (
-          <div className='fixed top-0 left-0 w-full h-full bg-black opacity-50'></div>
-        ) : null}
+        {fade.visible
+          ? (
+            <div className='fixed top-0 left-0 w-full h-full bg-black opacity-50'>
+            </div>
+          )
+          : null}
         {headFoot.visible ? <Footer /> : null}
       </Suspense>
     </div>
