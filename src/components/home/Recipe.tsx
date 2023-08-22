@@ -118,7 +118,7 @@ export function Recipe({
                 className='cursor-pointer active:scale-175 transition'
               />
               <span className='inline-block !ml-1'>
-                {reviews - (decrement ? 1 : 0) + (increment ? 1 : 0)}
+                {Intl.NumberFormat('en-US').format(reviews - (decrement ? 1 : 0) + (increment ? 1 : 0))}
               </span>
             </div>
           </div>
@@ -209,7 +209,7 @@ export function Recipe({
                         : onLike(id))}
                     />
                     <span>
-                      {reviews - (decrement ? 1 : 0) + (increment ? 1 : 0)}
+                      {Intl.NumberFormat('en-US').format(reviews - (decrement ? 1 : 0) + (increment ? 1 : 0))}
                     </span>
                   </div>
                 )}

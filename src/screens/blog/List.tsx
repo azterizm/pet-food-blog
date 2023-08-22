@@ -2,13 +2,23 @@ import { IAuthor } from '@backend/models/author'
 import { ILike } from '@backend/models/like'
 import { IPost } from '@backend/models/post'
 import { useHookstate } from '@hookstate/core'
-import { ReactElement } from 'react'
+import classNames from 'classnames'
+import _ from 'lodash'
+import { HandsClapping } from 'phosphor-react'
+import { ReactElement, useState } from 'react'
+import Masonry from 'react-masonry-css'
+import { useNavigate } from 'react-router-dom'
+import TagsList from '../../components/home/List'
+import PageIndicator from '../../components/home/PageIndicator'
 import Title from '../../components/home/Title'
-import { PAGE_OFFSET } from '../../constants/api'
+import { Loader } from '../../components/Loader'
+import { API_ENDPOINT } from '../../constants/api'
+import '../../css/home.css'
 import { useApi } from '../../hooks/api'
 import { SortBy } from '../../types/ui'
 
 export function List(): ReactElement {
+  const [activePage, setActivePage] = useState(0)
   const filter = useHookstate<
     { sortBy: SortBy; tag: string | null; page: number }
   >({
@@ -17,12 +27,20 @@ export function List(): ReactElement {
     page: 0,
   })
 
+  const navigate = useNavigate()
+
   const { data, loading, error } = useApi<{
     count: number
     rows: (IPost & { author: IAuthor; likes: ILike[] })[]
-  }>('/blog/get_posts/' + filter.page.value * PAGE_OFFSET, {}, [filter])
+  }>(
+    `/blog/get_client_posts/${filter.page.value * 30}/${filter.sortBy.value}/${
+      !filter.tag.value ? '' : '&tag=' + filter.tag.value
+    }`,
+    {},
+    [filter],
+  )
 
-  const { data: tags, loading: loadingTags } = useApi<{ data: string[] }>(
+  const { data: tags } = useApi<{ data: string[] }>(
     '/blog/get_client_tags',
   )
 
@@ -38,6 +56,97 @@ export function List(): ReactElement {
         sortBy={filter.sortBy.value}
         onChangeSortBy={filter.sortBy.set}
       />
+      <TagsList
+        data={tags?.data.map((r) => ({ key: r, value: _.capitalize(r) })) || []}
+        value={filter.tag.value}
+        onChange={filter.tag.set}
+      />
+      <PageIndicator active={activePage} />
+
+      <div id='list'>
+        {loading
+          ? <Loader />
+          : !data || !data.rows.length || error
+          ? (
+            <span className='mt-30 block'>
+              No articles are available at the moment.
+            </span>
+          )
+          : (
+            <Masonry
+              breakpointCols={{
+                default: 5,
+                1550: 4,
+                1100: 3,
+                768: 2,
+              }}
+              className='flex w-auto'
+              id='list_masonry'
+              columnClassName='flex items-center flex-col gap-6 mx-6'
+            >
+              {data.rows.map((r, i) => (
+                <div key={i}>
+                  <img
+                    className={classNames(
+                      'cursor-pointer object-cover rounded-lg w-full',
+                    )}
+                    loading='lazy'
+                    src={API_ENDPOINT + r.mainImage}
+                    alt={r.title + ' ' + 'image'}
+                    onClick={() => navigate(r.id?.toString() || '/')}
+                  />
+
+                  <div className='relative text-center'>
+                    <span className='text-2xl font-bold'>{r.title}</span>
+                    <span className='block text-lg font-bold c-button'>
+                      with {r.author?.name.split(' ')[0]}
+                    </span>
+                    <div className='flex items-center justify-center mt-1'>
+                      <HandsClapping
+                        size={24}
+                        weight='fill'
+                        className='cursor-pointer active:scale-175 transition c-black'
+                      />
+                      <span className='inline-block !ml-1'>
+                        {Intl.NumberFormat('en-US').format(
+                          r.likes?.length || 0,
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Masonry>
+          )}
+      </div>
+
+      {data && data?.count > data?.rows.length && (
+        <div
+          id='more_recipes_button'
+          className='flex items-center gap-2 justify-center'
+        >
+          {filter.page.value > 0 && (
+            <button
+              onClick={() => (filter.page.set((e) => e > 0 ? e - 1 : 0),
+                setActivePage((e) => e <= 0 ? 3 : e - 1))}
+              className='px-6 py-3 rounded-full bg-secondary font-medium c-white block border-none'
+            >
+              Go back
+            </button>
+          )}
+
+          {data?.count > (data?.rows.length + (filter.page.value * 30)) &&
+            (
+              <button
+                onClick={() => (filter.page.set((e) => e + 1),
+                  setActivePage((e) => e === 3 ? 0 : e + 1))}
+                className='px-6 py-3 rounded-full bg-white border-2 border-gray-300 font-medium c-black block'
+              >
+                More articles
+              </button>
+            )}
+        </div>
+      )}
     </div>
   )
 }
