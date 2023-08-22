@@ -99,7 +99,7 @@ export function Recipe({
         className={classNames(
           'cursor-pointer object-cover',
           fullWidth ? 'w-full' : 'max-w-80',
-          previewMode ? 'rounded-lg' : 'rounded-t-lg',
+          previewMode ? 'rounded-2xl' : 'rounded-t-lg',
         )}
         src={image}
         alt='recipe image'
@@ -108,17 +108,23 @@ export function Recipe({
         ? (
           <div className='relative text-center'>
             <span className='text-2xl font-bold'>{title}</span>
-            <span className='block text-lg font-bold c-button'>with {author?.name.split(' ')[0]}</span>
+            <span className='block text-lg font-bold c-button'>
+              with {author?.name.split(' ')[0]}
+            </span>
             <div className='flex items-center justify-center mt-1'>
               <Heart
                 size={24}
                 weight='fill'
-                color='#FEA2AD'
+                color={(userLiked && !decrement) || increment
+                  ? '#FEA2AD'
+                  : '#000000'}
                 onClick={() => (onHeartClick ? onHeartClick() : onLike(id))}
                 className='cursor-pointer active:scale-175 transition'
               />
               <span className='inline-block !ml-1'>
-                {Intl.NumberFormat('en-US').format(reviews - (decrement ? 1 : 0) + (increment ? 1 : 0))}
+                {Intl.NumberFormat('en-US').format(
+                  reviews - (decrement ? 1 : 0) + (increment ? 1 : 0),
+                )}
               </span>
             </div>
           </div>
@@ -209,7 +215,9 @@ export function Recipe({
                         : onLike(id))}
                     />
                     <span>
-                      {Intl.NumberFormat('en-US').format(reviews - (decrement ? 1 : 0) + (increment ? 1 : 0))}
+                      {Intl.NumberFormat('en-US').format(
+                        reviews - (decrement ? 1 : 0) + (increment ? 1 : 0),
+                      )}
                     </span>
                   </div>
                 )}

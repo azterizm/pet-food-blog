@@ -2,7 +2,8 @@ import { IAuthor } from '@backend/models/author'
 import { IRecipe } from '@backend/models/recipe'
 import { ISave } from '@backend/models/save'
 import { useHookstate } from '@hookstate/core'
-import { useState } from 'react'
+import classNames from 'classnames'
+import { useEffect, useState } from 'react'
 import List from '../components/home/List'
 import PageIndicator from '../components/home/PageIndicator'
 import { Recipes } from '../components/home/Recipes'
@@ -20,6 +21,11 @@ import { SortBy } from '../types/ui'
 
 export function Home() {
   const [activePage, setActivePage] = useState(0)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const filter = useHookstate<
     { sortBy: SortBy; category: Category | null; page: number }
@@ -47,10 +53,14 @@ export function Home() {
     },
     [filter],
   )
-  console.log(filter.value)
 
   return (
-    <div className='relative'>
+    <div
+      className={classNames(
+        'transition duration-500 relative',
+        mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10',
+      )}
+    >
       <Title
         title='Discover'
         subTitle='Yummy Recipes'

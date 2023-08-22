@@ -36,8 +36,8 @@ export default function List<T,>(props: Props<T>) {
         onScroll={onScroll}
       >
         <div
-          className={'block px-5 py-2 rounded-full cursor-pointer select-none ' +
-            (!props.value ? 'bg-primary c-white' : 'bg-gray-300 c-black')}
+          className={'block px-5 py-2 rounded-full c-white cursor-pointer select-none ' +
+            (!props.value ? 'bg-button' : 'bg-neutral-400')}
           onClick={() => props.onChange(null)}
           draggable='false'
         >
@@ -46,10 +46,10 @@ export default function List<T,>(props: Props<T>) {
         {props.data.map((r, i) => (
           <div
             draggable='false'
-            className={'block px-5 py-2 rounded-full cursor-pointer whitespace-nowrap select-none ' +
+            className={'block px-5 c-white py-2 rounded-full cursor-pointer whitespace-nowrap select-none ' +
               (props.value === r.key
-                ? 'bg-primary c-white'
-                : 'bg-neutral-300 c-black')}
+                ? 'bg-button'
+                : 'bg-neutral-400')}
             key={'category_' + i}
             onClick={() => props.onChange(r.key)}
           >

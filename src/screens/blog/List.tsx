@@ -5,7 +5,7 @@ import { useHookstate } from '@hookstate/core'
 import classNames from 'classnames'
 import _ from 'lodash'
 import { HandsClapping } from 'phosphor-react'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import Masonry from 'react-masonry-css'
 import { useNavigate } from 'react-router-dom'
 import TagsList from '../../components/home/List'
@@ -14,6 +14,7 @@ import Title from '../../components/home/Title'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT } from '../../constants/api'
 import '../../css/home.css'
+import { handleLike } from '../../features/like'
 import { useApi } from '../../hooks/api'
 import { SortBy } from '../../types/ui'
 
@@ -26,17 +27,24 @@ export function List(): ReactElement {
     tag: null,
     page: 0,
   })
-
   const navigate = useNavigate()
+  const [mounted, setMounted] = useState(false)
+  const likes = useHookstate<{ increment: number[]; decrement: number[] }>({
+    decrement: [],
+    increment: [],
+  })
 
   const { data, loading, error } = useApi<{
     count: number
-    rows: (IPost & { author: IAuthor; likes: ILike[] })[]
+    rows: (IPost & { author: IAuthor; likes: ILike[]; userLiked: boolean })[]
   }>(
     `/blog/get_client_posts/${filter.page.value * 30}/${filter.sortBy.value}/${
       !filter.tag.value ? '' : '&tag=' + filter.tag.value
     }`,
-    {},
+    {
+      debounce: 800,
+      onSuccess: () => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }),
+    },
     [filter],
   )
 
@@ -44,8 +52,27 @@ export function List(): ReactElement {
     '/blog/get_client_tags',
   )
 
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  async function onLike(id: number, i: number, userLiked: boolean) {
+    await handleLike(id, 'blog')
+    if (likes.increment.value.includes(i)) {
+      likes.increment.set((r) => r.filter((v) => v !== i))
+    } else if (likes.decrement.value.includes(i)) {
+      likes.decrement.set((r) => r.filter((v) => v !== i))
+    } else if (userLiked) likes.decrement.merge([i])
+    else likes.increment.merge([i])
+  }
+
   return (
-    <div className='relative'>
+    <div
+      className={classNames(
+        'transition duration-500 relative',
+        mounted ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10',
+      )}
+    >
       <Title
         headingClass='max-w-1/2 mx-auto'
         title={
@@ -101,15 +128,26 @@ export function List(): ReactElement {
                     <span className='block text-lg font-bold c-button'>
                       with {r.author?.name.split(' ')[0]}
                     </span>
-                    <div className='flex items-center justify-center mt-1'>
+                    <div
+                      onClick={() => onLike(r.id!, i, r.userLiked)}
+                      className='flex items-center justify-center mt-1'
+                    >
                       <HandsClapping
                         size={24}
+                        color={(r.userLiked &&
+                              !likes.decrement.value.includes(i) ||
+                            likes.increment.value.includes(i))
+                          ? '#FEA2AD'
+                          : '#000000'}
                         weight='fill'
                         className='cursor-pointer active:scale-175 transition c-black'
                       />
                       <span className='inline-block !ml-1'>
                         {Intl.NumberFormat('en-US').format(
-                          r.likes?.length || 0,
+                          (r.likes?.length ||
+                            0) -
+                            (likes.decrement.value.includes(i) ? 1 : 0) +
+                            (likes.increment.value.includes(i) ? 1 : 0),
                         )}
                       </span>
                     </div>

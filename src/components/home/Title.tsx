@@ -25,7 +25,7 @@ export default function Title(props: Props) {
       >
         <p id='main_label' className='select-none'>{props.title}</p>
         {props.subTitle && (
-          <p className='pt-8 md:pt-0 text-button select-none !-mt-[2rem]'>
+          <p className='pt-8 md:pt-0 text-button select-none !-mt-[1rem]'>
             {props.subTitle}
           </p>
         )}
@@ -33,7 +33,7 @@ export default function Title(props: Props) {
       <div className='absolute top-0 left-0'>
         <button
           onClick={() => setOpenSortMenu((e) => !e)}
-          className='border-none text-lg hover:bg-element rounded-lg bg-white c-black'
+          className='border-none text-md hover:bg-element rounded-lg bg-white c-black'
         >
           Sort by:{' '}
           <span className='font-bold'>
@@ -42,7 +42,7 @@ export default function Title(props: Props) {
         </button>
         <div
           className={classNames(
-            'transition absolute left-0 -bottom-40 w-full bg-white border-none flex justify-start item-start flex-col rounded-lg',
+            'transition absolute left-0 z-10 -bottom-40 w-full bg-white border-2 outline-none border-neutral-200 flex justify-start item-start flex-col rounded-3xl',
             openSortMenu
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-5 pointer-events-none',
@@ -56,16 +56,16 @@ export default function Title(props: Props) {
                 disabled={props.sortBy === i}
                 key={i}
                 className={classNames(
-                  'border-2 border-gray-300',
+                  'border-none outline-none',
                   i === 0
-                    ? 'rounded-tr-xl rounded-tl-xl border-b-none'
+                    ? 'rounded-tr-3xl rounded-tl-3xl'
                     : i === 2
-                    ? 'rounded-br-xl rounded-bl-xl border-t-none'
+                    ? 'rounded-br-3xl rounded-bl-3xl'
                     : 'rounded-none',
                   'py-4 bg-white',
                   props.sortBy === i
-                    ? 'pointer-events-none c-neutral-600'
-                    : 'hover:bg-gray-400 c-black',
+                    ? 'pointer-events-none c-black'
+                    : 'hover:bg-neutral-300 hover:c-black c-neutral-400',
                 )}
               >
                 {typeof r === 'string' ? r.replace(/_/g, ' ') : r}

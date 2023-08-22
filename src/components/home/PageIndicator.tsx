@@ -15,7 +15,7 @@ export default function PageIndicator(props: Props) {
             props.active ===
                 i
               ? 'c-button'
-              : '',
+              : 'c-neutral-400',
             'select-none',
           )}
           key={i}

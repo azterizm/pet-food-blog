@@ -6,12 +6,12 @@ import { handleLike } from '../../features/like'
 import { useFade } from '../../hooks/state'
 
 interface Props {
-  saved: boolean
-  onPrint: () => void
-  onSave: () => void
+  saved?: boolean
+  onPrint?: () => void
+  onSave?: () => void
   liked: boolean
   blog?: boolean
-  onLike: (arg: boolean) => void
+  onLike?: (arg: boolean) => void
   originalId?: number
   availableLanguages?: { lang: string; id: number }[]
 }
@@ -35,7 +35,7 @@ export const LikeSection = (props: Props) => {
       return
     }
 
-    props.onLike(!props.liked)
+    if (props.onLike) props.onLike(!props.liked)
   }
 
   return (
@@ -50,6 +50,8 @@ export const LikeSection = (props: Props) => {
           {props.liked ? 'You liked it!' : 'Like it'}
         </span>
       </button>
+      {props.onPrint&&(
+
       <button
         type='button'
         onClick={props.onPrint}
@@ -57,30 +59,40 @@ export const LikeSection = (props: Props) => {
       >
         Print
       </button>
-      <button
-        type='button'
-        onClick={() => (props.onSave(), setSaved((e) => !e))}
-        className='font-bold text-md gap-2 flex items-center text-white bg-[#98d4cb] rounded-full border-none py-2 px-5'
-      >
-        {saved ? 'Saved!' : 'Save'}
-      </button>
-      {props.originalId ? (
-        <button
-          type='button'
-          onClick={() => navigate('/recipes/read/' + props.originalId)}
-          className='font-bold text-md gap-2 flex items-center text-white bg-[#98d4cb] rounded-full border-none py-2 px-5'
-        >
-          See original version
-        </button>
-      ) : props.availableLanguages?.length ? (
-        <button
-          type='button'
-          onClick={() => setShowLanguages(true)}
-          className='font-bold text-md gap-2 flex items-center text-white bg-[#98d4cb] rounded-full border-none py-2 px-5'
-        >
-          Change language
-        </button>
-      ) : null}
+      )}
+      {props.onSave
+        ? (
+          <button
+            type='button'
+            onClick={() => (props.onSave && props.onSave(),
+              setSaved((e) => !e))}
+            className='font-bold text-md gap-2 flex items-center text-white bg-[#98d4cb] rounded-full border-none py-2 px-5'
+          >
+            {saved ? 'Saved!' : 'Save'}
+          </button>
+        )
+        : null}
+      {props.originalId
+        ? (
+          <button
+            type='button'
+            onClick={() => navigate('/recipes/read/' + props.originalId)}
+            className='font-bold text-md gap-2 flex items-center text-white bg-[#98d4cb] rounded-full border-none py-2 px-5'
+          >
+            See original version
+          </button>
+        )
+        : props.availableLanguages?.length
+        ? (
+          <button
+            type='button'
+            onClick={() => setShowLanguages(true)}
+            className='font-bold text-md gap-2 flex items-center text-white bg-[#98d4cb] rounded-full border-none py-2 px-5'
+          >
+            Change language
+          </button>
+        )
+        : null}
       <Portal>
         {showLanguages && (
           <div className='fixed-center bg-white rounded-lg p-10'>

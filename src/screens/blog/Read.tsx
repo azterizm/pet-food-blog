@@ -23,12 +23,10 @@ export function Read(): ReactElement {
   const { id } = useParams()
   const [loaded, setLoaded] = useState(false)
   const [liked, setLiked] = useState(false)
-  const [likes, setLikes] = useState(0)
   const [donateStatus, setDonateStatus] = useState<DonateStatus>(
     DonateStatus.Idle,
   )
 
-  const navigate = useNavigate()
 
   const { data, loading, error } = useApi<IPost & FetchData>(
     '/blog/one/' + id,
@@ -37,33 +35,12 @@ export function Read(): ReactElement {
         const d: FetchData = data || r
         if (d && !loaded) {
           setLiked(d.userLiked)
-          setLikes(d.likes.length)
           setLoaded(true)
         }
       },
     },
     [id],
   )
-
-  async function onLike() {
-    if (!id) return navigate('/login')
-    const data: ApiProcess = await fetch(API_ENDPOINT + '/blog/like/' + id, {
-      method: 'post',
-      credentials: 'include',
-    }).then((r) => r.json())
-    if (data.error) {
-      setLiked(!liked)
-      alert(data.info)
-      return
-    }
-    if (!liked) {
-      setLikes((e) => e + 1)
-      setLiked(true)
-    } else {
-      setLikes((e) => e - 1)
-      setLiked(false)
-    }
-  }
 
   async function onDonate(amount: number) {
     if (!amount || !data) return
@@ -93,8 +70,9 @@ export function Read(): ReactElement {
         title={decodeURIComponent(data.title)}
         author={data.author}
       />
+      <LikeSection blog liked={liked} onLike={setLiked}/>
       <article className='mt-20'>
-        <p>{data.intro}</p>
+        <div dangerouslySetInnerHTML={{ __html: data.intro }} />
         <div dangerouslySetInnerHTML={{ __html: data.content }} />
 
         <Donate

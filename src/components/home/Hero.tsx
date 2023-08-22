@@ -28,7 +28,7 @@ export function Hero(props: Props) {
       }
     >
       <img
-        className='brightness-65 lg:brightness-100 w-120% lg:w-50% h-90vh xl:rounded-lg lg:rounded-r-lg object-right aspect-video object-cover'
+        className='brightness-65 lg:brightness-100 w-120% lg:w-50% h-100vh xl:rounded-lg lg:rounded-r-lg object-right aspect-video object-cover'
         src={props.image}
         alt={props.title + ' ' + props.image}
       />
