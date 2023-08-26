@@ -19,8 +19,6 @@ export function Login(): ReactElement {
       title='Welcome back!'
     >
       <div className='my-5'>
-        <p className='mt-5'>How should we describe you as?</p>
-
         <a
           className='g-sign-in-button'
           href={API_ENDPOINT + '/auth/google/' + 'author'}
