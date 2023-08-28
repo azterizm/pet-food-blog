@@ -10,7 +10,7 @@ export function Footer(): ReactElement {
 
   return (
     <>
-      <footer className='flex bg-white p-4 items-center justify-between gap-6 c-neutral-600 flex-col lg:flex-row lg:fixed bottom-0 left-0 lg:w-screen mt-32 mb-4 lg:m-0'>
+      <footer className='flex bg-white p-4 items-center justify-between gap-6 c-neutral-600 flex-col lg:flex-row lg:fixed bottom-0 left-0 lg:w-screen mt-32 mb-4 lg:m-0 z-10'>
         <div className='flex items-center gap-4'>
           <button
             onClick={() =>

@@ -1,12 +1,17 @@
 import { IAuthor } from '@backend/models/author'
 import { ILike } from '@backend/models/like'
 import { IPost } from '@backend/models/post'
-import { ReactElement, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import Delimiter from '@editorjs/delimiter'
+import EditorJS, { OutputData } from '@editorjs/editorjs'
+import Header from '@editorjs/header'
+import Image from '@editorjs/image'
+import Quote from '@editorjs/quote'
+import Underline from '@editorjs/underline'
+import { ReactElement, useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { Hero } from '../../components/home/Hero'
 import { Loader } from '../../components/Loader'
 import { Donate } from '../../components/recipe/Donate'
-import { HelpSection } from '../../components/recipe/HelpSection'
 import { LikeSection } from '../../components/recipe/LikeSection'
 import { API_ENDPOINT } from '../../constants/api'
 import { donateAuthor } from '../../features/author'
@@ -27,6 +32,8 @@ export function Read(): ReactElement {
     DonateStatus.Idle,
   )
 
+  const editorContainerRef = useRef<HTMLDivElement>(null)
+  const editorRef = useRef<EditorJS>()
 
   const { data, loading, error } = useApi<IPost & FetchData>(
     '/blog/one/' + id,
@@ -41,6 +48,36 @@ export function Read(): ReactElement {
     },
     [id],
   )
+
+  useEffect(() => {
+    if (!editorContainerRef.current || !data) return
+    if (editorRef.current) {
+      editorRef.current.isReady.then(() => editorRef.current?.destroy()).then(
+        () => initEditor(data?.body as any),
+      )
+    } else initEditor(data?.body as any)
+  }, [editorContainerRef,  editorRef, data])
+
+  function initEditor(data?: OutputData) {
+    if (!editorContainerRef.current) return
+
+    const editor = new EditorJS({
+      holder: editorContainerRef.current,
+      tools: {
+        header: Header,
+        quote: Quote,
+        delimiter: Delimiter,
+        underline: Underline,
+        image: {
+          class: Image,
+        },
+      },
+      logLevel: 'ERROR' as any,
+      data,
+      readOnly: true,
+    })
+    editorRef.current = editor
+  }
 
   async function onDonate(amount: number) {
     if (!amount || !data) return
@@ -69,12 +106,11 @@ export function Read(): ReactElement {
         publishedOn={data.createdAt!}
         title={decodeURIComponent(data.title)}
         author={data.author}
+        tags={data.tags}
       />
       <LikeSection blog liked={liked} onLike={setLiked}/>
       <article className='mt-20'>
-        <div dangerouslySetInnerHTML={{ __html: data.intro }} />
-        <div dangerouslySetInnerHTML={{ __html: data.content }} />
-
+      <div className='font-sans' ref={editorContainerRef} />
         <Donate
           name={data.author.name}
           status={donateStatus}

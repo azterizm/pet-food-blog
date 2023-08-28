@@ -7,7 +7,7 @@ import _ from 'lodash'
 import { HandsClapping } from 'phosphor-react'
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import Masonry from 'react-masonry-css'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import TagsList from '../../components/home/List'
 import PageIndicator from '../../components/home/PageIndicator'
 import Title from '../../components/home/Title'
@@ -20,6 +20,7 @@ import { SortBy } from '../../types/ui'
 
 export function List(): ReactElement {
   const [activePage, setActivePage] = useState(0)
+  const location = useLocation()
   const filter = useHookstate<
     { sortBy: SortBy; tag: string | null; page: number }
   >({
@@ -39,7 +40,7 @@ export function List(): ReactElement {
     rows: (IPost & { author: IAuthor; likes: ILike[]; userLiked: boolean })[]
   }>(
     `/blog/get_client_posts/${filter.page.value * 30}/${filter.sortBy.value}/${
-      !filter.tag.value ? '' : '&tag=' + filter.tag.value
+      !filter.tag.value ? '' : filter.tag.value
     }`,
     {
       debounce: 800,
@@ -55,6 +56,9 @@ export function List(): ReactElement {
   useEffect(() => {
     setMounted(true)
   }, [])
+  useEffect(() => {
+    if (location.state?.tag) filter.tag.set(location.state.tag)
+  }, [location])
 
   async function onLike(id: number, i: number, userLiked: boolean) {
     await handleLike(id, 'blog')
