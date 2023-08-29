@@ -3,11 +3,13 @@ import { API_ENDPOINT } from '../constants/api'
 import { getUser } from '../features/auth'
 import { AuthUser } from '../types/auth'
 
-interface ApiOptions extends Partial<Request> {
+
+interface ApiOptions<T> extends Partial<Request> {
   params?: Record<string, string>
   debounce?: number
-  onSuccess?: (response: any) => void
+  onSuccess?: (response: T) => void
 }
+
 interface ApiReturn<T> {
   loading: boolean
   error: string | null
@@ -17,7 +19,7 @@ interface ApiReturn<T> {
 
 export function useApi<T>(
   path: string,
-  options?: ApiOptions,
+  options?: ApiOptions<T>,
   deps: any[] = [],
 ): ApiReturn<T> {
   const [loading, setLoading] = useState(true)

@@ -5,7 +5,7 @@ import { useHookstate } from '@hookstate/core'
 import classNames from 'classnames'
 import _ from 'lodash'
 import { HandsClapping } from 'phosphor-react'
-import { ReactElement, useEffect, useRef, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import Masonry from 'react-masonry-css'
 import { useLocation, useNavigate } from 'react-router-dom'
 import TagsList from '../../components/home/List'
@@ -18,8 +18,13 @@ import { handleLike } from '../../features/like'
 import { useApi } from '../../hooks/api'
 import { SortBy } from '../../types/ui'
 
+interface ApiResponse {
+  count: number
+  rows: (IPost & { author: IAuthor; likes: ILike[]; userLiked: boolean })[]
+}
 export function List(): ReactElement {
   const [activePage, setActivePage] = useState(0)
+  const [data, setData] = useState<ApiResponse['rows']>([])
   const location = useLocation()
   const filter = useHookstate<
     { sortBy: SortBy; tag: string | null; page: number }
@@ -35,16 +40,15 @@ export function List(): ReactElement {
     increment: [],
   })
 
-  const { data, loading, error } = useApi<{
-    count: number
-    rows: (IPost & { author: IAuthor; likes: ILike[]; userLiked: boolean })[]
-  }>(
+  const { data: newData, loading, error } = useApi<ApiResponse>(
     `/blog/get_client_posts/${filter.page.value * 30}/${filter.sortBy.value}/${
       !filter.tag.value ? '' : filter.tag.value
     }`,
     {
       debounce: 800,
-      onSuccess: () => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }),
+      onSuccess: (e: ApiResponse) => {
+        setData((v) => (_.uniqBy([...v, ...e.rows], 'id')))
+      },
     },
     [filter],
   )
@@ -56,6 +60,7 @@ export function List(): ReactElement {
   useEffect(() => {
     setMounted(true)
   }, [])
+
   useEffect(() => {
     if (location.state?.tag) filter.tag.set(location.state.tag)
   }, [location])
@@ -92,12 +97,10 @@ export function List(): ReactElement {
         value={filter.tag.value}
         onChange={filter.tag.set}
       />
-      <PageIndicator active={activePage} />
+      <PageIndicator active={1} />
 
       <div id='list'>
-        {loading
-          ? <Loader />
-          : !data || !data.rows.length || error
+        {!data || !data.length || error
           ? (
             <span className='mt-30 block'>
               No articles are available at the moment.
@@ -115,7 +118,7 @@ export function List(): ReactElement {
               id='list_masonry'
               columnClassName='flex items-center flex-col gap-6 mx-6'
             >
-              {data.rows.map((r, i) => (
+              {data.map((r, i) => (
                 <div key={i}>
                   <img
                     className={classNames(
@@ -160,24 +163,15 @@ export function List(): ReactElement {
               ))}
             </Masonry>
           )}
+        {loading ? <Loader /> : null}
       </div>
 
-      {data && data?.count > data?.rows.length && (
+      {newData && newData?.count > newData?.rows.length && (
         <div
           id='more_recipes_button'
           className='flex items-center gap-2 justify-center'
         >
-          {filter.page.value > 0 && (
-            <button
-              onClick={() => (filter.page.set((e) => e > 0 ? e - 1 : 0),
-                setActivePage((e) => e <= 0 ? 3 : e - 1))}
-              className='px-6 py-3 rounded-full bg-secondary font-medium c-white block border-none'
-            >
-              Go back
-            </button>
-          )}
-
-          {data?.count > (data?.rows.length + (filter.page.value * 30)) &&
+          {newData?.count > (data?.length + (filter.page.value * 30)) &&
             (
               <button
                 onClick={() => (filter.page.set((e) => e + 1),

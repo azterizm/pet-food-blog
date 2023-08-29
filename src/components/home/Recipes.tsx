@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom'
 import { API_ENDPOINT } from '../../constants/api'
 import { isSaved, onSave } from '../../features/save'
 import { useAuth } from '../../hooks/api'
-import { AuthorTotalRecipe } from '../../types/api'
 import { Loader } from '../Loader'
 import { Recipe } from './Recipe'
 
@@ -18,7 +17,6 @@ interface Props {
       saves: ISave[]
       userLiked: boolean
     })[]
-    authorTotalRecipes: AuthorTotalRecipe[]
     total: number
   } | null
   error: string | null
@@ -30,7 +28,7 @@ export function Recipes(props: Props): ReactElement {
 
   return (
     <div id='list'>
-      {props.loading
+      {props.loading && !props.data?.recipes.length
         ? <Loader />
         : !props.data || !props.data.recipes.length || props.error
         ? (
@@ -72,10 +70,7 @@ export function Recipes(props: Props): ReactElement {
                 priceType={r.priceType}
                 price={r.price}
                 userLiked={r.userLiked}
-                authorTotalRecipes={!props.data?.authorTotalRecipes?.length ? 0 :  props.data?.authorTotalRecipes.find((v) =>
-                  v.id === r.author.id
-                )
-                  ?.total || 0}
+                authorTotalRecipes={0}
                 onSave={() =>
                   onSave({
                     id: r.id,
@@ -90,6 +85,7 @@ export function Recipes(props: Props): ReactElement {
             ))}
           </Masonry>
         )}
+      {props.loading ? <Loader /> : null}
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { IAuthor } from '@backend/models/author'
 import { ILike } from '@backend/models/like'
 import { IPost } from '@backend/models/post'
+import List from '@editorjs/list'
 import Delimiter from '@editorjs/delimiter'
 import EditorJS, { OutputData } from '@editorjs/editorjs'
 import Header from '@editorjs/header'
@@ -68,6 +69,13 @@ export function Read(): ReactElement {
         quote: Quote,
         delimiter: Delimiter,
         underline: Underline,
+        list: {
+          class: List,
+          inlineToolbar: true,
+          config: {
+            defaultStyle: 'unordered',
+          },
+        },
         image: {
           class: Image,
         },

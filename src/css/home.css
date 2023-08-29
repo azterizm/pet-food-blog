@@ -8,7 +8,7 @@
   }
   #list > div > div:nth-child(1),
   #list > div > div:nth-child(4) {
-    transform: translateY(-9rem);
+    transform: translateY(-6rem);
   }
   #page_indicator {
     margin-bottom: 0 !important;
@@ -30,7 +30,7 @@
   }
   #list > div > div:nth-child(1),
   #list > div > div:nth-child(5) {
-    transform: translateY(-9rem);
+    transform: translateY(-7rem);
   }
   #more_recipes_button {
     margin-top: 16rem;
@@ -53,4 +53,8 @@
   #list_title {
     font-size: 1.25rem;
   }
+}
+
+#list_masonry img {
+  aspect-ratio: 9 / 16;
 }
