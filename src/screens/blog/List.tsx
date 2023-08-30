@@ -4,10 +4,10 @@ import { IPost } from '@backend/models/post'
 import { useHookstate } from '@hookstate/core'
 import classNames from 'classnames'
 import _ from 'lodash'
-import { HandsClapping } from 'phosphor-react'
 import { ReactElement, useEffect, useState } from 'react'
 import Masonry from 'react-masonry-css'
 import { useLocation, useNavigate } from 'react-router-dom'
+import AuthorListItem from '../../components/blog/ListItem'
 import TagsList from '../../components/home/List'
 import PageIndicator from '../../components/home/PageIndicator'
 import Title from '../../components/home/Title'
@@ -23,7 +23,6 @@ interface ApiResponse {
   rows: (IPost & { author: IAuthor; likes: ILike[]; userLiked: boolean })[]
 }
 export function List(): ReactElement {
-  const [activePage, setActivePage] = useState(0)
   const [data, setData] = useState<ApiResponse['rows']>([])
   const location = useLocation()
   const filter = useHookstate<
@@ -119,47 +118,20 @@ export function List(): ReactElement {
               columnClassName='flex items-center flex-col gap-6 mx-6'
             >
               {data.map((r, i) => (
-                <div key={i}>
-                  <img
-                    className={classNames(
-                      'cursor-pointer object-cover rounded-lg w-full',
-                    )}
-                    loading='lazy'
-                    src={API_ENDPOINT + r.mainImage}
-                    alt={r.title + ' ' + 'image'}
-                    onClick={() => navigate(r.id?.toString() || '/')}
-                  />
-
-                  <div className='relative text-center'>
-                    <span className='text-2xl font-bold'>{r.title}</span>
-                    <span className='block text-lg font-bold c-button'>
-                      with {r.author?.name.split(' ')[0]}
-                    </span>
-                    <div
-                      onClick={() => onLike(r.id!, i, r.userLiked)}
-                      className='flex items-center justify-center mt-1'
-                    >
-                      <HandsClapping
-                        size={24}
-                        color={(r.userLiked &&
-                              !likes.decrement.value.includes(i) ||
-                            likes.increment.value.includes(i))
-                          ? '#FEA2AD'
-                          : '#000000'}
-                        weight='fill'
-                        className='cursor-pointer active:scale-175 transition c-black'
-                      />
-                      <span className='inline-block !ml-1'>
-                        {Intl.NumberFormat('en-US').format(
-                          (r.likes?.length ||
-                            0) -
-                            (likes.decrement.value.includes(i) ? 1 : 0) +
-                            (likes.increment.value.includes(i) ? 1 : 0),
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                <AuthorListItem
+                  authorName={r.author.name}
+                  onClick={() => navigate(r.id?.toString() || '/')}
+                  image={API_ENDPOINT + r.mainImage}
+                  title={r.title}
+                  onLike={() => onLike(r.id!, i, r.userLiked)}
+                  likes={(r.likes?.length ||
+                    0) -
+                    (likes.decrement.value.includes(i) ? 1 : 0) +
+                    (likes.increment.value.includes(i) ? 1 : 0)}
+                  liked={r.userLiked &&
+                      !likes.decrement.value.includes(i) ||
+                    likes.increment.value.includes(i)}
+                />
               ))}
             </Masonry>
           )}
@@ -174,8 +146,7 @@ export function List(): ReactElement {
           {newData?.count > (data?.length + (filter.page.value * 30)) &&
             (
               <button
-                onClick={() => (filter.page.set((e) => e + 1),
-                  setActivePage((e) => e === 3 ? 0 : e + 1))}
+                onClick={() => (filter.page.set((e) => e + 1))}
                 className='px-6 py-3 rounded-full bg-white border-2 border-gray-300 font-medium c-black block'
               >
                 More articles
