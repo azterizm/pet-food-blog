@@ -1,4 +1,5 @@
 import { IAuthor } from '@backend/models/author'
+import Embed from '@editorjs/embed'
 import { ILike } from '@backend/models/like'
 import { IPost } from '@backend/models/post'
 import List from '@editorjs/list'
@@ -57,7 +58,7 @@ export function Read(): ReactElement {
         () => initEditor(data?.body as any),
       )
     } else initEditor(data?.body as any)
-  }, [editorContainerRef,  editorRef, data])
+  }, [editorContainerRef, editorRef, data])
 
   function initEditor(data?: OutputData) {
     if (!editorContainerRef.current) return
@@ -69,6 +70,10 @@ export function Read(): ReactElement {
         quote: Quote,
         delimiter: Delimiter,
         underline: Underline,
+        embed: {
+          class: Embed,
+          inlineToolbar: true,
+        },
         list: {
           class: List,
           inlineToolbar: true,
@@ -100,12 +105,13 @@ export function Read(): ReactElement {
   }
 
   if (loading) return <Loader />
-  else if (!data || error)
+  else if (!data || error) {
     return (
       <div className='flex-center absolute-center'>
         <span className='c-red'>{error}</span>
       </div>
     )
+  }
 
   return (
     <div>
@@ -116,9 +122,9 @@ export function Read(): ReactElement {
         author={data.author}
         tags={data.tags}
       />
-      <LikeSection blog liked={liked} onLike={setLiked}/>
+      <LikeSection blog liked={liked} onLike={setLiked} />
       <article className='mt-20'>
-      <div className='font-sans' ref={editorContainerRef} />
+        <div className='font-sans' ref={editorContainerRef} />
         <Donate
           name={data.author.name}
           status={donateStatus}
