@@ -20,6 +20,15 @@ import { donateAuthor } from '../../features/author'
 import { useApi } from '../../hooks/api'
 import { ApiProcess } from '../../types/api'
 import { DonateStatus } from '../../types/ui'
+import {
+  ChatCircle,
+  Circle,
+  HandsClapping,
+  Heart,
+  ListBullets,
+  Share,
+} from 'phosphor-react'
+import { GoBack } from '../../components/GoBack'
 
 interface FetchData {
   author: IAuthor
@@ -114,24 +123,61 @@ export function Read(): ReactElement {
   }
 
   return (
-    <div>
-      <Hero
-        image={API_ENDPOINT + data.mainImage}
-        publishedOn={data.createdAt!}
-        title={decodeURIComponent(data.title)}
-        author={data.author}
-        tags={data.tags}
-      />
-      <LikeSection blog liked={liked} onLike={setLiked} />
-      <article className='mt-20'>
-        <div className='font-sans' ref={editorContainerRef} />
-        <Donate
-          name={data.author.name}
-          status={donateStatus}
-          onReset={() => setDonateStatus(DonateStatus.Idle)}
-          onDonate={onDonate}
+    <div className='max-w-[42.5rem] mx-auto'>
+      <GoBack/>
+      <h1 className='text-5xl font-black block mt-16'>
+        {data.title}
+      </h1>
+      <div className='flex items-center gap-2'>
+        <img
+          className='rounded-full aspect-sqaure object-cover object-center w-16'
+          src={API_ENDPOINT + '/auth/profile/' + data.author.id}
+          alt={`${data.author.name} profile`}
         />
-      </article>
+        <div>
+          <div className='flex items-center gap-2 text-lg'>
+            <p className='m-0'>{data.author.name}</p>
+            <span>&bull;</span>
+            <button className='py-2 bg-white hover:underline text-blue-600 border-none text-lg font-bold'>
+              Follow
+            </button>
+          </div>
+          <div className='flex items-center gap-2 text-sm text-gray-600'>
+            <p className='m-0'>11 min read</p>
+            <span>&bull;</span>
+            <p className='m-0'>
+              {new Date(data.createdAt || '').toLocaleDateString()}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className='flex items-center justify-between border-y-2 border-gray-200 my-6 py-2'>
+        <div className='flex items-center gap-6'>
+          <button className='flex items-center gap-1 bg-white text-gray-600 border-none'>
+            <HandsClapping size={20} />
+            <span className='text-md'>
+              4.7k
+            </span>
+          </button>
+
+          <button className='flex items-center gap-1 bg-white border-none text-gray-600'>
+            <ChatCircle size={20} />
+            <span className='text-md'>
+              56
+            </span>
+          </button>
+        </div>
+        <div className='flex items-center gap-6'>
+          <button className='bg-white border-none text-gray-600'>
+            <Heart size={20} />
+          </button>
+          <button className='bg-white border-none text-gray-600'>
+            <Share size={20} />
+          </button>
+        </div>
+      </div>
+      <img src={API_ENDPOINT + data.mainImage} className='w-full' />
+      <div className='font-sans' ref={editorContainerRef} />
     </div>
   )
 }
