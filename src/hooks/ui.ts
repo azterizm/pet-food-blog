@@ -1,4 +1,11 @@
-import { RefObject, useEffect, useMemo, useState } from 'react'
+import {
+  LegacyRef,
+  RefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 export function useUndefinedParam(...arg: any[]) {
   useEffect(() => {
@@ -84,4 +91,21 @@ export function makeMouseScrollable(boxRef: RefObject<HTMLElement>) {
       document.removeEventListener('mousemove', onMouseMove)
     }
   }, [boxRef])
+}
+
+export function useOnClickOutside(
+  ref: RefObject<HTMLElement>,
+  callback: () => void,
+) {
+  useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        callback()
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [ref])
 }

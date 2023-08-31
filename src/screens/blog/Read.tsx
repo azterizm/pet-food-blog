@@ -1,4 +1,5 @@
 import { IAuthor } from '@backend/models/author'
+import { IComment } from '@backend/models/comment'
 import { IPost } from '@backend/models/post'
 import Delimiter from '@editorjs/delimiter'
 import EditorJS, { OutputData } from '@editorjs/editorjs'
@@ -11,9 +12,11 @@ import Underline from '@editorjs/underline'
 import { useHookstate } from '@hookstate/core'
 import classNames from 'classnames'
 import { ChatCircle, Heart, Share } from 'phosphor-react'
-import { ReactElement, useEffect, useRef } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
+import { Portal } from 'react-portal'
 import { useNavigate, useParams } from 'react-router-dom'
 import shortNumber from 'short-number'
+import CommentSection from '../../components/blog/CommentSection'
 import AuthorListItem from '../../components/blog/ListItem'
 import { GoBack } from '../../components/GoBack'
 import { Loader } from '../../components/Loader'
@@ -22,11 +25,14 @@ import { followAuthor } from '../../features/author'
 import { handleLike } from '../../features/like'
 import { onSavePost } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
+import { useFade } from '../../hooks/state'
 import { calculateEstimatedTimeReading } from '../../util/ui'
 
 //TODO: comment, share
 export function Read(): ReactElement {
   const { id } = useParams()
+
+  const [showCommentSection, setShowCommentSection] = useState(false)
 
   const status = useHookstate({
     liked: false,
@@ -39,6 +45,8 @@ export function Read(): ReactElement {
   const editorRef = useRef<EditorJS>()
 
   const [user] = useAuth()
+
+  const fade = useFade()
 
   const { data, loading, error } = useApi<IPost & FetchData>(
     '/blog/one/' + id + '/true',
@@ -53,6 +61,7 @@ export function Read(): ReactElement {
     },
     [id],
   )
+  console.log({ data })
 
   useEffect(() => {
     if (!editorContainerRef.current || !data) return
@@ -132,10 +141,16 @@ export function Read(): ReactElement {
           </span>
         </button>
 
-        <button className='flex items-center gap-1 bg-white border-none text-gray-600'>
-          <ChatCircle size={20} />
+        <button
+          onClick={() => (setShowCommentSection((e) => !e), fade.show())}
+          className='flex items-center gap-1 bg-white border-none text-gray-600'
+        >
+          <ChatCircle
+            size={20}
+            weight={showCommentSection ? 'fill' : 'regular'}
+          />
           <span className='text-md'>
-            56
+            {shortNumber(data.comments.length)}
           </span>
         </button>
       </div>
@@ -268,6 +283,22 @@ export function Read(): ReactElement {
           </div>
         </div>
       </div>
+      <Portal>
+        <div
+          className={classNames(
+            'transition-transform fixed top-0 right-0 z-101 overflow-auto h-screen w-full md:w-1/2 lg:w-1/3',
+            showCommentSection ? 'translate-x-0' : 'translate-x-full',
+          )}
+        >
+          <CommentSection
+            authorProfileImage={data.author.profile}
+            authorName={data.author.name}
+            onClose={() => (setShowCommentSection(false), fade.hide())}
+            postId={data.id!}
+            data={data.comments}
+          />
+        </div>
+      </Portal>
     </>
   )
 }
@@ -283,4 +314,5 @@ interface FetchData {
   likesCount: number
   following: boolean
   saved: boolean
+  comments: (IComment & { author: IAuthor })[]
 }

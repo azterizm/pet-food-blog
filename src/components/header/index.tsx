@@ -1,12 +1,12 @@
-import { CaretUp, List, MagnifyingGlass, User, X } from 'phosphor-react'
+import { animated, useSpringValue } from '@react-spring/web'
+import classNames from 'classnames'
+import { CaretUp, MagnifyingGlass, User, X } from 'phosphor-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { animated, useSpringValue } from '@react-spring/web'
 import { CREATOR_ENDPOINT } from '../../constants/api'
+import { useFade } from '../../hooks/state'
 import { AuthUser } from '../../types/auth'
 import { MobileMenu } from '../header/MobileMenu'
-import classNames from 'classnames'
-import { useAuth } from '../../hooks/api'
 
 interface Props {
   user: AuthUser | null
@@ -23,6 +23,7 @@ export function Header({ user }: Props) {
       else setRemoveHint(false)
     },
   })
+  const fade = useFade()
 
   useEffect(() => {
     const hintShown = window.localStorage.getItem('hintShown')
@@ -37,7 +38,13 @@ export function Header({ user }: Props) {
 
   return (
     <>
-      <div id='header' className='lg:fixed top-0 left-0 z-100 bg-white flex justify-unset lg:justify-between items-center pt-2rem pl-2rem lg:pl-1rem lg:pt-1rem -ml-14 lg:ml-0'>
+      <div
+        id='header'
+        className={classNames(
+          'lg:fixed top-0 left-0 z-100 bg-white flex justify-unset lg:justify-between items-center pt-2rem pl-2rem lg:pl-1rem lg:pt-1rem -ml-14 lg:ml-0 pr-2rem',
+          fade.visible ? 'brightness-50 pointer-events-none' : '',
+        )}
+      >
         <Link className='hidden lg:block' to='/'>
           <img className='w-50' src='/logo.svg' alt='logo' />
         </Link>
@@ -45,7 +52,7 @@ export function Header({ user }: Props) {
           <Link
             className={classNames(
               'no-underline',
-              location.pathname===('/') ? 'c-button' : 'c-black',
+              location.pathname === ('/') ? 'c-button' : 'c-black',
             )}
             to='/'
           >
@@ -80,58 +87,62 @@ export function Header({ user }: Props) {
           </Link>
         </div>
         <div className='items-center gap-6 hidden lg:flex font-bold'>
-          {!user || user.type === 'author' ? (
-            <div className={'z-100 relative ' + (user ? 'translate-y--1' : '')}>
-              {user&&(
-
+          {!user || user.type === 'author'
+            ? (
+              <div
+                className={'z-100 relative ' + (user ? 'translate-y--1' : '')}
+              >
+                {user && (
+                  <button
+                    onClick={() =>
+                      !user
+                        ? navigate('/login')
+                        : (window.location.href = CREATOR_ENDPOINT)}
+                    className='bg-#2821fc c-white rounded-full c-black border-none font-bold px-7 py-2 hover:brightness-75 '
+                  >
+                    Create
+                  </button>
+                )}
+                <animated.div
+                  onClick={closeHint}
+                  className='absolute right-0 bottom--45 bg-secondary c-white p-5 rounded-lg w-50 font-medium z-1 z-100'
+                  style={{
+                    opacity: hintOpacity,
+                    display: removeHint || !user ? 'none' : 'block',
+                  }}
+                >
+                  <span>
+                    Click to create recipes or articles and access your admin
+                    panel.
+                  </span>
+                  <div className='flex items-center justify-start gap-2 mt-4 bg-blue-700 w-max px-2 py-1 rounded-lg cursor-pointer'>
+                    <X weight='bold' />
+                    <span>Close</span>
+                  </div>
+                  <div className='absolute top--7.5 right-5 c-secondary'>
+                    <CaretUp size={56} weight='fill' />
+                  </div>
+                </animated.div>
+              </div>
+            )
+            : null}
+          {user
+            ? (
+              <div
+                className='cursor-pointer p-5 pl-0'
+                onClick={() => navigate('/profile')}
+              >
+                <User size={24} weight='bold' />
+              </div>
+            )
+            : (
               <button
-                onClick={() =>
-                  !user
-                    ? navigate('/login')
-                    : (window.location.href = CREATOR_ENDPOINT)
-                }
-                className='bg-#2821fc c-white rounded-full c-black border-none font-bold px-7 py-2 hover:brightness-75 '
+                onClick={() => navigate('login')}
+                className='bg-black border-none rounded-full c-white font-bold px-6 py-3 hover:brightness-75'
               >
-                Create
+                Register / Log In
               </button>
-              )}
-              <animated.div
-                onClick={closeHint}
-                className='absolute right-0 bottom--45 bg-secondary c-white p-5 rounded-lg w-50 font-medium z-1 z-100'
-                style={{
-                  opacity: hintOpacity,
-                  display: removeHint || !user ? 'none' : 'block',
-                }}
-              >
-                <span>
-                  Click to create recipes or articles and access your admin
-                  panel.
-                </span>
-                <div className='flex items-center justify-start gap-2 mt-4 bg-blue-700 w-max px-2 py-1 rounded-lg cursor-pointer'>
-                  <X weight='bold' />
-                  <span>Close</span>
-                </div>
-                <div className='absolute top--7.5 right-5 c-secondary'>
-                  <CaretUp size={56} weight='fill' />
-                </div>
-              </animated.div>
-            </div>
-          ) : null}
-          {user ? (
-            <div
-              className='cursor-pointer p-5 pl-0'
-              onClick={() => navigate('/profile')}
-            >
-              <User size={24} weight='bold' />
-            </div>
-          ) : (
-            <button
-              onClick={() => navigate('login')}
-              className='bg-black border-none rounded-full c-white font-bold px-6 py-3 hover:brightness-75'
-            >
-              Register / Log In
-            </button>
-          )}
+            )}
           <Link className='no-underline c-black' to='/search'>
             <MagnifyingGlass weight='bold' size={24} />
           </Link>
@@ -154,21 +165,23 @@ export function Header({ user }: Props) {
             <img className='w-50' src='/logo.svg' alt='logo' />
           </Link>
 
-          {user ? (
-            <Link
-              className='bg-lightCyan text-white px-5 py-2 rounded-full border-none no-underline'
-              to='/profile'
-            >
-              My Account
-            </Link>
-          ) : (
-            <Link
-              className='bg-lightCyan text-white px-5 py-2 rounded-full border-none no-underline'
-              to='/login'
-            >
-              Login
-            </Link>
-          )}
+          {user
+            ? (
+              <Link
+                className='bg-lightCyan text-white px-5 py-2 rounded-full border-none no-underline'
+                to='/profile'
+              >
+                My Account
+              </Link>
+            )
+            : (
+              <Link
+                className='bg-lightCyan text-white px-5 py-2 rounded-full border-none no-underline'
+                to='/login'
+              >
+                Login
+              </Link>
+            )}
 
           <button
             onClick={() => (window.location.href = CREATOR_ENDPOINT)}
@@ -184,8 +197,8 @@ export function Header({ user }: Props) {
 
             <p className='font-medium'>
               Each time you create and share a recipe,{' '}
-              <span className='text-button'>you are helping dogs</span> with
-              better nutrition and a better life. Animal parents depend on
+              <span className='text-button'>you are helping dogs</span>{' '}
+              with better nutrition and a better life. Animal parents depend on
               people like you.
             </p>
 
@@ -206,7 +219,7 @@ export function Header({ user }: Props) {
           />
         </div>
       </div>
-      <div className='h-30 hidden lg:block bg-transparent pointer-events-none'/>
+      <div className='h-30 hidden lg:block bg-transparent pointer-events-none' />
     </>
   )
 }

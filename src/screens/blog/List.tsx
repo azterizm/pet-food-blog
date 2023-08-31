@@ -119,6 +119,7 @@ export function List(): ReactElement {
             >
               {data.map((r, i) => (
                 <AuthorListItem
+                  key={i}
                   authorName={r.author.name}
                   onClick={() => navigate(r.id?.toString() || '/')}
                   image={API_ENDPOINT + r.mainImage}

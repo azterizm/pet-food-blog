@@ -1,16 +1,24 @@
+import classNames from 'classnames'
 import { Copyright } from 'phosphor-react'
 import type { ReactElement } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { CREATOR_ENDPOINT } from '../constants/api'
 import { useAuth } from '../hooks/api'
+import { useFade } from '../hooks/state'
 
 export function Footer(): ReactElement {
   const [user] = useAuth()
   const navigate = useNavigate()
+  const fade = useFade()
 
   return (
     <>
-      <footer className='flex bg-white p-4 items-center justify-between gap-6 c-neutral-600 flex-col lg:flex-row lg:fixed bottom-0 left-0 lg:w-screen mt-32 mb-4 lg:m-0 z-10'>
+      <footer
+        className={classNames(
+          'flex bg-white p-4 items-center justify-between gap-6 c-neutral-600 flex-col lg:flex-row lg:fixed bottom-0 left-0 lg:w-screen mt-32 mb-4 lg:m-0 z-10',
+          fade.visible ? 'brightness-50 pointer-events-none' : '',
+        )}
+      >
         <div className='flex items-center gap-4'>
           <button
             onClick={() =>
