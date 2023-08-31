@@ -24,7 +24,7 @@ import { onSavePost } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import { calculateEstimatedTimeReading } from '../../util/ui'
 
-//TODO: save, comment, share
+//TODO: comment, share
 export function Read(): ReactElement {
   const { id } = useParams()
 
@@ -44,9 +44,11 @@ export function Read(): ReactElement {
     '/blog/one/' + id + '/true',
     {
       onSuccess: (r) => {
-        status.liked.set(r.userLiked)
-        status.following.set(r.following)
-        status.saved.set(r.saved)
+        status.set({
+          liked: r.userLiked,
+          following: r.following,
+          saved: r.saved,
+        })
       },
     },
     [id],
