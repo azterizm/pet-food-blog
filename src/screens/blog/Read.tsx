@@ -11,6 +11,7 @@ import Quote from '@editorjs/quote'
 import Underline from '@editorjs/underline'
 import { useHookstate } from '@hookstate/core'
 import classNames from 'classnames'
+import moment from 'moment'
 import { ChatCircle, Heart, Share } from 'phosphor-react'
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import { Portal } from 'react-portal'
@@ -206,7 +207,7 @@ export function Read(): ReactElement {
               </p>
               <span>&bull;</span>
               <p className='m-0'>
-                {new Date(data.createdAt || '').toDateString()}
+                {moment(data.createdAt || '').format('MMM D')}
               </p>
             </div>
           </div>
@@ -291,11 +292,13 @@ export function Read(): ReactElement {
           )}
         >
           <CommentSection
+            postAuthorId={data.authorId!}
             authorProfileImage={data.author.profile}
             authorName={data.author.name}
             onClose={() => (setShowCommentSection(false), fade.hide())}
             postId={data.id!}
             data={data.comments}
+            open={showCommentSection}
           />
         </div>
       </Portal>
