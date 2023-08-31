@@ -15,7 +15,7 @@ export function MobileMenu(): ReactElement {
   const menuItems = useMemo(
     () => [
       ['/', 'Recipes'],
-      ['/blog', 'Topics'],
+      ['/blog', 'Articles'],
       ['/free', 'Free Stuff'],
       ['', ''],
       ['/saved', 'Saved'],

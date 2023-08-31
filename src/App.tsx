@@ -7,6 +7,7 @@ import { useAuth } from './hooks/api'
 import { useFade, useHeaderFooter } from './hooks/state'
 import { lazyImport } from './util/ui'
 import 'swiper/css'
+import ScrollToTop from './components/ScrollToTopRouter'
 
 const Donate = lazy(() => import('./screens/recipe/Donate'))
 const { PrintRecipe } = lazyImport(
@@ -89,6 +90,7 @@ function App() {
     >
       <Suspense fallback={<Loader />}>
         {headFoot.visible ? <Header user={user} /> : null}
+        <ScrollToTop />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='login' element={<Login />} />

@@ -1,5 +1,4 @@
 import { IAuthor } from '@backend/models/author'
-import { ILike } from '@backend/models/like'
 import { IPost } from '@backend/models/post'
 import Delimiter from '@editorjs/delimiter'
 import EditorJS, { OutputData } from '@editorjs/editorjs'
@@ -9,46 +8,49 @@ import Image from '@editorjs/image'
 import List from '@editorjs/list'
 import Quote from '@editorjs/quote'
 import Underline from '@editorjs/underline'
+import { useHookstate } from '@hookstate/core'
 import classNames from 'classnames'
 import { ChatCircle, Heart, Share } from 'phosphor-react'
-import { ReactElement, useEffect, useRef, useState } from 'react'
+import { ReactElement, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import shortNumber from 'short-number'
 import AuthorListItem from '../../components/blog/ListItem'
 import { GoBack } from '../../components/GoBack'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT } from '../../constants/api'
-import { donateAuthor } from '../../features/author'
+import { followAuthor } from '../../features/author'
 import { handleLike } from '../../features/like'
-import { useApi } from '../../hooks/api'
-import { ApiProcess } from '../../types/api'
-import { DonateStatus } from '../../types/ui'
+import { onSavePost } from '../../features/save'
+import { useApi, useAuth } from '../../hooks/api'
+import { calculateEstimatedTimeReading } from '../../util/ui'
 
+//TODO: save, comment, share
 export function Read(): ReactElement {
   const { id } = useParams()
-  const [loaded, setLoaded] = useState(false)
-  const [liked, setLiked] = useState(false)
-  const [donateStatus, setDonateStatus] = useState<DonateStatus>(
-    DonateStatus.Idle,
-  )
+
+  const status = useHookstate({
+    liked: false,
+    following: false,
+    saved: false,
+  })
 
   const navigate = useNavigate()
   const editorContainerRef = useRef<HTMLDivElement>(null)
   const editorRef = useRef<EditorJS>()
 
+  const [user] = useAuth()
+
   const { data, loading, error } = useApi<IPost & FetchData>(
     '/blog/one/' + id + '/true',
     {
       onSuccess: (r) => {
-        const d: FetchData = data || r
-        if (d && !loaded) {
-          setLiked(d.userLiked)
-          setLoaded(true)
-        }
+        status.liked.set(r.userLiked)
+        status.following.set(r.following)
+        status.saved.set(r.saved)
       },
     },
     [id],
   )
-  console.log({ data })
 
   useEffect(() => {
     if (!editorContainerRef.current || !data) return
@@ -91,18 +93,6 @@ export function Read(): ReactElement {
     editorRef.current = editor
   }
 
-  async function onDonate(amount: number) {
-    if (!amount || !data) return
-    setDonateStatus(DonateStatus.Process)
-    const donateResponse: ApiProcess = await donateAuthor({
-      id: data.author.id!,
-      amount,
-    })
-    setDonateStatus(DonateStatus.Process)
-    if (donateResponse.error) return alert(donateResponse.info)
-    setDonateStatus(DonateStatus.Done)
-  }
-
   if (loading) return <Loader />
   else if (!data || error) {
     return (
@@ -121,11 +111,12 @@ export function Read(): ReactElement {
     >
       <div className='flex items-center gap-6'>
         <button
-          onClick={() => (setLiked((e) => !e), handleLike(data.id!, 'blog'))}
+          onClick={() => (status.liked.set((e) => !e),
+            handleLike(data.id!, 'blog'))}
           className='flex items-center gap-1 bg-white text-gray-600 border-none group select-none whitespace-nowrap cursor-pointer'
         >
           <img
-            src={liked ? '/icons/clap-active.png' : '/icons/clap.png'}
+            src={status.liked ? '/icons/clap-active.png' : '/icons/clap.png'}
             alt='Clapping hands icon'
             width='45'
             style={{ transform: 'translateY(-2px)' }}
@@ -135,7 +126,7 @@ export function Read(): ReactElement {
             className='text-md'
             style={{ marginLeft: -8 }}
           >
-            4.7k
+            {shortNumber(data.likesCount + (status.liked ? 1 : 0))}
           </span>
         </button>
 
@@ -147,8 +138,12 @@ export function Read(): ReactElement {
         </button>
       </div>
       <div className='flex items-center gap-6'>
-        <button className='bg-white border-none text-gray-600'>
-          <Heart size={20} />
+        <button
+          onClick={() => (status.saved.set((e) => !e),
+            onSavePost(data.id, user))}
+          className='bg-white border-none text-gray-600'
+        >
+          <Heart weight={status.saved.value ? 'fill' : 'regular'} size={20} />
         </button>
         <button className='bg-white border-none text-gray-600'>
           <Share size={20} />
@@ -174,12 +169,24 @@ export function Read(): ReactElement {
             <div className='flex items-center gap-2 text-lg'>
               <p className='m-0'>{data.author.name}</p>
               <span>&bull;</span>
-              <button className='py-2 bg-white hover:underline text-blue-600 border-none text-lg font-bold'>
-                Follow
+              <button
+                onClick={() => (followAuthor(data.author.id, user),
+                  status.following.set((e) => !e))}
+                disabled={loading}
+                className={classNames(
+                  'py-2 bg-white hover:underline border-none text-lg font-bold',
+                  status.following ? 'text-gray-600' : 'text-blue-600',
+                )}
+              >
+                {status.following ? 'Following' : 'Follow'}
               </button>
             </div>
             <div className='flex items-center gap-2 text-sm text-gray-600'>
-              <p className='m-0'>11 min read</p>
+              <p className='m-0'>
+                {calculateEstimatedTimeReading(
+                  JSON.stringify(data.body.blocks),
+                )}
+              </p>
               <span>&bull;</span>
               <p className='m-0'>
                 {new Date(data.createdAt || '').toDateString()}
@@ -192,7 +199,7 @@ export function Read(): ReactElement {
         <img src={API_ENDPOINT + data.mainImage} className='w-full' />
         <div className='font-sans' ref={editorContainerRef} />
         <div className='flex items-center gap-4'>
-          {data.tags.map((r,i) => (
+          {data.tags.map((r, i) => (
             <button
               key={i}
               onClick={() => navigate('/blog')}
@@ -206,7 +213,7 @@ export function Read(): ReactElement {
       </div>
 
       <div className='mt-16 w-screen -ml-10 bg-gray-100'>
-        <div className='py-16 max-w-[42.5rem] mx-auto'>
+        <div className='py-16 max-w-[42.5rem] mx-auto px-10'>
           <div className='my-8'>
             <img
               className='rounded-full aspect-sqaure object-cover object-center w-16 mb-4'
@@ -218,11 +225,23 @@ export function Read(): ReactElement {
                 <p className='m-0 font-semibold text-2xl mb-2'>
                   Written by {data.author.name}
                 </p>
-                <p className='m-0 text-md'>145 Followers</p>
+                <p className='m-0 text-md'>
+                  {shortNumber(data.author.followersCount)}{' '}
+                  Follower{data.author.followersCount > 1 ? 's' : ''}
+                </p>
               </div>
               <div className='flex items-center gap-2'>
-                <button className='px-5 font-medium py-3 rounded-full bg-black text-white border-none'>
-                  Follow
+                <button
+                  onClick={() => (followAuthor(data.author.id, user),
+                    status.following.set((e) => !e))}
+                  className={classNames(
+                    'px-5 font-medium py-3 rounded-full border-none',
+                    status.following
+                      ? 'bg-gray-200 text-black'
+                      : 'bg-black text-white',
+                  )}
+                >
+                  {status.following ? 'Following' : 'Follow'}
                 </button>
               </div>
             </div>
@@ -231,7 +250,7 @@ export function Read(): ReactElement {
           <p className='text-xl font-medium my-8'>
             Recommended
           </p>
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid sm:grid-cols-2 gap-4'>
             {data.recommendations.map((r, i) => (
               <AuthorListItem
                 key={i}
@@ -240,6 +259,8 @@ export function Read(): ReactElement {
                 onClick={() => navigate('/blog/' + r.id)}
                 authorName={r.author.name}
                 likes={r.likesCount}
+                onLike={() => handleLike(r.id!, 'blog')}
+                liked={r.userLiked}
               />
             ))}
           </div>
@@ -250,8 +271,14 @@ export function Read(): ReactElement {
 }
 
 interface FetchData {
-  author: IAuthor
+  author: IAuthor & { followersCount: number }
   userLiked: boolean
-  recommendations: (IPost & { author: { name: string }; likesCount: number })[]
-  likes: ILike[]
+  recommendations: (IPost & {
+    author: { name: string }
+    likesCount: number
+    userLiked: boolean
+  })[]
+  likesCount: number
+  following: boolean
+  saved: boolean
 }

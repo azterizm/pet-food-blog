@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { Recipe } from '../components/home/Recipe'
 import { Loader } from '../components/Loader'
 import { API_ENDPOINT } from '../constants/api'
-import { isSaved, onSave } from '../features/save'
+import { isSavedRecipe, onSaveRecipe } from '../features/save'
 import { useApi, useAuth } from '../hooks/api'
 
 export function Purchases(): ReactElement {
@@ -50,12 +50,12 @@ export function Purchases(): ReactElement {
                 purchaseDate={createdAt}
                 id={recipe.id!}
                 onSave={() =>
-                  onSave({
+                  onSaveRecipe({
                     user,
                     id: recipe.id,
                   })
                 }
-                saved={isSaved({ data: { saves: data }, user, id: recipe.id })}
+                saved={isSavedRecipe({ data: { saves: data }, user, id: recipe.id })}
               />
             ))}
         </div>

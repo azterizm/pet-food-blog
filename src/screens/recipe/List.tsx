@@ -10,7 +10,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { Recipe } from '../../components/home/Recipe'
 import { Loader } from '../../components/Loader'
 import { API_ENDPOINT, PAGE_OFFSET } from '../../constants/api'
-import { isSaved, onSave } from '../../features/save'
+import { isSavedRecipe, onSaveRecipe } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import { categories, Category, categoryLabel, sortLabel } from '../../types/api'
 
@@ -136,8 +136,8 @@ export function RecipeList(): ReactElement {
                   categories={r.categories}
                   price={r.price}
                   authorTotalRecipes={0}
-                  onSave={() => onSave({ user, id: r.id })}
-                  saved={isSaved({ data: r, user, id: r.id })}
+                  onSave={() => onSaveRecipe({ user, id: r.id })}
+                  saved={isSavedRecipe({ data: r, user, id: r.id })}
                 />
               ))}
             </div>

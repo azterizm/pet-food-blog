@@ -36,6 +36,7 @@
     "react-spring": "^9.5.5",
     "react-to-print": "^2.14.12",
     "react-type-animation": "^2.1.1",
+    "short-number": "^1.0.7",
     "swiper": "^9.1.1",
     "uniqid": "^5.4.0",
     "unocss": "^0.45.29",

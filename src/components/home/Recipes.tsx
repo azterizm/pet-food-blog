@@ -5,7 +5,7 @@ import { ReactElement } from 'react'
 import Masonry from 'react-masonry-css'
 import { useNavigate } from 'react-router-dom'
 import { API_ENDPOINT } from '../../constants/api'
-import { isSaved, onSave } from '../../features/save'
+import { isSavedRecipe, onSaveRecipe } from '../../features/save'
 import { useAuth } from '../../hooks/api'
 import { Loader } from '../Loader'
 import { Recipe } from './Recipe'
@@ -72,11 +72,11 @@ export function Recipes(props: Props): ReactElement {
                 userLiked={r.userLiked}
                 authorTotalRecipes={0}
                 onSave={() =>
-                  onSave({
+                  onSaveRecipe({
                     id: r.id,
                     user,
                   })}
-                saved={isSaved({
+                saved={isSavedRecipe({
                   id: r.id,
                   user,
                   data: r,

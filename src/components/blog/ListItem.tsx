@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { HandsClapping } from 'phosphor-react'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { handleLike } from '../../features/like'
 
 interface Props {
@@ -12,14 +12,20 @@ interface Props {
   onLike?: () => void
   liked?: boolean
   likes?: number
+  imgClassName?: string
 }
 
-export default function AuthorListItem(props: Props) {
+export default function AuthorListItem({ liked: likedProp, ...props }: Props) {
+  const [liked, setLiked] = useState(likedProp || false)
+  useEffect(() => {
+    setLiked(Boolean(likedProp))
+  }, [likedProp])
   return (
     <div>
       <img
         className={classNames(
           'cursor-pointer object-cover rounded-lg w-full',
+          props.imgClassName,
         )}
         loading='lazy'
         src={props.image}
@@ -34,11 +40,11 @@ export default function AuthorListItem(props: Props) {
         </span>
 
         <div
-          onClick={props.onLike}
+          onClick={() => (props.onLike && props.onLike(), setLiked((e) => !e))}
           className='flex items-center justify-center -mt-2 group cursor-pointer'
         >
           <img
-            src={props.liked ? '/icons/clap-active.png' : '/icons/clap.png'}
+            src={liked ? '/icons/clap-active.png' : '/icons/clap.png'}
             alt='Clapping hands icon'
             width='45'
             height='45'
@@ -48,7 +54,11 @@ export default function AuthorListItem(props: Props) {
           />
           <span className='inline-block !-ml-1'>
             {Intl.NumberFormat('en-US').format(
-              props.likes || 0,
+              (
+                props.likes || 0
+              ) + (
+                liked ? 1 : 0
+              ),
             )}
           </span>
         </div>

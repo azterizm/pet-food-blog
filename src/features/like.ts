@@ -13,7 +13,6 @@ export async function handleLike(
       credentials: 'include',
     },
   ).then((r) => r.json())
-  console.log({data})
 
   if (data.error) return { error: true, info: data.info }
   return { error: false }

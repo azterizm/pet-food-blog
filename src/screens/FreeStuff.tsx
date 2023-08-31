@@ -6,6 +6,7 @@ import { API_ENDPOINT } from "../constants/api";
 import { Link, useNavigate } from "react-router-dom";
 import { Portal } from "react-portal";
 import { useFade } from "../hooks/state";
+import PageIndicator from "../components/home/PageIndicator";
 
 export function FreeStuff(): ReactElement {
   const [paying, setPaying] = useState(0);
@@ -61,14 +62,16 @@ export function FreeStuff(): ReactElement {
   if (loading || userLoading) return <Loader />;
   return (
     <div>
+      <h1 className='text-center'>Free Stuff</h1>
+      <PageIndicator active={2}/>
       {!data || !data.length
         ? (
-          <div className="flex-center">
+          <div className="flex-center mt-8">
             <span>No items are available yet.</span>
           </div>
         )
         : (
-          <div className="flex flex-wrap justify-center items-center gap-5">
+          <div className="flex flex-wrap mt-8 justify-center items-center gap-5">
             {data.map((item) => {
               const canDownload = item.purchased || item.price <= 0;
               return (

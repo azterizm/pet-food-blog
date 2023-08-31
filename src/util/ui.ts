@@ -15,10 +15,12 @@ export function showDuration(arg: number | string) {
   const minutes: number | string = Math.floor((sec_num - hours * 3600) / 60)
   const seconds: number | string = sec_num - hours * 3600 - minutes * 60
 
-  return `${decideDuration(hours, 'hour')} ${decideDuration(
-    minutes,
-    'minute'
-  )} ${decideDuration(seconds, 'second')}`
+  return `${decideDuration(hours, 'hour')} ${
+    decideDuration(
+      minutes,
+      'minute',
+    )
+  } ${decideDuration(seconds, 'second')}`
 }
 
 function decideDuration(arg: number, label: string) {
@@ -27,7 +29,7 @@ function decideDuration(arg: number, label: string) {
 export function lazyImport<
   T extends React.ComponentType<any>,
   I extends { [K2 in K]: T },
-  K extends keyof I
+  K extends keyof I,
 >(factory: () => Promise<I>, name: K): I {
   return Object.create({
     [name]: lazy(() => factory().then((module) => ({ default: module[name] }))),
@@ -35,3 +37,9 @@ export function lazyImport<
 }
 
 export const isFirefox = typeof (window as any).InstallTrigger !== 'undefined'
+
+export function calculateEstimatedTimeReading(body: string) {
+  const len = body.length
+  const min = Math.ceil(len / 183)
+  return `${min} min read`
+}

@@ -15,7 +15,7 @@ import UnpublishedBanner from '../../components/recipe/UnpublishedBanner'
 import { API_ENDPOINT } from '../../constants/api'
 import '../../css/recipe_read.css'
 import { handleLike } from '../../features/like'
-import { onSave } from '../../features/save'
+import { onSaveRecipe } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import { useFade } from '../../hooks/state'
 import { ApiProcess, RecipeReadData } from '../../types/api'
@@ -222,7 +222,7 @@ export function RecipeRead(): ReactElement {
                 liked={liked}
                 onLike={setLiked}
                 onPrint={() => navigate('/recipes/read/print/' + id)}
-                onSave={() => onSave({ user, id })}
+                onSave={() => onSaveRecipe({ user, id })}
                 saved={data.userSaved}
               />
             </div>
