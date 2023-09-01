@@ -49,7 +49,7 @@ export function Read(): ReactElement {
 
   const fade = useFade()
 
-  const { data, loading, error } = useApi<IPost & FetchData>(
+  const { data, loading, error, refetch } = useApi<IPost & FetchData>(
     '/blog/one/' + id + '/true',
     {
       onSuccess: (r) => {
@@ -292,6 +292,7 @@ export function Read(): ReactElement {
           )}
         >
           <CommentSection
+            onRefetch={refetch}
             postAuthorId={data.authorId!}
             authorProfileImage={data.author.profile}
             authorName={data.author.name}
@@ -299,6 +300,7 @@ export function Read(): ReactElement {
             postId={data.id!}
             data={data.comments}
             open={showCommentSection}
+            ip={data.ip}
           />
         </div>
       </Portal>
@@ -317,5 +319,6 @@ interface FetchData {
   likesCount: number
   following: boolean
   saved: boolean
-  comments: (IComment & { author: IAuthor })[]
+  comments: (IComment & { author: IAuthor; repliesCount: number })[]
+  ip?: string
 }

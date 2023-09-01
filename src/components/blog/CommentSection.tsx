@@ -1,32 +1,46 @@
 import { IAuthor } from '@backend/models/author'
 import { IComment } from '@backend/models/comment'
+import { useHookstate } from '@hookstate/core'
+import classNames from 'classnames'
+import _ from 'lodash'
 import moment from 'moment'
 import { ChatCircle, X } from 'phosphor-react'
 import { useEffect, useRef, useState } from 'react'
 import shortNumber from 'short-number'
 import { API_ENDPOINT } from '../../constants/api'
+import { useAuth } from '../../hooks/api'
 import { useOnClickOutside } from '../../hooks/ui'
 
 interface Props {
   onClose: () => void
+  ip?: string
   authorProfileImage: string
   authorName: string
   postId: number | string
-  data: (IComment & { author: IAuthor })[]
+  data: (IComment & { author?: IAuthor; repliesCount: number })[]
+  onRefetch: () => void
   postAuthorId: number | string
   open?: boolean
 }
 
 export default function CommentSection(props: Props) {
   const [collapse, setCollapse] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const loading = useHookstate({
+    comment: false,
+    reply: false,
+  })
   const [text, setText] = useState('')
+  const [repliesData, setRepliesData] = useState<
+    { [x: number]: Props['data'] }
+  >({})
   const [replyText, setReplyText] = useState('')
   const [replyingComment, setReplyingComment] = useState<
     null | { id: number; authorName: string }
   >(null)
+  const [likedCommentsId, setLikedCommentsId] = useState<number[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
   const commentInputRef = useRef<HTMLTextAreaElement>(null)
+  const [user] = useAuth()
 
   useEffect(() => {
     if (props.open) commentInputRef.current?.focus()
@@ -36,21 +50,21 @@ export default function CommentSection(props: Props) {
 
   async function onComment() {
     if (!text) return
-    setLoading(true)
+    loading.comment.set(true)
     const data = await fetch(`${API_ENDPOINT}/comment/add/blog`, {
       body: JSON.stringify({ id: props.postId, text }),
       method: 'post',
       credentials: 'include',
       headers: { 'content-type': 'application/json' },
     }).then((r) => r.json())
-    setLoading(false)
+    loading.comment.set(false)
     if (data.error) return alert(data.info)
+    props.onRefetch()
   }
 
-  //TODO: Create separate table for Reply that references parent comment
-  //Would make it easy to render with order and lazy
   async function onReply() {
     if (!replyText || !replyingComment) return
+    loading.reply.set(true)
     const data = await fetch(`${API_ENDPOINT}/comment/add/blog`, {
       body: JSON.stringify({
         id: props.postId,
@@ -61,7 +75,46 @@ export default function CommentSection(props: Props) {
       credentials: 'include',
       headers: { 'content-type': 'application/json' },
     }).then((r) => r.json())
-    console.log({ data })
+    loading.reply.set(false)
+    if (data.error) return alert(data.info)
+    setRepliesData((e) => ({
+      ...e,
+      [replyingComment.id]: [{
+        author: user as any,
+        repliesCount: 0,
+        repliedTo: undefined,
+        text: replyText,
+        postId: Number(props.postId),
+        userId: user?.id,
+        likes: 0,
+        ip: !user ? 'unknown' : '',
+        id: data.id,
+      }, ...e[replyingComment.id]],
+    }))
+    setReplyText('')
+    setReplyingComment(null)
+  }
+
+  async function onShowReplies(id: number, force?: boolean) {
+    if (id in repliesData && !force) {
+      setRepliesData((e) =>
+        _.omitBy({ ...e, [id]: undefined as any }, _.isUndefined)
+      )
+      return
+    }
+    const replies = await fetch(
+      `${API_ENDPOINT}/comment/replies/${props.postId}/${id}`,
+    ).then((r) => r.json())
+    setRepliesData((e) => ({ ...e, [id]: replies }))
+  }
+
+  async function onLike(id?: number) {
+    if (!id) return
+    setLikedCommentsId((e) => [...e, id])
+    await fetch(`${API_ENDPOINT}/comment/like/${id}`, {
+      method: 'post',
+      credentials: 'include',
+    }).then((r) => r.json())
   }
 
   return (
@@ -93,10 +146,10 @@ export default function CommentSection(props: Props) {
             <div className='flex items-center gap-2'>
               <img
                 className='aspect-square object-cover object-center w-14 rounded-full mr-2'
-                src='https://images.unsplash.com/photo-1692879452826-649c6f685c37?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80'
-                alt='author profile image'
+                src={!user ? '/images/avatar.webp' : user.profile}
+                alt='user profile image'
               />
-              <p>{props.authorName}</p>
+              <p>{user ? user.name : 'Anonymous'}</p>
             </div>
             <textarea
               className='bg-white focus:outline-none mt-4 border-none w-full h-20 block font-sans placeholder:text-neutral-400'
@@ -109,18 +162,18 @@ export default function CommentSection(props: Props) {
             />
             <div className='flex items-center w-full justify-end gap-2'>
               <button
-                disabled={loading}
+                disabled={loading.comment.value}
                 onClick={() => setCollapse(true)}
                 className='bg-white border-none'
               >
                 Cancel
               </button>
               <button
-                disabled={loading}
+                disabled={loading.comment.value}
                 onClick={onComment}
                 className='bg-button text-white px-5 py-3 rounded-full border-none'
               >
-                {loading ? 'Commenting...' : 'Comment'}
+                {loading.comment.value ? 'Commenting...' : 'Comment'}
               </button>
             </div>
           </div>
@@ -132,15 +185,26 @@ export default function CommentSection(props: Props) {
               <div className='flex items-center gap-2'>
                 <img
                   className='aspect-square object-cover object-center w-14 rounded-full mr-2'
-                  src='https://images.unsplash.com/photo-1692879452826-649c6f685c37?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1887&q=80'
+                  src={r.author?.profile || '/images/avatar.webp'}
                   alt='author profile image'
                 />
                 <div className='flex items-start flex-col'>
                   <p className='m-0 font-medium'>
-                    {r.author.name}{' '}
-                    <span className='inline-block bg-green-600 text-white p-2 rounded text-xs font-bold ml-2'>
-                      {r.author.id === props.postAuthorId ? 'AUTHOR' : ''}
-                    </span>
+                    {!r.author ? 'Anonymous' : r.author.name}{' '}
+                    {r.author?.id === props.postAuthorId
+                      ? (
+                        <span className='inline-block bg-green-600 text-white p-2 rounded text-xs font-bold ml-2'>
+                          AUTHOR
+                        </span>
+                      )
+                      : null}
+                    {!user && r.ip === props.ip
+                      ? (
+                        <span className='inline-block bg-gray-600 text-white p-2 rounded text-xs font-bold ml-2'>
+                          YOU
+                        </span>
+                      )
+                      : null}
                   </p>
                   <p className='m-0 text-sm'>
                     {moment(r.createdAt).fromNow()}
@@ -150,39 +214,70 @@ export default function CommentSection(props: Props) {
               <p>{r.text}</p>
               <div className='flex items-center gap-2 justify-between -ml-4'>
                 <div className='flex items-center gap-2'>
-                  <button className='flex items-center bg-white border-none'>
+                  <button
+                    onClick={() => onLike(r.id)}
+                    className='flex items-center bg-white border-none'
+                  >
                     <img
-                      src={'/icons/clap.png'}
+                      src={r.id && likedCommentsId.includes(r.id)
+                        ? '/icons/clap-active.png'
+                        : '/icons/clap.png'}
                       alt='Clapping hands icon'
                       width='45'
                       className='group-active:scale-150 group-focus:scale-150 transition-transform -translate-y-1'
                     />
-                    <span>{shortNumber(r.likes)}</span>
+                    <span>
+                      {shortNumber(
+                        r.likes +
+                          (r.id && likedCommentsId.includes(r.id) ? 1 : 0),
+                      )}
+                    </span>
                   </button>
-                  {r.replies
+                  {r.repliesCount > 0 ||
+                      r.id && r.id in repliesData &&
+                        repliesData[r.id].length > 0
                     ? (
-                      <button className='flex items-center bg-white border-none gap-2'>
-                        <ChatCircle size={20} />
-                        <span>{shortNumber(r.likes)} replies</span>
+                      <button
+                        onClick={() => onShowReplies(r.id!)}
+                        className='flex items-center bg-white border-none gap-2'
+                      >
+                        <ChatCircle
+                          weight={r.id && r.id in repliesData
+                            ? 'fill'
+                            : 'regular'}
+                          size={20}
+                        />
+                        <span>
+                          {shortNumber(
+                            r.id && r.id in repliesData
+                              ? repliesData[r.id].length
+                              : r.repliesCount,
+                          )} {r.repliesCount > 1 ? 'replies' : 'reply'}
+                        </span>
                       </button>
                     )
                     : null}
                 </div>
                 <button
-                  onClick={() =>
-                    setReplyingComment({
-                      id: r.id!,
-                      authorName: r.author.name,
-                    })}
-                  className='px-5 py-2 bg-white border-none font-medium'
-                  disabled={replyingComment !== null}
+                  onClick={() => (
+                    replyingComment
+                      ? setReplyingComment(null)
+                      : setReplyingComment({
+                        id: r.id!,
+                        authorName: !r.author ? 'Anonymous' : r.author.name,
+                      }), onShowReplies(r.id!, true)
+                  )}
+                  className={classNames(
+                    'px-5 py-2 bg-white border-none font-medium',
+                    replyingComment !== null ? 'text-gray-400' : 'text-black',
+                  )}
                 >
                   Reply
                 </button>
               </div>
-              {replyingComment
-                ? (
-                  <div className='border-l-2 border-gray-200 pl-4'>
+              <div className='border-l-2 border-gray-200 pl-4'>
+                {replyingComment && replyingComment.id === r.id
+                  ? (
                     <div className='p-4 shadow-lg'>
                       <textarea
                         className='bg-white focus:outline-none mt-4 border-none w-full h-20 block font-sans placeholder:text-neutral-400'
@@ -197,6 +292,7 @@ export default function CommentSection(props: Props) {
                         <div className='flex items-center w-full justify-end gap-2'>
                           <button
                             onClick={() => setReplyingComment(null)}
+                            disabled={loading.reply.value}
                             className='bg-white border-none'
                           >
                             Cancel
@@ -204,15 +300,83 @@ export default function CommentSection(props: Props) {
                           <button
                             onClick={onReply}
                             className='bg-button text-white px-5 py-3 rounded-full border-none'
+                            disabled={loading.reply.value}
                           >
-                            Reply
+                            {loading.reply.value ? 'Replying...' : 'Reply'}
                           </button>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )
-                : null}
+                  )
+                  : null}
+                {r.id && r.id in repliesData
+                  ? !repliesData[r.id].length && r.repliesCount > 0
+                    ? <span>Loading...</span>
+                    : repliesData[r.id].map((r) => (
+                      <div className='p-4' key={r.id}>
+                        <div className='flex items-center gap-2'>
+                          <img
+                            className='aspect-square object-cover object-center w-14 rounded-full mr-2'
+                            src={!r.author
+                              ? '/images/avatar.webp'
+                              : r.author.profile}
+                            alt='author profile image'
+                          />
+                          <div className='flex items-start flex-col'>
+                            <p className='m-0 font-medium'>
+                              {r.author?.name || 'Anonymous'}{' '}
+                              {r.author?.id === props.postAuthorId
+                                ? (
+                                  <span className='inline-block bg-green-600 text-white p-2 rounded text-xs font-bold ml-2'>
+                                    AUTHOR
+                                  </span>
+                                )
+                                : null}
+                              {!user && r.ip === props.ip
+                                ? (
+                                  <span className='inline-block bg-gray-600 text-white p-2 rounded text-xs font-bold ml-2'>
+                                    YOU
+                                  </span>
+                                )
+                                : null}
+                            </p>
+                            <p className='m-0 text-sm'>
+                              {moment(r.createdAt).fromNow()}
+                            </p>
+                          </div>
+                        </div>
+
+                        <p>{r.text}</p>
+                        <div className='flex items-center gap-2 justify-between -ml-4'>
+                          <div className='flex items-center gap-2'>
+                            <button
+                              onClick={() =>
+                                onLike(r.id)}
+                              className='flex items-center bg-white border-none'
+                            >
+                              <img
+                                src={r.id && likedCommentsId.includes(r.id)
+                                  ? '/icons/clap-active.png'
+                                  : '/icons/clap.png'}
+                                alt='Clapping hands icon'
+                                width='45'
+                                className='group-active:scale-150 group-focus:scale-150 transition-transform -translate-y-1'
+                              />
+                              <span>
+                                {shortNumber(
+                                  r.likes +
+                                    (r.id && likedCommentsId.includes(r.id)
+                                      ? 1
+                                      : 0),
+                                )}
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  : null}
+              </div>
             </div>
           ))}
       </div>
