@@ -271,7 +271,7 @@ export function RecipeRead(): ReactElement {
                   items={data.popular}
                   contentType='recipe'
                 />
-                <div className='absolute top-60 -left-5 lg:-left-10 xl:-left-30 w-[200vw] h-140 bg-gray-100 z--1' />
+                <div className='-left-[100vw] absolute top-40 w-[200vw] h-160 bg-gray-100 z--1' />
               </div>
             )}
 
