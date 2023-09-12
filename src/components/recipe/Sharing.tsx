@@ -32,29 +32,25 @@ export const Sharing = ({
     quote: recipe.title,
     title: recipe.title,
     summary: stripHTML(recipe.intro),
+    description: recipe.title + ' ' + stripHTML(recipe.intro),
     source: window.location.href,
     media: API_ENDPOINT + recipe.mainImage,
-    imageUrl: API_ENDPOINT + recipe.mainImage,
-    imgUrl: API_ENDPOINT + recipe.mainImage,
     hashtags: recipe.tags.map((r) => '#' + r),
     subject: 'You got to see this website for dog recipes',
-    body:
-      'Hey! Check out this amazing website for dog recipes: ' +
+    body: 'Hey! Check out this amazing website for dog recipes: ' +
       window.location.href,
-    beforeOnClick: disableSharing
-      ? undefined
-      : async () => {
-          try {
-            await fetch(API_ENDPOINT + '/recipe/share/' + recipe.id, {
-              credentials: 'include',
-              method: 'post',
-            })
-              .then((r) => r.text())
-              .catch((_) => null)
-          } catch (error) {
-            console.error(error)
-          }
-        },
+    beforeOnClick: disableSharing ? undefined : async () => {
+      try {
+        await fetch(API_ENDPOINT + '/recipe/share/' + recipe.id, {
+          credentials: 'include',
+          method: 'post',
+        })
+          .then((r) => r.text())
+          .catch((_) => null)
+      } catch (error) {
+        console.error(error)
+      }
+    },
   }
   return (
     <div className='flex items-center gap-5 flex-wrap text-3xl ml-5 my-auto justify-center'>
