@@ -34,6 +34,8 @@ export const Sharing = ({
     summary: stripHTML(recipe.intro),
     source: window.location.href,
     media: API_ENDPOINT + recipe.mainImage,
+    imageUrl: API_ENDPOINT + recipe.mainImage,
+    imgUrl: API_ENDPOINT + recipe.mainImage,
     hashtags: recipe.tags.map((r) => '#' + r),
     subject: 'You got to see this website for dog recipes',
     body:

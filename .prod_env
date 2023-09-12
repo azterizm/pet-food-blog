@@ -1,1 +1,2 @@
 VITE_CREATOR_ENDPOINT=/creator
+VITE_API_ENDPOINT='https://vps-080d0b2c.vps.ovh.us'
