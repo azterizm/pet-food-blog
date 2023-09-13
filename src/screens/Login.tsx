@@ -8,6 +8,9 @@ export function Login(): ReactElement {
     window.localStorage.removeItem('user')
   }, [])
 
+  function getClientTimezone() {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone
+  }
   return (
     <TwoColumnLayout
       image='/images/auth3.jpg'
@@ -21,7 +24,7 @@ export function Login(): ReactElement {
       <div className='my-5'>
         <a
           className='g-sign-in-button'
-          href={API_ENDPOINT + '/auth/google/' + 'author'}
+          href={API_ENDPOINT + '/auth/google/' + getClientTimezone()}
         >
           <div className='content-wrapper'>
             <div className='logo-wrapper'>
