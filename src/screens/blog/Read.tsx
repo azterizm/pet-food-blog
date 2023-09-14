@@ -19,6 +19,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import shortNumber from 'short-number'
 import CommentSection from '../../components/blog/CommentSection'
 import AuthorListItem from '../../components/blog/ListItem'
+import VoicePlayer from '../../components/blog/VoicePlayer'
 import { GoBack } from '../../components/GoBack'
 import { Loader } from '../../components/Loader'
 import UnpublishedBanner from '../../components/recipe/UnpublishedBanner'
@@ -213,7 +214,12 @@ export function Read(): ReactElement {
         </div>
         {interactButtons('border-y-2')}
 
-        <img src={API_ENDPOINT + data.mainImage} className='w-full' />
+        <img src={API_ENDPOINT + data.mainImage} className='w-full rounded-lg' />
+
+        {data.voiceVersionPath && (
+          <VoicePlayer url={API_ENDPOINT + data.voiceVersionPath} />
+        )}
+
         <div className='font-sans' ref={editorContainerRef} />
         <div className='flex items-center gap-4'>
           {data.tags.map((r, i) => (

@@ -20,7 +20,6 @@ export function Saved(): ReactElement {
   const { data, error, loading } = useApi<
     ApiResponse[]
   >('/save/list', undefined, [user])
-  console.log({ data })
   const navigate = useNavigate()
 
   useEffect(() => {
