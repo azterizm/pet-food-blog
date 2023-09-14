@@ -21,6 +21,7 @@ import CommentSection from '../../components/blog/CommentSection'
 import AuthorListItem from '../../components/blog/ListItem'
 import { GoBack } from '../../components/GoBack'
 import { Loader } from '../../components/Loader'
+import UnpublishedBanner from '../../components/recipe/UnpublishedBanner'
 import { API_ENDPOINT } from '../../constants/api'
 import { followAuthor } from '../../features/author'
 import { handleLike } from '../../features/like'
@@ -29,7 +30,6 @@ import { useApi, useAuth } from '../../hooks/api'
 import { useFade } from '../../hooks/state'
 import { calculateEstimatedTimeReading } from '../../util/ui'
 
-//TODO: comment, share
 export function Read(): ReactElement {
   const { id } = useParams()
 
@@ -62,7 +62,6 @@ export function Read(): ReactElement {
     },
     [id],
   )
-  console.log({ data })
 
   useEffect(() => {
     if (!editorContainerRef.current || !data) return
@@ -284,6 +283,9 @@ export function Read(): ReactElement {
           </div>
         </div>
       </div>
+      {data.status !== 'published' && (
+        <UnpublishedBanner status={data.status} contentType='Blog post' />
+      )}
       <Portal>
         <div
           className={classNames(
