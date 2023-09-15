@@ -51,7 +51,7 @@ export function Read(): ReactElement {
   const fade = useFade()
 
   const { data, loading, error, refetch } = useApi<IPost & FetchData>(
-    '/blog/one/' + id + '/true',
+    '/blog/one/' + id + '/1',
     {
       onSuccess: (r) => {
         status.set({
@@ -128,7 +128,7 @@ export function Read(): ReactElement {
           className='flex items-center gap-1 bg-white text-gray-600 border-none group select-none whitespace-nowrap cursor-pointer'
         >
           <img
-            src={status.liked ? '/icons/clap-active.png' : '/icons/clap.png'}
+            src={status.liked.value ? '/icons/clap-active.png' : '/icons/clap.png'}
             alt='Clapping hands icon'
             width='45'
             style={{ transform: 'translateY(-2px)' }}
@@ -138,7 +138,9 @@ export function Read(): ReactElement {
             className='text-md'
             style={{ marginLeft: -8 }}
           >
-            {shortNumber(data.likesCount + (status.liked ? 1 : 0))}
+            {shortNumber(
+              data.likesCount + (status.liked.value && !data.userLiked ? 1 : 0),
+            )}
           </span>
         </button>
 
@@ -214,7 +216,10 @@ export function Read(): ReactElement {
         </div>
         {interactButtons('border-y-2')}
 
-        <img src={API_ENDPOINT + data.mainImage} className='w-full rounded-lg' />
+        <img
+          src={API_ENDPOINT + data.mainImage}
+          className='w-full rounded-lg'
+        />
 
         {data.voiceVersionPath && (
           <VoicePlayer url={API_ENDPOINT + data.voiceVersionPath} />

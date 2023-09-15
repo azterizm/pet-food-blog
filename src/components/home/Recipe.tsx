@@ -227,7 +227,7 @@ export function Recipe({
               >
                 <img
                   src={!author?.profile
-                    ? './images/avatar.webp'
+                    ? '/images/avatar.webp'
                     : author.profile}
                   alt='author image'
                   className='w-15 h-15 rounded-full object-cover'

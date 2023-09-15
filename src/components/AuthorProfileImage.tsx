@@ -15,7 +15,7 @@ export function AuthorProfileImage(props: Props): ReactElement {
     <img
       className='object-cover w-80 object-cover rounded-t-lg'
       src={
-        !props.author?.profile ? './images/avatar.webp' : props.author.profile
+        !props.author?.profile ? '/images/avatar.webp' : props.author.profile
       }
       alt='profile'
       {...props}

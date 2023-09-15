@@ -82,4 +82,5 @@ export interface RecipeReadData extends IRecipe {
   vetinfo?: IVetInfo
   following: boolean
   availableLanguages: { lang: string; id: number }[]
+  views: number
 }
