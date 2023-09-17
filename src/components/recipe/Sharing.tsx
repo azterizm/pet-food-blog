@@ -18,19 +18,20 @@ import {
   WhatsappShareButton,
 } from 'react-share'
 import { API_ENDPOINT } from '../../constants/api'
-import { stripHTML } from '../../util/seo'
 
 export const Sharing = ({
   disableSharing,
-  recipe,
+  data,
+  contentType,
 }: {
   disableSharing?: boolean
-  recipe: Pick<IRecipe, 'title' | 'mainImage' | 'intro' | 'tags' | 'id'>
+  data: Pick<IRecipe, 'title' | 'mainImage' | 'tags' | 'id'>
+  contentType: 'recipe' | 'post'
 }) => {
   async function onBeforeOnClick(platform: string) {
     if (disableSharing) return
     try {
-      await fetch(API_ENDPOINT + '/share/recipe/' + recipe.id, {
+      await fetch(`${API_ENDPOINT}/share/${contentType}/${data.id}`, {
         credentials: 'include',
         method: 'post',
         headers: { 'content-type': 'application/json' },
@@ -45,15 +46,13 @@ export const Sharing = ({
 
   const attr = {
     url: window.location.href,
-    quote: recipe.title,
-    title: recipe.title,
-    summary: stripHTML(recipe.intro),
-    description: recipe.title + ' ' + stripHTML(recipe.intro),
+    quote: data.title,
+    title: data.title,
     source: window.location.href,
-    media: API_ENDPOINT + recipe.mainImage,
-    hashtags: recipe.tags.map((r) => '#' + r),
-    subject: 'You got to see this website for dog recipes',
-    body: 'Hey! Check out this amazing website for dog recipes: ' +
+    media: API_ENDPOINT + data.mainImage,
+    hashtags: data.tags.map((r) => '#' + r),
+    subject: 'You got to see this website for dog recipes and articles',
+    body: 'Hey! Check out this amazing website for dog recipes and articles: ' +
       window.location.href,
   }
   return (

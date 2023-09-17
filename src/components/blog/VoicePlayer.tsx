@@ -1,6 +1,8 @@
 import { Pause, Play } from 'phosphor-react'
 import { useEffect, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import WaveSurfer from 'wavesurfer.js'
+import { API_ENDPOINT } from '../../constants/api'
 
 interface Props {
   url: string
@@ -13,6 +15,7 @@ export default function VoicePlayer(props: Props) {
   const [playing, setPlaying] = useState(false)
   const audioPreviewRef = useRef<HTMLDivElement>(null)
   const PlaybackButton = !playing ? Play : Pause
+  const { id } = useParams()
 
   useEffect(() => {
     if (!audioPreviewRef.current) return
@@ -29,7 +32,14 @@ export default function VoicePlayer(props: Props) {
     wavesurfer.once('interaction', () => {
       wavesurfer.play()
     })
-    wavesurfer.on('play', () => setPlaying(true))
+    let countedStat = false
+    wavesurfer.on('play', () => {
+      setPlaying(true)
+      if (!countedStat) {
+        fetch(API_ENDPOINT + '/blog/played_podcast/' + id).then((r) => r.text())
+        countedStat = true
+      }
+    })
     wavesurfer.on('pause', () => setPlaying(false))
     setWaveSurferInstance(wavesurfer)
     return () => {

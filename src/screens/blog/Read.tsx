@@ -12,7 +12,7 @@ import Underline from '@editorjs/underline'
 import { useHookstate } from '@hookstate/core'
 import classNames from 'classnames'
 import moment from 'moment'
-import { ChatCircle, Heart, Share } from 'phosphor-react'
+import { ChatCircle, Heart, Share, XCircle } from 'phosphor-react'
 import { ReactElement, useEffect, useRef, useState } from 'react'
 import { Portal } from 'react-portal'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -22,6 +22,7 @@ import AuthorListItem from '../../components/blog/ListItem'
 import VoicePlayer from '../../components/blog/VoicePlayer'
 import { GoBack } from '../../components/GoBack'
 import { Loader } from '../../components/Loader'
+import { Sharing } from '../../components/recipe/Sharing'
 import UnpublishedBanner from '../../components/recipe/UnpublishedBanner'
 import { API_ENDPOINT } from '../../constants/api'
 import { followAuthor } from '../../features/author'
@@ -35,6 +36,7 @@ export function Read(): ReactElement {
   const { id } = useParams()
 
   const [showCommentSection, setShowCommentSection] = useState(false)
+  const [showShareDialog, setShowShareDialog] = useState(false)
 
   const status = useHookstate({
     liked: false,
@@ -128,7 +130,9 @@ export function Read(): ReactElement {
           className='flex items-center gap-1 bg-white text-gray-600 border-none group select-none whitespace-nowrap cursor-pointer'
         >
           <img
-            src={status.liked.value ? '/icons/clap-active.png' : '/icons/clap.png'}
+            src={status.liked.value
+              ? '/icons/clap-active.png'
+              : '/icons/clap.png'}
             alt='Clapping hands icon'
             width='45'
             style={{ transform: 'translateY(-2px)' }}
@@ -157,7 +161,7 @@ export function Read(): ReactElement {
           </span>
         </button>
       </div>
-      <div className='flex items-center gap-6'>
+      <div className='flex items-center gap-6 relative'>
         <button
           onClick={() => (status.saved.set((e) => !e),
             onSavePost(data.id, user))}
@@ -165,9 +169,25 @@ export function Read(): ReactElement {
         >
           <Heart weight={status.saved.value ? 'fill' : 'regular'} size={20} />
         </button>
-        <button className='bg-white border-none text-gray-600'>
-          <Share size={20} />
+        <button
+          onClick={() => setShowShareDialog((e) => !e)}
+          className={classNames(
+            'border-none text-gray-600',
+            showShareDialog ? 'bg-neutral-200 pt-2 rounded-t-lg' : 'bg-white ',
+          )}
+        >
+          {showShareDialog ? <XCircle size={20} /> : <Share size={20} />}
         </button>
+        <div
+          className={classNames(
+            'absolute top-full right-0 w-max transition bg-neutral-200 pr-8 py-4 flex items-center justify-center rounded-lg',
+            !showShareDialog
+              ? 'translate-y-5 opacity-0 pointer-events-none'
+              : 'translate-y-0 opacity-100',
+          )}
+        >
+          <Sharing data={data} contentType='post' />
+        </div>
       </div>
     </div>
   )
@@ -226,7 +246,7 @@ export function Read(): ReactElement {
         )}
 
         <div className='font-sans' ref={editorContainerRef} />
-        <div className='flex items-center gap-4'>
+        <div className='flex items-center gap-4 flex-wrap'>
           {data.tags.map((r, i) => (
             <button
               key={i}

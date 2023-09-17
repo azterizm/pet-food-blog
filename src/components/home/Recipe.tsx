@@ -43,7 +43,6 @@ export function Recipe({
   previewMode,
   onHeartClick,
   hideLike,
-  intro,
   mainImage,
   tags,
   userLiked,
@@ -166,7 +165,8 @@ export function Recipe({
                 ? (
                   <Sharing
                     disableSharing
-                    recipe={{ id, intro, title, mainImage, tags }}
+                    data={{ id,  title, mainImage, tags }}
+                    contentType='recipe'
                   />
                 )
                 : (

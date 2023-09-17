@@ -1,7 +1,6 @@
 import { IAuthor } from '@backend/models/author'
 import { IRecipe } from '@backend/models/recipe'
 import { API_ENDPOINT } from '../../constants/api'
-import { AuthorProfileImage } from '../AuthorProfileImage'
 import { Sharing } from './Sharing'
 
 interface Props {
@@ -29,7 +28,7 @@ export const HelpSection = (props: Props) => (
           </span>
         </div>
       </div>
-      <Sharing recipe={props.recipe} />
+      <Sharing data={props.recipe} contentType='recipe' />
     </div>
   </div>
 )
