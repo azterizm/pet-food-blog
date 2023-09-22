@@ -238,7 +238,8 @@ export function Read(): ReactElement {
 
         <img
           src={API_ENDPOINT + data.mainImage}
-          className='w-full rounded-lg'
+          className='w-full rounded-lg object-cover object-center'
+          style={{aspectRatio: '9 / 16'}}
         />
 
         {data.voiceVersionPath && (
