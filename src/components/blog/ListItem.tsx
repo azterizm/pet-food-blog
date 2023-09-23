@@ -1,7 +1,5 @@
 import classNames from 'classnames'
-import { HandsClapping } from 'phosphor-react'
 import { ReactNode, useEffect, useState } from 'react'
-import { handleLike } from '../../features/like'
 
 interface Props {
   image: string
@@ -24,7 +22,7 @@ export default function AuthorListItem({ liked: likedProp, ...props }: Props) {
     <div>
       <img
         className={classNames(
-          'cursor-pointer object-cover rounded-lg w-full',
+          'cursor-pointer object-cover rounded-2xl w-full',
           props.imgClassName,
         )}
         loading='lazy'

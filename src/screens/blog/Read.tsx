@@ -31,6 +31,7 @@ import { onSavePost } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import { useFade } from '../../hooks/state'
 import { calculateEstimatedTimeReading } from '../../util/ui'
+import '../../css/editor.css'
 
 export function Read(): ReactElement {
   const { id } = useParams()
@@ -239,7 +240,7 @@ export function Read(): ReactElement {
         <img
           src={API_ENDPOINT + data.mainImage}
           className='w-full rounded-lg object-cover object-center'
-          style={{aspectRatio: '9 / 16'}}
+          style={{ aspectRatio: '9 / 16' }}
         />
 
         {data.voiceVersionPath && (

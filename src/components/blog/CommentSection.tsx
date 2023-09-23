@@ -11,6 +11,7 @@ import { API_ENDPOINT } from '../../constants/api'
 import { useAuth } from '../../hooks/api'
 import { useOnClickOutside } from '../../hooks/ui'
 
+//TODO: Approved distinguish
 interface Props {
   onClose: () => void
   ip?: string
@@ -89,6 +90,7 @@ export default function CommentSection(props: Props) {
         likes: 0,
         ip: !user ? 'unknown' : '',
         id: data.id,
+        approved: false,
       }, ...e[replyingComment.id]],
     }))
     setReplyText('')
