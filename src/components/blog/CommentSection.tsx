@@ -183,34 +183,45 @@ export default function CommentSection(props: Props) {
       <div className='divide-y grid grid-cols-1 mt-16'>
         {props.data
           .map((r) => (
-            <div key={r.id} className='pt-10 pb-6 border-gray-200'>
+            <div
+              key={r.id}
+              className={classNames('pt-10 pb-6 border-gray-200 relative')}
+            >
               <div className='flex items-center gap-2'>
                 <img
                   className='aspect-square object-cover object-center w-14 rounded-full mr-2'
                   src={r.author?.profile || '/images/avatar.webp'}
                   alt='author profile image'
                 />
-                <div className='flex items-start flex-col'>
-                  <p className='m-0 font-medium'>
-                    {!r.author ? 'Anonymous' : r.author.name}{' '}
-                    {r.author?.id === props.postAuthorId
-                      ? (
-                        <span className='inline-block bg-green-600 text-white p-2 rounded text-xs font-bold ml-2'>
-                          AUTHOR
-                        </span>
-                      )
-                      : null}
-                    {!user && r.ip === props.ip
-                      ? (
-                        <span className='inline-block bg-gray-600 text-white p-2 rounded text-xs font-bold ml-2'>
-                          YOU
-                        </span>
-                      )
-                      : null}
-                  </p>
-                  <p className='m-0 text-sm'>
-                    {moment(r.createdAt).fromNow()}
-                  </p>
+                <div className='flex items-center justify-between w-full'>
+                  <div className='flex items-start flex-col'>
+                    <p className='m-0 font-medium'>
+                      {!r.author ? 'Anonymous' : r.author.name}{' '}
+                      {r.author?.id === props.postAuthorId
+                        ? (
+                          <span className='inline-block bg-green-600 text-white p-2 rounded text-xs font-bold ml-2'>
+                            AUTHOR
+                          </span>
+                        )
+                        : null}
+                      {!user && r.ip === props.ip
+                        ? (
+                          <span className='inline-block bg-gray-600 text-white p-2 rounded text-xs font-bold ml-2'>
+                            YOU
+                          </span>
+                        )
+                        : null}
+                    </p>
+                    <p className='m-0 text-sm'>
+                      {moment(r.createdAt).fromNow()}
+                    </p>
+                  </div>
+                  {!r.approved&&(
+
+                  <span className='bg-red-600 text-white uppercase p-2 rounded font-medium'>
+                    AUTHOR REVIEW REQUIRED
+                  </span>
+                  )}
                 </div>
               </div>
               <p>{r.text}</p>
@@ -378,6 +389,8 @@ export default function CommentSection(props: Props) {
                       </div>
                     ))
                   : null}
+              </div>
+              <div className='absolute top-0 right-0 !opacity-100'>
               </div>
             </div>
           ))}
