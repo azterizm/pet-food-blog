@@ -77,12 +77,12 @@ export function FreeStuff(): ReactElement {
               return (
                 <article
                   key={item.id}
-                  className="overflow-hidden rounded-lg shadow transition hover:shadow-lg min-w-80"
+                  className="overflow-hidden rounded-lg transition hover:shadow-lg min-w-80 text-center"
                 >
                   <img
                     alt="Thumbnail"
                     src={API_ENDPOINT + "/free_items/thumbnail/" + item.id}
-                    className="h-56 w-56 object-cover object-center mx-auto block"
+                    className="w-140 object-cover object-center mx-auto block"
                   />
                   <div className="bg-white p-4 sm:p-6">
                     <time
@@ -115,9 +115,7 @@ export function FreeStuff(): ReactElement {
                         canDownload
                           ? onDownload(item.id!, item.file)
                           : setPaying(item.id!)}
-                      className={`rounded-lg w-full py-5 tracking-wide ${
-                        canDownload ? "bg-primary" : "bg-button"
-                      } c-white font-bold block text-center no-underline border-none text-lg`}
+                      className={`rounded-lg w-full py-5 tracking-wide bg-button c-white font-bold block text-center no-underline border-none text-lg`}
                     >
                       {canDownload ? "Download" : "Pay " + item.price + "$"}
                     </button>
