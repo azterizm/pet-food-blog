@@ -216,10 +216,10 @@ export function Read(): ReactElement {
                 disabled={loading}
                 className={classNames(
                   'py-2 bg-white hover:underline border-none text-lg font-bold',
-                  status.following ? 'text-gray-600' : 'text-blue-600',
+                  status.following.value ? 'text-gray-600' : 'text-blue-600',
                 )}
               >
-                {status.following ? 'Following' : 'Follow'}
+                {status.following.value ? 'Following' : 'Follow'}
               </button>
             </div>
             <div className='flex items-center gap-2 text-sm text-gray-600'>
@@ -286,12 +286,12 @@ export function Read(): ReactElement {
                     status.following.set((e) => !e))}
                   className={classNames(
                     'px-5 font-medium py-3 rounded-full border-none',
-                    status.following
+                    status.following.value
                       ? 'bg-gray-200 text-black'
                       : 'bg-black text-white',
                   )}
                 >
-                  {status.following ? 'Following' : 'Follow'}
+                  {status.following.value ? 'Following' : 'Follow'}
                 </button>
               </div>
             </div>
