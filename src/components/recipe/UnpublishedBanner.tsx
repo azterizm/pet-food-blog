@@ -18,7 +18,7 @@ export default function UnpublishedBanner(
     <Portal>
       <div
         className={classNames(
-          'fixed bottom-5 lg:bottom-25 right-5 p-5 rounded-lg bg-blue-700 text-white max-w-[24rem]',
+          'fixed bottom-5 lg:bottom-25 right-5 p-5 rounded-lg bg-blue-700 text-white max-w-[24rem] z-101',
           props.containerClass,
         )}
       >

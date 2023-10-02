@@ -25,13 +25,14 @@ import { Loader } from '../../components/Loader'
 import { Sharing } from '../../components/recipe/Sharing'
 import UnpublishedBanner from '../../components/recipe/UnpublishedBanner'
 import { API_ENDPOINT } from '../../constants/api'
+import '../../css/editor.css'
 import { followAuthor } from '../../features/author'
+import { LinkInlineTool } from '../../features/editor/inline-tool-link'
 import { handleLike } from '../../features/like'
 import { onSavePost } from '../../features/save'
 import { useApi, useAuth } from '../../hooks/api'
 import { useFade } from '../../hooks/state'
 import { calculateEstimatedTimeReading } from '../../util/ui'
-import '../../css/editor.css'
 
 export function Read(): ReactElement {
   const { id } = useParams()
@@ -76,7 +77,7 @@ export function Read(): ReactElement {
     } else initEditor(data?.body as any)
   }, [editorContainerRef, editorRef, data])
 
-  function initEditor(data?: OutputData) {
+  function initEditor(editorData?: OutputData) {
     if (!editorContainerRef.current) return
 
     const editor = new EditorJS({
@@ -90,6 +91,9 @@ export function Read(): ReactElement {
           class: Embed,
           inlineToolbar: true,
         },
+        image: {
+          class: Image,
+        },
         list: {
           class: List,
           inlineToolbar: true,
@@ -97,13 +101,50 @@ export function Read(): ReactElement {
             defaultStyle: 'unordered',
           },
         },
-        image: {
-          class: Image,
+        link: {
+          class: LinkInlineTool,
         },
       },
       logLevel: 'ERROR' as any,
-      data,
+      data: editorData,
       readOnly: true,
+      onReady: () => {
+        const videoBlocks = editorData?.blocks.filter((r) => r.type === 'video')
+        videoBlocks?.forEach((block) => {
+          const data = block.data as {
+            autoplay: boolean
+            controls: boolean
+            muted: boolean
+            stretched: boolean
+            url: string
+          }
+          const el = document.querySelector(
+            `.ce-block[data-id="${block.id}"] div`,
+          )
+          if (el) {
+            el.innerHTML = `
+              <video
+              src="${data.url}"
+              ${data.autoplay ? 'autoplay' : ''}
+              ${data.muted ? 'muted' : ''}
+              ${data.controls ? 'controls' : ''}
+              style="width:100%"
+              />`
+          }
+        })
+        const imagesWithLink = data?.imagesSrcWithLinks
+        imagesWithLink?.forEach((item) => {
+          const el = document.querySelector(`img[src="${item.imageSrc}"]`)
+          if (!el) return
+          const anchor = document.createElement('a')
+          anchor.href = item.link
+          if (item.openInNewtab) anchor.target = '_blank'
+          else anchor.target = '_self'
+          const clonedImageEl = el.cloneNode() as HTMLImageElement
+          anchor.appendChild(clonedImageEl)
+          el.replaceWith(anchor)
+        })
+      },
     })
     editorRef.current = editor
   }
