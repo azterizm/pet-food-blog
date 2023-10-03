@@ -27,7 +27,7 @@ export type Category = (typeof categories)[number]
 export const categories = [
   'meal',
   'health',
-  'desert',
+  'dessert',
   'treat',
   'birthday',
   'season',
@@ -40,7 +40,7 @@ export const categoryLabel = {
   meal: 'Meals',
   birthday: 'Birthday',
   cooked: 'Cooked',
-  desert: 'Dessert',
+  dessert: 'Dessert',
   health: 'Health condition',
   raw: 'Raw',
   season: 'Seasonal',

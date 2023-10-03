@@ -74,7 +74,7 @@ export function Header({ user }: Props) {
             )}
             to='/free'
           >
-            Free Stuff
+            Printables
           </Link>
           <Link
             className={classNames(
@@ -83,7 +83,7 @@ export function Header({ user }: Props) {
             )}
             to='/saved'
           >
-            Saved
+            Favorites
           </Link>
         </div>
         <div className='items-center gap-6 hidden lg:flex font-bold'>

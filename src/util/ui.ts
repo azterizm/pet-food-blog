@@ -43,3 +43,11 @@ export function calculateEstimatedTimeReading(body: string) {
   const min = Math.ceil(len / 183)
   return `${min} min read`
 }
+
+//Write function that formats number into USD currency
+export function formatCurrency(num: number) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(num)
+}

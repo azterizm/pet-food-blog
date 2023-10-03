@@ -1,12 +1,17 @@
-import { ReactElement, useEffect, useState } from 'react'
-import { useApi, useAuth } from '../hooks/api'
 import { IFreeItem } from '@backend/models/freeItem'
+import { useHookstate } from '@hookstate/core'
+import { ReactElement, useEffect, useState } from 'react'
+import { Portal } from 'react-portal'
+import { useNavigate } from 'react-router-dom'
+import { categories } from '../../../src/constants/info'
+import FreeStuffItem from '../components/free_stuff/FreeStuffItem'
+import List from '../components/home/List'
+import PageIndicator from '../components/home/PageIndicator'
 import { Loader } from '../components/Loader'
 import { API_ENDPOINT } from '../constants/api'
-import { Link, useNavigate } from 'react-router-dom'
-import { Portal } from 'react-portal'
+import { useApi, useAuth } from '../hooks/api'
 import { useFade } from '../hooks/state'
-import PageIndicator from '../components/home/PageIndicator'
+import { categoryLabel } from '../types/api'
 
 export function FreeStuff(): ReactElement {
   const [paying, setPaying] = useState(0)
@@ -16,13 +21,20 @@ export function FreeStuff(): ReactElement {
   const navigate = useNavigate()
   const fade = useFade()
 
+  const selectedCategory = useHookstate('')
+
   const { refetch, data, loading } = useApi<
+  {
+
+  items: 
     (IFreeItem & {
       author?: { name: string; id: number }
       purchased: boolean
       file: string
     })[]
-  >('/free_items/all')
+    contributionPercentage: number
+  }
+  >(`/free_items/all/${selectedCategory.value}`, {}, [selectedCategory])
 
   async function onPayItem() {
     setPayLoading(true)
@@ -62,67 +74,46 @@ export function FreeStuff(): ReactElement {
   if (loading || userLoading) return <Loader />
   return (
     <div>
-      <h1 className='text-center'>Free Stuff</h1>
+      <div className='text-center max-w-5xl mx-auto'>
+        <h1>
+          <span className='text-button'>Support dog shelters worldwide</span>
+          {' '}
+          by downloading free printables or making a purchase.
+        </h1>
+        <p>
+          "Every purchase will contribute 50% of its proceeds to animal
+          shelters."
+        </p>
+      </div>
+      <List
+        data={categories.map((r) => ({
+          key: r,
+          value: categoryLabel[r as keyof typeof categoryLabel],
+        }))}
+        value={selectedCategory.value}
+        onChange={(value) => selectedCategory.set(value || '')}
+      />
+
       <PageIndicator active={2} />
-      {!data || !data.length
+      {!data || !data.items.length
         ? (
           <div className='flex-center mt-8'>
-            <span>No items are available yet.</span>
+            <span>No items are available yet for this category.</span>
           </div>
         )
         : (
           <div className='flex flex-wrap mt-8 justify-center items-center gap-5'>
-            {data.map((item) => {
-              const canDownload = item.purchased || item.price <= 0
-              return (
-                <article
-                  key={item.id}
-                  className='overflow-hidden rounded-lg transition hover:shadow-lg min-w-80 text-center'
-                >
-                  <img
-                    alt='Thumbnail'
-                    src={API_ENDPOINT + '/free_items/thumbnail/' + item.id}
-                    className='w-140 object-cover object-center mx-auto block'
-                  />
-                  <div className='bg-white p-4 sm:p-6'>
-                    <time
-                      dateTime='2022-10-10'
-                      className='block text-xs text-gray-500'
-                    >
-                      {new Date(item.createdAt!).toDateString()}
-                    </time>
-                    <h3 className='mt-0.5 m-0 text-lg text-gray-900 no-underline'>
-                      {decodeURIComponent(item.title)}
-                    </h3>
-                    {item.author
-                      ? (
-                        <p className='m-0 text-sm'>
-                          by{' '}
-                          <Link
-                            to={'/authors/' + item.author.id}
-                            className='no-underline'
-                          >
-                            {item.author?.name}
-                          </Link>
-                        </p>
-                      )
-                      : null}
-                    <p className='mt-2 text-md leading-relaxed text-gray-500 line-clamp-3'>
-                      {item.description}
-                    </p>
-                    <button
-                      onClick={() =>
-                        canDownload
-                          ? onDownload(item.id!, item.file)
-                          : setPaying(item.id!)}
-                      className={`rounded-lg w-full py-5 tracking-wide bg-button c-white font-bold block text-center no-underline border-none text-lg`}
-                    >
-                      {canDownload ? 'Download' : 'Pay ' + item.price + '$'}
-                    </button>
-                  </div>
-                </article>
-              )
-            })}
+            {data.items.map((item) => (
+              <FreeStuffItem
+                contributionPercentage={data.contributionPercentage}
+                data={item}
+                onClick={() => (
+                  item.purchased || item.price <= 0
+                    ? onDownload(item.id!, item.file)
+                    : setPaying(item.id!)
+                )}
+              />
+            ))}
 
             {paying
               ? (

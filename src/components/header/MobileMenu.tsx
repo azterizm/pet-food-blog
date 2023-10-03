@@ -16,9 +16,9 @@ export function MobileMenu(): ReactElement {
     () => [
       ['/', 'Recipes'],
       ['/blog', 'Articles'],
-      ['/free', 'Free Stuff'],
+      ['/free', 'Printables'],
       ['', ''],
-      ['/saved', 'Saved'],
+      ['/saved', 'Favorites'],
       user ? ['/profile', 'My Account'] : ['/login', 'Login'],
       user ? ['', ''] : null,
       user?.type === 'author' ? [CREATOR_ENDPOINT, 'Post your recipe'] : null,
