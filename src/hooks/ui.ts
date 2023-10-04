@@ -109,3 +109,14 @@ export function useOnClickOutside(
     }
   }, [ref])
 }
+
+export function useDebounce(value: string, time: number) {
+  const [state, setState] = useState(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => setState(value), time)
+    return () => clearTimeout(handler)
+  }, [value])
+
+  return state
+}
