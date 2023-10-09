@@ -22,7 +22,7 @@ export const categoryRenders: CategoriesUI = [
     color: ['#fecaca', '#b91c1c'],
   },
   {
-    value: 'desert',
+    value: 'dessert',
     icon: <Cake size={24} />,
     color: ['#bfdbfe', '#1d4ed8'],
   },
