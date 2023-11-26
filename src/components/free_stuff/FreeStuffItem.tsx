@@ -17,8 +17,10 @@ interface Props {
 }
 export default function FreeStuffItem(props: Props) {
   const canDownload = props.data.purchased || props.data.price <= 0
-  const contributionAmount = !props.data.price ? 0 : props.data.price / 100 *
+  const contributionAmount = !props.data.price ? 0 : (
+    props.data.price / 100 *
     props.contributionPercentage
+  )
   return (
     <article
       key={props.data.id}

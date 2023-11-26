@@ -8,6 +8,7 @@ import { useFade, useHeaderFooter } from './hooks/state'
 import { lazyImport } from './util/ui'
 import 'swiper/css'
 import ScrollToTop from './components/ScrollToTopRouter'
+import FreeStuffPaymentFeedback from './screens/free_stuff/PaymentFeedback'
 
 const Donate = lazy(() => import('./screens/recipe/Donate'))
 const { PrintRecipe } = lazyImport(
@@ -45,7 +46,7 @@ const { Subscribed } = lazyImport(
   'Subscribed',
 )
 const { FreeStuff } = lazyImport(
-  () => import('./screens/FreeStuff'),
+  () => import('./screens/free_stuff'),
   'FreeStuff',
 )
 const { Saved } = lazyImport(() => import('./screens/Saved'), 'Saved')
@@ -95,7 +96,11 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='login' element={<Login />} />
           <Route path='register' element={<Register />} />
-          <Route path='free' element={<FreeStuff />} />
+          <Route path='free'>
+            <Route path='pay' element={<FreeStuffPaymentFeedback />} />
+            <Route path=':id' element={<FreeStuff />} />
+            <Route index element={<FreeStuff />} />
+          </Route>
           <Route path='saved' element={<Saved />} />
           {user
             ? (

@@ -54,7 +54,7 @@ export function ReadContent({
     setDonateStatus(DonateStatus.Process);
     const data: ApiProcess = await fetch(
       API_ENDPOINT +
-        "/donate/create/" +
+        "/donate/recipe/" +
         props.data.id +
         "/" +
         props.data.authorId +

@@ -9,7 +9,7 @@ export default function Donate(): ReactElement {
   const success = searchParams.get('status') === 'success'
 
   return (
-    <div className='w-screen h-screen flex flex-col justify-center items-center'>
+    <div className='w-screen py-8 flex flex-col justify-center items-center -translate-x-8'>
       {success ? (
         <CheckCircle className='text-green-600 text-5xl' />
       ) : (
