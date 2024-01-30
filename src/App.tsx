@@ -11,6 +11,15 @@ import ScrollToTop from './components/ScrollToTopRouter'
 import FreeStuffPaymentFeedback from './screens/free_stuff/PaymentFeedback'
 
 const Donate = lazy(() => import('./screens/recipe/Donate'))
+const { TermsAndConditions } = lazyImport(
+  () => import('./screens/TermsAndConditions'),
+  'TermsAndConditions',
+)
+
+const { PrivacyPolicy } = lazyImport(
+  () => import('./screens/PrivacyPolicy'),
+  'PrivacyPolicy',
+)
 const { PrintRecipe } = lazyImport(
   () => import('./screens/recipe/Print'),
   'PrintRecipe',
@@ -96,6 +105,8 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='login' element={<Login />} />
           <Route path='register' element={<Register />} />
+          <Route path='terms' element={<TermsAndConditions />} />
+          <Route path='policy' element={<PrivacyPolicy />} />
           <Route path='free'>
             <Route path='pay' element={<FreeStuffPaymentFeedback />} />
             <Route path=':id' element={<FreeStuff />} />

@@ -56,7 +56,7 @@ export function Footer(): ReactElement {
           </Link>
           <Link
             className='text-sm no-underline hover:underline decoration-none'
-            to='/privacy_policy'
+            to='/policy'
           >
             Privacy Policy
           </Link>
